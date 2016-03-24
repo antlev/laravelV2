@@ -48,28 +48,52 @@
   </div>
 
   <?php $messagExist = 0 ?> <!-- On initialise messagExist à 0 -->
+  <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
   @foreach($posts as $post) <!-- On affiche les catégories -->
     <div class="col-lg-12 col-md-12 col-xs-12 panel panel-default">
       @if($post->post_topic_id==$topic[0]->topic_id)
         <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
         <div class="panel-body panel-info" style="min-height:70px">
-          <div> {{$post->post_texte}}  </div>    
+          <div> {{$post->post_texte}}  </div>
+          <?php $id++ ?>   
         </div>
         <div class="col-lg-9 col-md-9 col-xs-9 panel-footer" style="height:55px" >
           <div> créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
         </div>
         @if(Auth::isAdmin())
           <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right" style="height:55px">   
-            <button id="supMessage" class="btn btn-success" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
+            <button id="supMessage{{$id}}" class="btn btn-success" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
+            <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-success" style="margin-left:15px">Editer</a> 
           </div>
         @else(Auth::id() == $post->post_createur)
           <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
-            <button href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/supMessage')}}" class="btn btn-success" style="margin-left:15px">Editer</button> 
-            <button id="editMessage"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px">Supprimer</button>
+            <button id="supMessage{{$id}}"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
           </div>
         @endif
       @endif
     </div>
+  <script>
+    $('#supMessage{{$id}}').click(function() {
+      $.ajax({
+          url: '{{$topic[0]->topic_id}}/supMessage',
+          type: "post",
+          data: {'post_id': $(this).attr('data-id') },
+          success: function(data){
+            window.location.href = ""; // On redirige sur la même page
+          }
+      });  
+    });
+    $('#editMessage{{$id}}').click(function() {
+      $.ajax({
+          url: '{{$topic[0]->topic_id}}/editMessage',
+          type: "post",
+          data: {'post_id': $(this).attr('data-id') },
+          success: function(data){
+            window.location.href = "";
+          }
+      });  
+    });
+  </script>
   @endforeach
 
   @if($messagExist==0) <!-- Si aucun message ne doit être affiché -->
@@ -84,18 +108,8 @@
 </html> 
 
 <script>
-$(function() { 
-  
-  $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-  $('#supMessage').click(function() {
-      $.ajax({
-          url: '{{$topic[0]->topic_id}}/supMessage',
-          type: "post",
-          data: {'post_id': $(this).attr('data-id') },
-          success: function(data){
-            window.location.href = "";
-          }
-      });  
+  $(function() { 
+    
+    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
   });
-});
 </script>
