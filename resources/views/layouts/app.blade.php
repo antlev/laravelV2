@@ -64,7 +64,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{url('forum')}}">Forum</a></li>
                 </ul>
-
+                <ul class="nav navbar-nav">
+                    <li><a href="{{url('quizz')}}">Quizz</a></li>
+                </ul>
                 <ul class="nav navbar-nav col-lg-offset-3">
                     <li class="dropdown" onclick="if($(this).attr('class')!='dropdown open') { $(this).addClass('open') } else { $(this).removeClass('open') }">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
