@@ -68,8 +68,8 @@ foreach ($shout as $shoutresult) {
     $date = $shoutresult->date_shoutbox;
     $message = $shoutresult->msg_shoutbox;
     $sport = Auth::getSportbyId($shoutresult->iduser_shoutbox);
-    $color = Auth::getColorById(Auth::getRoleById($shoutresult->iduser_shoutbox));
-    array_push($user, array('name' => $name,'date' => $date,'msg' => $message,'sport'=>$sport,'color'=>$color));
+  //  $color = Auth::getColorById(Auth::getRoleById($shoutresult->iduser_shoutbox));
+    array_push($user, array('name' => $name,'date' => $date,'msg' => $message,'sport'=>$sport));
 
 //echo 'nickname: '.Auth::getNameById($shoutresult->iduser_shoutbox).' msg : '.$shoutresult->msg_shoutbox;
    }

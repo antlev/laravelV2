@@ -59,7 +59,7 @@
           <div> créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
         </div>
         @if(Auth::isAdmin())
-          <div class="col-lg-2 panel-footer pull-right">   
+          <div class="col-lg-2 panel-footer pull-right" style="height:60px">   
             <button id="supMessage" class="btn btn-success" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
           </div>
         @else(Auth::id() == $post->post_createur)
