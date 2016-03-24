@@ -175,13 +175,13 @@ class forumController extends Controller{
 	public function postTopic($cat){
 		// Récupétration des informations
 		$inputData = Input::all();
-		$createur_id = Auth::id();
+		$createurId = Auth::id();
 		$msgTopic = $inputData['msgTopic'];
 		$titleTopic = $inputData['titleTopic'];
 		$date = date('Y-m-d H:i:s');
 		// Requête SQL d'insertion du topic dans la base
 		DB::table('forum_topic')->insert(
-			['topic_titre' => $titleTopic, 'topic_createur' => $createur_id,'topic_cat' => $cat,'topic_time' => $date]
+			['topic_titre' => $titleTopic, 'topic_createur' => $createurId,'topic_cat' => $cat,'topic_time' => $date]
 		);
 	}
 
@@ -191,13 +191,13 @@ class forumController extends Controller{
 		// Récupération des informations à sauvegarder en base
 		//$catName = forumController::getCatName($cat);
         $inputData = Input::all(); 
-		$createur_id = Auth::id();
+		$createurId = Auth::id();
 		$message = $inputData['msg'];
 		$date = date('Y-m-d H:i:s');
 		
 		// Requete SQL qui permet d'insérer les données dans la base
 		DB::table('forum_post')->insert([
-			['post_createur' => $createur_id, 'post_texte' => $message, 'post_time' => $date , 'post_topic_id' => $topic ]
+			['post_createur' => $createurId, 'post_texte' => $message, 'post_time' => $date , 'post_topic_id' => $topic ]
 		]);
 	}
 	public function supMessage($cat,$topic){
@@ -207,8 +207,47 @@ class forumController extends Controller{
 
 	    DB::table('forum_post')->where('post_id', '=', $post_id)->delete();
 	}	
-	public function editMessage($cat,$topic){
-		
+	public function editMessageView($cat,$topic_id,$post_id){
+		// Vérifier que l'utilisateur a bien les droits sur le message
+		$editeurId = Auth::id();
+		if( Auth::isAdmin() ){
+			$messageToEdit = forumController::__getPostMessageById($post_id)[0]->post_texte;
+
+			$data = array(
+				'post_id' => $post_id,
+				'cat' => $cat,
+				'topic_id' => $topic_id,
+				'messageToEdit' => $messageToEdit);
+
+			return view('forumEditMessage',$data);
+
+		} else if( $editeurId == forumController::__getCreateurPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			dd('it s ok go on');
+		} else {
+			dd("sorry you don't have permission to edit this message");
+		}
+	}
+
+	public function editMessage($cat,$topic_id,$post_id){
+		// Vérifier que l'utilisateur a bien les droits sur le message
+		$editeurId = Auth::id();
+		$inputData = Input::all(); 
+		$messageRemplacant = $inputData['msgToSend'];
+
+		if( Auth::isAdmin() ){
+			DB::table('forum_post')->where('post_id', '=', $post_id)->update(['post_texte' => $messageRemplacant]);
+		} else if( $editeurId == forumController::__getCreateurPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			dd('it s ok go on');
+		} else {
+			dd("sorry you don't have permission to edit this message");
+		}
+	}
+
+	public function __getCreateurPostById($post_id){
+		return DB::table('forum_post')->where('post_id', '=', $post_id)->select('post_createur')->get();
+	}
+	public function __getPostMessageById($post_id){
+		return DB::table('forum_post')->where('post_id', '=', $post_id)->select('post_texte')->get();
 	}
 }
 ?>

@@ -80,7 +80,10 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/forum/{cat}/newTopic', 'forumController@newTopic');
 	Route::get('/forum/{cat}/{topic}/newMessage','forumController@newMessage');
 	Route::post('/forum/{cat}/{topic}/supMessage','forumController@supMessage');
-	Route::post('/forum/{cat}/{topic}/editMessage','forumController@editMessage');
+
+	Route::get('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editMessageView');
+	
+	Route::post('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editMessage');
 
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
 
