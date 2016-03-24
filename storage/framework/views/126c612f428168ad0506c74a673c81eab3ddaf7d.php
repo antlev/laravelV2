@@ -34,7 +34,18 @@
                 for(var i=0;i<obj.length;i++) {
                     var randomized = Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random());
                     var idd = obj[i].id;
-                    $('#lastquizz').before('<div class="col-lg-12" id="quizz_'+obj[i].id+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+','+randomized+')"><i style="color:green;cursor:pointer" class="fa fa-plus-circle" ></i>Ajouter une réponse</button>&nbsp;<br></div><div class="col-lg-6" style="font-weight:normal">Réponse : <input type="text" style="width:60% !important" class="form-control" id="reponse_' + randomized + '"><br></div><div class="col-lg-6"><br><input type="radio" name="groupe_'+obj[i].id+'"></div>');
+                    $('#lastquizz').before('' +
+                            '<div class="col-lg-12" id="quizz_'+obj[i].id+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;' +
+                            '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+','+randomized+')">' +
+                            '<i style="color:green;cursor:pointer" class="fa fa-plus-circle" ></i>Ajouter une réponse</button>&nbsp;<br>' +
+                            '</div>' +
+                            '<div class="col-lg-12" id="quizzdemerde_'+obj[i].id+'">'+
+                            '<div class="col-lg-6" id="rep_'+idd+'" style="font-weight:normal">Réponse : ' +
+                            '<input type="text" style="width:60% !important" class="form-control" id="reponsee_' + randomized + '"><br>' +
+                            '</div>' +
+                            '<div class="col-lg-6"><br>' +
+                            '<input type="radio" id="group_'+idd+'" name="groupe_'+obj[i].id+'">' +
+                            '</div></div>');
 
                     general++;
                     var j = i;
@@ -59,7 +70,15 @@ $(':radio').each(function() {
     });
     function addQ(quizz,random) {
         var id = event.target.id;
-        $('#quizz_'+quizz).append('<div class="col-lg-6" style="font-weight:normal">Réponse : <input type="text" style="width:60% !important" class="form-control" id="reponse_' + Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random()) + '"><br></div><div class="col-lg-6"><br><input type="radio" name="groupe_' +random + '"></div>');
+        $('#quizzdemerde_'+quizz).after(
+                '<div class="col-lg-12">'+
+                '<div class="col-lg-6" style="font-weight:normal">' + 'Réponse : ' +
+                '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random()) + '">' +
+                '<br>' +
+                '</div>' +
+                '<div class="col-lg-6"><br>' +
+                '<input type="radio" name="groupe_' +random + '">' +
+                '</div></div>');
 
 
     }
