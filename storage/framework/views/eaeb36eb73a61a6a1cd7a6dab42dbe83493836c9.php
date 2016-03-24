@@ -1,3 +1,5 @@
+    
+
 <?php $__env->startSection('content'); ?>
     <meta name="csrf-token" content="<?php echo csrf_token() ?>" />
 
@@ -45,13 +47,13 @@ $( document ).ready(function() {
             values.push(item1);
 
             });
-jsonvar = JSON.stringify({ values });
-        $.ajax({
+                jsonvar = JSON.stringify({ values });
+            $.ajax({
             url: 'insertquestions',
             type: "post",
             data:{ 'insertQ':jsonvar } ,
             success: function(data){
-window.location.href  = "<?php echo e(url('quizz/reponse')); ?>";
+                window.location.href  = "<?php echo e(url('quizz/reponse')); ?>";
             }
         });
 

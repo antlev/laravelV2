@@ -47,13 +47,13 @@ $( document ).ready(function() {
             values.push(item1);
 
             });
-jsonvar = JSON.stringify({ values });
-        $.ajax({
+                jsonvar = JSON.stringify({ values });
+            $.ajax({
             url: 'insertquestions',
             type: "post",
             data:{ 'insertQ':jsonvar } ,
             success: function(data){
-window.location.href  = "{{url('quizz/reponse')}}";
+                window.location.href  = "{{url('quizz/reponse')}}";
             }
         });
 
