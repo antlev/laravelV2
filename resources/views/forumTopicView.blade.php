@@ -49,21 +49,21 @@
 
   <?php $messagExist = 0 ?> <!-- On initialise messagExist à 0 -->
   @foreach($posts as $post) <!-- On affiche les catégories -->
-    <div class="panel panel-default">
+    <div class="col-lg-12 col-md-12 col-xs-12 panel panel-default">
       @if($post->post_topic_id==$topic[0]->topic_id)
         <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
-        <div class="panel-body panel-info">
+        <div class="panel-body panel-info" style="min-height:70px">
           <div> {{$post->post_texte}}  </div>    
         </div>
-        <div class="col-lg-10 panel-footer" style="height:60px" >
+        <div class="col-lg-9 col-md-9 col-xs-9 panel-footer" style="height:55px" >
           <div> créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
         </div>
         @if(Auth::isAdmin())
-          <div class="col-lg-2 panel-footer pull-right">   
+          <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right" style="height:55px">   
             <button id="supMessage" class="btn btn-success" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
           </div>
         @else(Auth::id() == $post->post_createur)
-          <div class="col-lg-2 panel-footer pull-right">   
+          <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
             <button href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/supMessage')}}" class="btn btn-success" style="margin-left:15px">Editer</button> 
             <button id="editMessage"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px">Supprimer</button>
           </div>
