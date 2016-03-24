@@ -113,11 +113,13 @@
         </div>
     </nav>
 
-    <script src="{{('/laravel/public/js/jquery-2.1.1.min.js')}}"></script>
+    <script src="{{asset('js/jquery-2.1.1.min.js')}}"></script>
     @if(!isset($table))
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     @endif
     <script src="{{('/laravel/public/js/moment-with-locales.js')}}"></script>
+            <script src="{{asset('js/bootstrap.min.js')}}"></script>
+
     <script src="{{('/laravel/public/js/boostrap-datetimepicker.js')}}"></script>
         <script src="{{ asset('js/bootstrap-notify.js') }}"></script>
 

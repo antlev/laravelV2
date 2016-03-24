@@ -1,6 +1,6 @@
-@extends('layouts.app2')
+@extends('layouts.app')
 
-@section('profil')
+@section('content')
         <meta name="csrf-token" content="<?php echo csrf_token() ?>" />
 
 

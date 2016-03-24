@@ -2,8 +2,11 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="csrf-token" content="<?php echo csrf_token() ?>" />
+    <script src="{{asset('js/jquery-2.1.1.min.js')}}" rel="stylesheet"> </script>
+    <script src="{{asset('js/bootstrap.min.js')}}" rel="stylesheet"> </script>
     <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <style type="text/css">
       [class*="col"] { margin-bottom: 20px; }
@@ -14,14 +17,30 @@
 
 <div class="container" style="margin-top: 35px">
   <div class="page-header page-heading">
-    <div class="col-md-6">
       <img src="{{asset('img/logo.png')}}" style="width:8%">
-    <h1 href="{{url('forum')}}" >Forum De La Maison Des Ligues</h1>
-    </div>
-    <ol class="breadcrumb pull-right where-am-i">
-      <li><a href="#">Forums</a></li>
-      <li class="active">List of topics</li>
-    </ol>
+    <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+  </div>
+</div>
+
+<!-- Menu de navigation -->
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
+    @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+      <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
+      @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+        @if($topic_as->topic_cat==$cats->cat_id)
+          <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
+        @endif
+      @endforeach
+      </li>
+    @endforeach
+  <ul>
+</div>
+
+
     <div class="clearfix"></div>
   </div>
 
@@ -51,8 +70,8 @@
         </td>
  
 
-        <td class="cell-stat text-center hidden-xs hidden-sm">post: {{$topic_as->topic_post}}</td>
-        <td class="cell-stat hidden-xs hidden-sm">last_post: {{$topic_as->topic_last_post}}</td>
+        <td class="cell-stat text-center hidden-xs hidden-sm">post: 0</td>
+        <td class="cell-stat hidden-xs hidden-sm">last_post: 0</td>
       </tr>
       @endforeach
       @endif

@@ -3,8 +3,10 @@
 
   <head>
     <meta charset="utf-8">
-    <link href="laravel/public/css/bootstrap.css" rel="stylesheet">
-    <link href="{{('/laravel/public/css/bootstrap.min.css')}}" rel="stylesheet">
+    <meta name="csrf-token" content="<?php echo csrf_token() ?>" />
+    <script src="{{asset('js/jquery-2.1.1.min.js')}}" rel="stylesheet"> </script>
+    <script src="{{asset('js/bootstrap.min.js')}}" rel="stylesheet"> </script>
+    <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <style type="text/css">
       [class*="col"] { margin-bottom: 20px; }
       img { width: 100%; }
@@ -14,17 +16,31 @@
 
 <div class="container" style="margin-top: 35px">
   <div class="page-header page-heading">
-    <div class="col-md-6">
       <img src="{{asset('img/logo.png')}}" style="width:8%">
-    <h1 href="{{url('forum')}}" >Forum De La Maison Des Ligues</h1>
-    </div>
-    <ol class="breadcrumb pull-right where-am-i">
-      <li><a href="#">Forums</a></li>
-      <li class="active">List of topics</li>
-    </ol>
-    <div class="clearfix"></div>
+      <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+    <p class="lead">Bienvenue sur le forum de la maison des ligues</p>
   </div>
-  <p class="lead">Bienvenue sur le forum de la maison des ligues</p>
+</div>
+
+    <!-- Menu de navigation -->
+    <ol class="breadcrumb pull-right where-am-i">
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
+          @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+            <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
+            @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+              @if($topic_as->topic_cat==$cats->cat_id)
+                <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
+              @endif
+            @endforeach
+            </li>
+          @endforeach
+        <ul>
+      </div>
+    </ol>
 
   <table class="table forum table-striped">
     <thead>

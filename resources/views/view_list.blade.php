@@ -4,7 +4,7 @@
 @section('content')
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.8/datatables.min.css" />
-    <link href="/laravel/public/calendar/css/responsive-calendar.css" rel="stylesheet">
+    <link href="{{asset('css/responsive-calendar.css')}}" rel="stylesheet">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="https://cdn.datatables.net/r/bs-3.3.5/jqc-1.11.3,dt-1.10.8/datatables.min.js"></script>
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
@@ -38,9 +38,14 @@
     <script type="text/javascript" charset="utf-8">
     var data = {
         name: '',
-        id: ''
+        id: '',
+        action: ''
     };
         $(document).ready(function() {
+            function timeRefresh(timeoutPeriod) 
+            {
+                setTimeout("location.reload(true);",timeoutPeriod);
+            }
             var table = $('#vue_list').DataTable({
                 "language":{
                     "url": "http://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
@@ -87,14 +92,28 @@
                     });
                 }
                 // On refresh seulement si on à coché une valeur a supprimer
-                if(i == 1){location.reload();}                
+                if(i == 1){timeRefresh('1000');}                
             });
 
             $('#select_all').change(function(){
+                $('#delete').prop('disabled', !$(this).is(':checked'));
+                $('#edit').prop('disabled', true);
                 var cells = table.cells( ).nodes();
                 $( cells ).find(':checkbox').prop('checked', $(this).is(':checked'));
             });
-            
+
+            $('.dt-body-center').on('click', function(){
+                // var i=0;
+                var i = $( "input:checked" ).length;
+
+                if(i == 0){$('#delete, #edit').prop('disabled', true);}
+                else if(i == 1){$('#delete, #edit').prop('disabled', false);}
+                else{
+                    $('#delete').prop('disabled', false);
+                    $('#edit').prop('disabled', true);
+                }
+            });
+
             $('#vue_list tbody').on('dblclick', 'td', function(){
                 data1 = table.row( $(this).parents('tr') ).data();
                 data.id = data1[1];
@@ -149,12 +168,6 @@
                     }
                 }
             });
-
-            function inform(text,time) {
-                ajaxStatus.showStatus(text);
-                window.setTimeout('ajaxStatus.hideStatus()',time);
-            };
-
             //quand on appuit sur le bouton d'edit
             $('#vue_list tbody td').on('click', '.update', function(){
                 editAjax($(this));
@@ -162,15 +175,22 @@
 
             //quick edit en cas de double clique
             function editAjax(item){
-                console.log(item.prev().val());
-                console.log(data);
+                // console.log(item.prev().val());
+                // console.log(data);
                 if(data.name == 'datenaiss'){
                     if(item.prev().val() != ""){
                         date = item.prev().val()
                         split = date.split('/');
                         console.log(split.length);
-                        if(split.length != 3){err('La date est mal rempli veuillez respecter le format DD/MM/YYYY'); return;}
-                        else if(split[0].length != 2 || split[1].length != 2 || split[2].length != 4){err('La date est mal rempli veuillez respecter le format DD/MM/YYYY'); return;}
+                        if(split.length != 3){err('La date est mal rempli veuillez respecter le format Jour/mois/Année'); return;}
+                        else if(split[0].length != 2 || split[1].length != 2 || split[2].length != 4){err('La date est mal rempli veuillez respecter le format Jour/mois/Année'); return;}
+                        else{
+                            var d = new Date();
+                            year = d.getFullYear()-5;
+                            if(split[0] == "00" || split[0] > 31){err('Le nombre de jour défini est faux');return;}
+                            if(split[1] == "00" || split[1] > 12){err('Le nombre de mois est compris entre 01 et 12');return;}
+                            if(split[2] < 1920  || split[2] > year){err('L\' année saisie est incorrecte ');return;}
+                        }
                     }
                     else{err('La date est vide');return;}
                 }
@@ -181,7 +201,8 @@
                     name: data.name,
                     table: data.table,
                 }).done(function() {
-                    location.reload();
+                    // location.reload();
+                    timeRefresh('1000');
                 });
             }
             function err(text){
@@ -213,6 +234,7 @@
               autocomplete('lieu_name_1', 'lieux','sport', $('#sport_1').val(), 'nom');
             });
             $('#create, #edit').on('click', function(){
+                data.action = $(this).context.id == 'create' ? 'insert' : 'update';
                 if(data.table == 'user_roles'){
                     autocomplete('name_1', 'users');                     
                 }
@@ -220,9 +242,27 @@
                     autocomplete('nom_planning_1', 'participants')
                 }
             });
+            $('#edit').on('click', function(){
+                // console.log(table.row( $( "input:checked" ).parents('tr')).context());
+                data.action = 'update';
+                value = table.row( $( "input:checked" ).parents('tr')).data();
+                console.log(value);
+                data.id = value[1];
+                diff = value.length - $( '#myModal input, #myModal select' ).length;
+                if(data.table == 'user_roles'){diff = 4;}
+                else if(data.table != 'users'){diff -= 2;}
+                // console.log(value.length);
+                // console.log($( '#myModal input, #myModal select' ).length);
+                $( '#myModal input, #myModal select' ).each(function(index,data2){
+                    console.log(data2.id+ " index : "+index);
+                    $('#'+data2.id).val(value[index+diff]);
+                });
+                // console.log(table.row( $( "input:checked" ).parents('tr')).ids());
+            });
             $('#save').on('click', function(){
                 valid = true;
                 data.create = [];
+                // console.log(data.action);
                 // tab = table.column().header();
                 // console.log($('#myModal'));
                 $( '#myModal input, #myModal select' ).each(function(index,data2){
@@ -231,7 +271,7 @@
                     // console.log(clas+' '+id);
                     // console.log($(this).parent()[0]);
                     // console.log($('#'+data.id));
-                    if($('#'+data2.id).val() == ''){
+                    if($('#'+data2.id).val() == '' || (data2.id == 'email_1' && isEmail($('#'+data2.id).val()) == false)){
                         valid = false;
                         if(clas.indexOf('has') == -1){$('#'+id).addClass('has-error');}
                         else if(clas.indexOf('success') != -1){$('#'+id).removeClass('has-success').addClass('has-error');}
@@ -247,15 +287,22 @@
                         });
                     }
                 });
+                function isEmail(myVar){
+                    // Définition de l'expression régulière d'une adresse email
+                    var regEmail = new RegExp('^[0-9a-z._-]+@{1}[0-9a-z.-]{2,}[.]{1}[a-z]{2,5}$','i');
+
+                    return regEmail.test(myVar);
+                }
                 if(valid == true){
 
-                    console.log(data);
+                    // console.log(data);
                     $.ajax({
                         url: "../create",
                         type: "get",
                         data : data,
                     });
                     // location.reload();
+                    timeRefresh('1000');
                 }
            });
         });
@@ -266,9 +313,11 @@
         <div id="error" style="display:none;" align="left"></div>
         <div id="admin" style="display:none;">{{Auth::isAdmin()}}</div>
         <div class="container">
-            <button class="btn btn-danger" id="delete"> Supprimer</button>
-            <button class="btn btn-success" id="create" data-toggle="modal" data-target="#myModal">Création</button>
-            <button class="btn btn-info" id="edit" data-toggle="modal" data-target="#myModal">Edition</button>
+            <button class="btn btn-danger" id="delete" disabled> Supprimer</button>
+            @if($table != 'planning')
+                <button class="btn btn-success" id="create" data-toggle="modal" data-target="#myModal">Création</button>
+            @endif
+            <button class="btn btn-info" id="edit" data-toggle="modal" data-target="#myModal" disabled>Edition</button>
         </div>
         </br>
         <table id="vue_list" class="display" cellspacing="0" width="100%">
@@ -305,9 +354,6 @@
         </table>
 
     </div>
-
-
-
 
     <!-- Modal -->
     <div id="myModal" class="modal " role="form">

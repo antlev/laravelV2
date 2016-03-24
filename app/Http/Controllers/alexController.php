@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\User;
 use DB;
+use Mail;
 use Session;
 use Auth;
 
@@ -40,6 +40,33 @@ class alexController extends Controller
         return view('welcome');
     }
 
+    public function mail2($user_id, $id_planning, $action, $request){
+        $from = DB::select("SELECT distinct email, concat(nom,' ',prenom) as 'nom'  from users where id = '".$user_id."'");
+        // dd($from);
+        // try {mail($from[0]->email, 'Test mail', 'je suis un Test');}
+        // catch (Exception $ex){
+        //     return $ex;
+        // }
+
+        // return 'totot';
+
+        // $roles = DB::select("SELECT distinct r.nom, r.id  from planning p join participants pa on pa.id_planning = p.id join roles r on r.id = pa.id_role where p.id = ".$id_planning);
+        Mail::send('email', $from , function($mess){
+            // $mess->from('laravel@m2l.com', 'laravel');
+            // $mess->to($from['email'], $from['nom']);
+            // foreach ($roles as $role) {
+            //     $and = '';
+            //     if($roles[$role]['nom'] == 'Joueurs'){
+            //         $and = " AND sport = '".$request['sport']."' AND categorie = '".$request['categorie']."'";
+            //     }
+            //     $email = "SELECT distinct email, concat(nom,' ',prenom) as 'nom'  from user_roles ur join users u on u.id = ur.user_id where ur.id_roles = '".$roles[$role]['id']."'".$and;
+            //     foreach ($email as $key ) {
+            //         $mess->to($email[$key]['email'], $email[$key]['nom']);
+            //     }                
+            // }
+
+        });
+    }
 
     // public function suivi_mot_passe(){
     //     $types = DB::table('users')->paginate(100);
@@ -75,7 +102,7 @@ class alexController extends Controller
             DB::table('planning')->where('id', $request['id'])->delete();
         }
         else{
-            $nom = (!empty($request['categorie'])) ? $request['type'].' '.$request['categorie']."\n".$request['sport'] : $request['type']."\n".$request['sport'];
+            $nom = (!empty($request['categorie'])) ? $request['type'].' '.$request['categorie']." ".$request['sport']." ".$request['lieu'] : $request['type']." ".$request['sport']." ".$request['lieu'];
             $lieu_id = DB::select('SELECT distinct id from lieux where nom = "'.$request['lieu'].'"');
             if($request['action'] == 'insert'){
                 DB::table('planning')->insert([
@@ -106,7 +133,7 @@ class alexController extends Controller
                 if($request['action'] == 'drop'){
                     DB::table('planning')->where('id', $request['id'])
                     ->update(array('debut'=>$request['debut'] , 'fin'=> $request['fin'],'updated_at' => date('Y-m-d H:i:s')));
-                    // User::mail($user_id, $request['id'], 'modif', $request);
+                    $this->mail2(Auth::id(), $request['id'], 'modif', false);
                 }
                 else if ($request['action'] == 'resize'){
                     DB::table('planning')->where('id', $request['id'])
@@ -126,6 +153,7 @@ class alexController extends Controller
         // var_dump($_GET);
         $name = "(";
         $value = "(";
+        $update = array();
         //Parcourt du tableau pour la remise en forme avant la création
         foreach($_GET['create'] as $key => $val){
             if($_GET['table'] == 'user_roles'){
@@ -136,16 +164,33 @@ class alexController extends Controller
                 $val['value'] = ($val['name'] != 'nom_planning') ? $this->getId('roles',$val['value'], 'nom') : $this->getId('planning', $val['value'], 'nom');
                 $val['name'] = ($val['name'] != 'nom_planning') ? 'id_role' : 'id_planning';
             }
-            $name .= $val['name'].',';
-            $value .= '"'.$val['value'].'"'.',';
+            
+            if($val['name'] == 'datenaiss' && !empty($val['value'])){
+                $ex = explode("/", $val['value']);
+                $val['value'] = $ex[2].'-'.$ex[1].'-'.$ex[0];
+            }
+
+
+            if($_GET['action'] == 'update'){
+                $update = array_merge(array($val['name'] => $val['value']), $update);
+            }
+            else{
+                $name .= $val['name'].',';
+                $value .= '"'.$val['value'].'"'.',';                
+            }
         }
-        $name .= "created_at, updated_at)" ;
-        $value .= date('YmdHis').",".date('YmdHis').")";
-        // var_dump($name);
-        // dd($value);
-        // var_dump($value);
-        DB::select("insert into {$_GET['table']} {$name} values {$value}");
-        // var_dump($query);
+        if($_GET['action'] == 'update'){
+            $update = array_merge(array('updated_at' => date('YmdHis')), $update);
+            // var_dump($update);
+            DB::table($_GET['table'])->where('id', $_GET['id'])->update($update);
+        }
+        else{
+            $name .= "created_at, updated_at)" ;
+            $value .= date('YmdHis').",".date('YmdHis').")";
+            // var_dump($name);
+            // var_dump($value);            
+            DB::select("insert into {$_GET['table']} {$name} values {$value}");
+        }
 
     }
     public function index($table){
@@ -198,7 +243,7 @@ class alexController extends Controller
             'roles' => array('id'=> 'nok', 'nom'=> 'ok','created_at'=> 'nok','updated_at'=> 'nok'),
             'lieux' => array('id'=> 'nok', 'nom'=> 'ok', 'sport'=> 'ok','adresse'=> 'ok', 'created_at'=> 'nok','updated_at'=> 'nok'),
             'planning' => array('id' => 'nok', 'nom' => 'ok', 'debut'=>"ok",'fin' => 'ok','type' => 'ok','sport' => 'ok','lieu_name'=> 'ok','description'=> 'ok','created_at'=> 'nok','updated_at'=> 'nok'),
-            'user_roles' => array('id'=> 'nok', 'id_role'=> 'nok', 'user_id'=> 'nok', 'role'=> 'ok','nom'=> 'nok', 'prenom'=> 'nok','name'=> 'nok', 'created_at'=> 'nok', 'updated_at'=> 'nok'),
+            'user_roles' => array('id'=> 'nok', 'id_role'=> 'nok', 'user_id'=> 'nok', 'role'=> 'ok','name'=> 'nok','nom'=> 'nok', 'prenom'=> 'nok', 'created_at'=> 'nok', 'updated_at'=> 'nok'),
             'participants' => array('id'=> 'nok','id_role'=> 'nok', 'id_planning'=> 'nok','role'=> 'ok','nom_planning'=> 'nok','created_at'=> 'nok','updated_at'=> 'nok'),
         );
         return $retour[$table];

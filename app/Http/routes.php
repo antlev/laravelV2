@@ -40,15 +40,31 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('list_view/{table}', 'alexController@index');
 	Route::get('update', 'alexController@update');
 
+   Route::get('/quizz','quizzController@index');
+   Route::get('/quizz/reponse','quizzController@quizzReponse');
 
+   Route::post('quizz/question','quizzController@getQuestions');
+   
+	Route::post('quizz/insertquestions','quizzController@insertQuestions');
+
+    Route::post('quizz/getgame','quizzController@getgame');
+	Route::get('quizz/game','quizzController@gamepage');
+    Route::post('quizz/checkanswer','quizzController@checkAnswer');
 
 //profil
 	Route::post('auth/{id}', 'Auth\AuthController@getUserName');
     Route::post('changeUserInfo','HomeController@changeUserInfo');
     Route::post('postimage','HomeController@postImage');
 	Route::post('msg', 'HomeController@sbInsert');
+	Route::post('sendprivmsg','HomeController@sendPrivMsg');
+	Route::post('getprivmsg','HomeController@getPrivMsg');
+    Route::post('readmsg','HomeController@readMsg');
 	Route::post('shouts', 'HomeController@getShouts');
-    Route::get('profil','HomeController@getProfil'); 
+    Route::get('admin_profil','HomeController@getProfil');
+	Route::get('profil','HomeController@userProfil');
+	Route::get('members','HomeController@Members');
+	Route::get('members/{id}','HomeController@MembersById');
+
 	Route::get('supp_view', 'alexController@supp_view');
 	Route::get('create', 'alexController@postIndex');
 	// Route::get('suivi_mot_passe', 'alexController@suivi_mot_passe');
@@ -59,12 +75,20 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/forum/', 'forumController@index');
 
 	Route::get('/forum/{cat}', 'forumController@cat');
+	
+	// La ligne suivante DOIT SE TROUVER AVANT la ligne 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::get('/forum/{cat}/newTopic', 'forumController@newTopic');
+	Route::get('/forum/{cat}/{topic}/newMessage','forumController@newMessage');
+	Route::post('/forum/{cat}/{topic}/supMessage','forumController@supMessage');
+	Route::post('/forum/{cat}/{topic}/editMessage','forumController@editMessage');
 
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
-	Route::get('/forum/{cat}/{topic}/newMessage', 'forumController@newMessage');
-	Route::post('/forum/newMessage','forumController@postMessage');
 
-    Route::post('/forum/{cat}/{topic}/newMessage/savemsg','forumController@postMessage');
+    Route::post('/forum/{cat}/{topic}/saveMsg','forumController@postMessage');
+
+	// Route::get('/forum/{cat}', 'forumController@newTopic');
+
+	//Route::get('/forum/{cat}/newTopic', 'forumController@redirect');//
+	Route::post('/forum/saveMsgTopic/{cat}',"forumController@postTopic");
 
 });

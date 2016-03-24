@@ -2,14 +2,13 @@
 
 
 @section('content')
-<link href="/laravel/public/calendar/css/responsive-calendar.css" rel="stylesheet">
-<link href='/laravel/public/calendar/css/fullcalendar.css' rel='stylesheet' />
+<link href="{{asset('calendar/css/responsive-calendar.css')}}" rel="stylesheet">
+<link href="{{asset('calendar/css/fullcalendar.css')}}" rel='stylesheet' />
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<script src='/laravel/public/calendar/js/moment.min.js'></script>
-<script src='/laravel/public/calendar/js/fullcalendar.min.js'></script>
-<script src='/laravel/public/calendar/js/lang-all.js'></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="{{asset('calendar/js/fullcalendar.min.js')}}"></script>
+<script src="{{asset('calendar/js/lang-all.js')}}"></script>
+<script src="{{asset('calendar/js/moment.min.js')}}"></script>
 <script>
 var info =  {
   day: '',
@@ -131,7 +130,11 @@ var info =  {
         data = JSON.parse(data);
         for(i in data){
           info.data[data[i].id] = data[i];
-          title = "\n"+data[i].nom +"\n" +data[i].lieu;
+          nom = data[i].nom.split(" ");
+          console.log(nom.length);
+          title = (nom.length == 3)? "\n"+nom[0]+" "+nom[1]+"\n" : "\n"+nom[0]+" "+nom[1]+"\n"+nom[2]+"\n";
+          title = title+data[i].lieu;
+          // title = "\n"+data[i].nom +"\n" +data[i].lieu;
           var myEvent ={
             title: title,
             start: data[i].debut,
@@ -157,7 +160,7 @@ var info =  {
   }); 
   // envoie le type pour lui retourner la liste de lieu qui lui correspond
   function autocomplete(type){
-    data = {'type' :type, 'action': 'autocomplete'};
+    data = {'type' :type,name:'sport', table:'lieux', 'action': 'autocomplete',nom:'nom'};
     $.ajax({
       type: "GET",
       url: 'lieu',
@@ -397,21 +400,21 @@ var info =  {
               <div class="form-group">
                 <label class="col-md-2 control-label">Sport</label>
                 <div class="col-md-6">
-                  <select id="sport">
+                  <select class="form-control" id="sport">
                     <option></option>
                     <option value="Football">Football</option>
                     <option value="Basket">Basketball</option>
                     <option value="Handball">Handball</option>
                     <option value="Tennis">Tennis</option>
                     <option value="Rugby">Rugby</option>
-                    <option value="Aucun">Aucun</option>
+                    <option value="Autre">Aucun</option>
                   </select>
                 </div>
               </div></br>
               <div class="form-group">
                 <label class="col-md-2 control-label">Type</label>
                 <div class="col-md-6">
-                  <select id="type">
+                  <select class="form-control" id="type">
                     <option></option>
                     <option value="Entrainement">Entrainement</option>
                     <option value="Reunion">Réunion</option>
@@ -465,4 +468,5 @@ var info =  {
       </div>
     </div>
 </body>
+
 @endsection
