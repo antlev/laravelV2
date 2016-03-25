@@ -73,7 +73,6 @@
             </td>
             <td class="cell-stat text-center hidden-xs hidden-sm">{{$nbPost[$compteur]}}</td>
             <!-- TODO error on $lastPostCreator[$compteur] -->
-            <td class="cell-stat hidden-xs hidden-sm">created by :{{$compteur}} {{Auth::getPrenombyId($lastPostCreator[$compteur])}} {{Auth::getNombyId($lastPostCreator[$compteur])}}</td>
           </tr>
           <?php $compteur++ ?>
         @endforeach

@@ -47,7 +47,7 @@
     </br>
     </h2>
     <h3>
-      <a href=""> Topic : {{$topic[0]->topic_titre}}</a>
+      <div> Topic : {{$topic[0]->topic_titre}}</div>
     </h3>
   </div>
 

@@ -41,6 +41,7 @@ class forumController extends Controller{
 	// Affiche la page affichant les topics de la catégorie passée en paramètre
 	public function cat($cat){
 
+
 		$categories = forumController::getCategories();
 		$catName = forumController::getCatName($cat); // retourne le nom de la catégorie avec son id
 		$topic = $this->getTopicFromCat($cat);
@@ -50,7 +51,9 @@ class forumController extends Controller{
 		foreach ($topic as $value) {
 			array_push($nbPost, forumController::getNbPost($value->topic_id));
 			array_push($lastPostId, forumController::__getLastPostId($value->topic_id));
-			array_push($lastPostCreator, forumController::__getLastPostCreator($value->topic_id));
+			if ( forumController::__getLastPostCreator($value->topic_id) != null ) {
+				array_push($lastPostCreator, forumController::__getLastPostCreator($value->topic_id));
+			}
 		}
 
 
@@ -62,8 +65,6 @@ class forumController extends Controller{
 			'lastPostId' => $lastPostId,
 			'lastPostCreator' => $lastPostCreator,
 			'nbPost' => $nbPost);
-
-
 
 		return view('forumCatView',  $data);
 	}
@@ -168,21 +169,21 @@ class forumController extends Controller{
 			FROM forum_topic
 			WHERE topic_id = '$topic'");
 	}
-	public function __getCreateurPostById($post_id){
+	private function __getCreateurPostById($post_id){
 		return DB::table('forum_post')->where('post_id', '=', $post_id)->select('post_createur')->get();
 	}
-	public function __getPostMessageById($post_id){
+	private function __getPostMessageById($post_id){
 		return DB::table('forum_post')->where('post_id', '=', $post_id)->select('post_texte')->get();
 	}
-	public function __getLastTopicId(){
-		return DB::table('forum_topic')->select('topic_id')->last();
+	private function __getLastTopicId(){
+		return DB::table('forum_topic')->select('topic_id')->orderBy('topic_id', 'desc')->first();
 	}
-	public function __getLastPostId($topic_id){
+	private function __getLastPostId($topic_id){
 		return DB::table('forum_post')->select('topic_id')->where('post_topic_id', '=', $topic_id)->max('post_id');
 	}
-	public function __getLastPostCreator($topic_id){
+	private function __getLastPostCreator($topic_id){
 		// TODO
-		return DB::table('forum_post')->select('post_createur')->where('post_topic_id', '=', $topic_id)->max('post_id');
+		return DB::table('forum_post')->select('post_createur')->where('post_topic_id', '=', $topic_id)->orderBy('post_id', 'desc')->first();
 	}
 
 	// Renvoie le nombre de topic TODO
@@ -268,12 +269,14 @@ class forumController extends Controller{
 	// Méthode appelée lors du post d'un nouveau topic
 	public function createTopic($cat){
 
-		dd('stop');
 		$inputData = Input::all(); 
 		$createurId = Auth::id();
 		$messageTopic = $inputData['msgTopic'];
 		$titreTopic = $inputData['titleTopic'];
-
+		var_dump($messageTopic);
+		var_dump($titreTopic);
+		var_dump($createurId);
+		var_dump($cat);
 
 		// Creation du topic
 		DB::table('forum_topic')->insert(
@@ -282,9 +285,17 @@ class forumController extends Controller{
 		$post_topic_id = forumController::__getLastTopicId();
 		// Insertion du message
 		DB::table('forum_post')->insert(
-			['post_createur' => $createurId, 'post_texte' => $messageTopic, 'post_topic_id' => $post_topic_id, 'post_time' => date('Y-m-d H:i:s')]
+			['post_createur' => $createurId, 'post_texte' => $messageTopic, 'post_topic_id' => $post_topic_id->topic_id, 'post_time' => date('Y-m-d H:i:s')]
 		);
 
 	}
+
+	public function test(){
+		DB::table('forum_topic')->insert(
+			['topic_titre' => "titre", 'topic_createur' => 2, 'topic_time' => date('Y-m-d H:i:s'), 'topic_cat' => 1]
+		);
+		dd('stop test');
+	}
+
 }
 ?>
