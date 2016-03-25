@@ -186,21 +186,11 @@ class forumController extends Controller{
 		return DB::table('forum_post')->select('post_createur')->where('post_topic_id', '=', $topic_id)->orderBy('post_id', 'desc')->first();
 	}
 
-	// Renvoie le nombre de topic TODO
-/*	public function getNbTopic($sous_cat){
-		$nbTopic = array();
-		for($i=0;$i<sizeof($sous_cat);$i++){
-			$res = DB::select("SELECT count(topic_id)
-				FROM forum_topic
-				JOIN forum_forum using(forum_id)
-				JOIN forum_categorie ON forum_cat_id = cat_id
-				WHERE cat_id = $i
-				GROUP BY topic_id");
-			array_push($nbTopic, array($res));
-		}
-		return $nbTopic ;
+	// Renvoie le nombre de topic
+	public function getNbTopic($cat){
 
-	}*/
+		return DB::table('forum_topic')->where('topic_cat', '=', $cat)->count();
+	}
 
 	public function getNbPost($topic_id){
 		return DB::table('forum_post')->where('post_topic_id', '=', $topic_id)->count();
@@ -296,6 +286,5 @@ class forumController extends Controller{
 		);
 		dd('stop test');
 	}
-
 }
 ?>
