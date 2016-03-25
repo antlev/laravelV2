@@ -59,12 +59,17 @@
                     <li><a href="<?php echo e(url('users')); ?>">Formulaire joueur</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
+                    <li><a href="<?php echo e(url('members')); ?>">Membres</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
                     <li><a href="<?php echo e(url('calendar')); ?>">Calendrier</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
                     <li><a href="<?php echo e(url('forum')); ?>">Forum</a></li>
                 </ul>
-
+                <ul class="nav navbar-nav">
+                    <li><a href="<?php echo e(url('quizz')); ?>">Quizz</a></li>
+                </ul>
                 <ul class="nav navbar-nav col-lg-offset-3">
                     <li class="dropdown" onclick="if($(this).attr('class')!='dropdown open') { $(this).addClass('open') } else { $(this).removeClass('open') }">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="true">
@@ -132,8 +137,10 @@
     <script src="<?php echo e(asset('js/jquery-2.2.2.min.js')); ?>"></script>
     <?php if(isset($table)): ?>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <?php else: ?>
+                <script src="<?php echo e(asset('js/bootstrap.js')); ?>"></script>
     <?php endif; ?>
-          <!-- // <script src="<?php echo e(asset('js/bootstrap.js')); ?>"></script> -->
+
 
     <script src="<?php echo e(asset('js/moment-with-locales.js')); ?>"></script>
     <script src="<?php echo e(asset('js/boostrap-datetimepicker.js')); ?>"></script>

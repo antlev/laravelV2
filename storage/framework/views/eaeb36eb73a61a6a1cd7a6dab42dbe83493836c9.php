@@ -29,7 +29,6 @@
 <?php $__env->stopSection(); ?>
 
 
-<script src="<?php echo e(asset('js/jquery-2.1.1.min.js')); ?>"></script>
 
 <script>
 $( document ).ready(function() {
@@ -72,4 +71,8 @@ $('#lastquizz').before('<br>Question ' +  addone + ' : <input type="text" id="qu
 
 
 </script>
+    <script src="<?php echo e(asset('js/bootstrap.js')); ?>"></script>
+
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

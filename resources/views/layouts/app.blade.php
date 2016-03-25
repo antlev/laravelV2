@@ -59,6 +59,9 @@
                     <li><a href="{{url('users')}}">Formulaire joueur</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
+                    <li><a href="{{url('members')}}">Membres</a></li>
+                </ul>
+                <ul class="nav navbar-nav">
                     <li><a href="{{url('calendar')}}">Calendrier</a></li>
                 </ul>
                 <ul class="nav navbar-nav">
@@ -134,8 +137,10 @@
     <script src="{{asset('js/jquery-2.2.2.min.js')}}"></script>
     @if(isset($table))
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        @else
+                <script src="{{asset('js/bootstrap.js')}}"></script>
     @endif
-          <!-- // <script src="{{asset('js/bootstrap.js')}}"></script> -->
+
 
     <script src="{{asset('js/moment-with-locales.js')}}"></script>
     <script src="{{asset('js/boostrap-datetimepicker.js')}}"></script>

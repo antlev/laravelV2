@@ -467,4 +467,8 @@ var info =  {
 </body>
 
 <?php $__env->stopSection(); ?>
+
+<script src="<?php echo e(asset('js/bootstrap.js')); ?>"></script>
+
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
