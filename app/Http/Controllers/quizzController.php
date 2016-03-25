@@ -33,7 +33,7 @@ class quizzController extends Controller
 $data = Input::get('insertQ');
 $data = json_decode($data);
       //dd($data->values[0]->data->nom);
-
+      DB::table('quizz')->truncate();
       foreach($data->values as $key => $questions) {
           DB::table('quizz')->insert([
               ['nom' => $questions->data->nom ]
@@ -55,12 +55,12 @@ $data = json_decode($data);
         $data = Input::get('QuestionReponse');
         $data = json_decode($data);
          $Question = array();
-
+        DB::table('quizz_reponse')->truncate();
         foreach($data->values as $key => $questionreponse) {
 
 
             $idquestion = str_replace("group_","",$questionreponse->data->Question);
-           
+
                 array_push($Question, array('BonneReponse' => $questionreponse->data->BonneReponse, 'question' => $questionreponse->data->Question));
 
             DB::table('quizz_reponse')->insert([
