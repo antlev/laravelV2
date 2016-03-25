@@ -32,24 +32,24 @@
             type: "post",
             success: function(data){
                 obj = $.parseJSON(data);
-                var general = 0;
+                var general = 1;
                 for(var i=0;i<obj.length;i++) {
-                    var randomized = Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random());
+                    general++;
                     var idd = obj[i].id;
                     $('#lastquizz').before('' +
                             '<div class="col-lg-12" id="quizz_'+obj[i].id+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;' +
-                            '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+','+randomized+')">' +
+                            '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+')">' +
                             '<i style="color:green;cursor:pointer" class="fa fa-plus-circle" ></i>Ajouter une réponse</button>&nbsp;<br>' +
                             '</div>' +
                             '<div class="col-lg-12" id="quizzreponse_'+obj[i].id+'">'+
                             '<div class="col-lg-6" id="rep_'+idd+'" style="font-weight:normal">Réponse : ' +
-                            '<input type="text" style="width:60% !important" class="form-control" id="reponsee_' + randomized + '"><br>' +
+                            '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + general + '"><br>' +
                             '</div>' +
                             '<div class="col-lg-6"><br>' +
-                            '<input type="radio" id="group_'+idd+'" name="groupe_'+obj[i].id+'">' +
+                            '<input type="radio" id="'+general+'" name="groupe_'+obj[i].id+'">' +
                             '</div></div>');
 
-                    general++;
+
 
 
 
@@ -66,11 +66,12 @@ $('#finished').click(function() {
 $(':radio').each(function() {
     var BonneReponse = ""
     var id = $(this).attr("id");
-
-    if($(this).prop('checked')) { BonneReponse = $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''); }
+    var idquestion = $(this).attr('name').replace('groupe_','');
+    if($(this).prop('checked')) { BonneReponse = id;  }
     else { BonneReponse=""; }
+
     var item1 = {
-        "data": { "Question": $(this).attr('id'),"Reponse": $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''),"BonneReponse":BonneReponse}
+        "data": { "Question": idquestion,"Reponse":id,"BonneReponse":BonneReponse,"PhraseReponse":$('#'+id).val()}
     };
     values.push(item1);
 
@@ -82,24 +83,29 @@ $(':radio').each(function() {
         type: "post",
         data:{ 'QuestionReponse':jsonvar } ,
         success: function(data){
-           // window.location.href  = "{{url('quizz/reponse')}}";
-          if(data==1) {  }
+          if(data==1) { //window.location.href  = "{{url('welcome')}}";
+          }
+            else { alert('Une erreur est survenue, merci de contacter l\'administrateur'); }
         }
+                    });
+            });
     });
-});
+    function addQ(quizz) {
+        var IdQuestion="";
 
+        $(':radio').each(function() {
+            IdQuestion++;
+        })
 
-    });
-    function addQ(quizz,random) {
         var id = event.target.id;
         $('#quizz_'+quizz).after(
                 '<div class="col-lg-12" id="quizzreponse_'+quizz+'">'+
                 '<div class="col-lg-6" style="font-weight:normal">' + 'Réponse : ' +
-                '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random()) + '">' +
+                '<input type="text" style="width:60% !important" class="form-control" id="reponse_' +  IdQuestion + '">' +
                 '<br>' +
                 '</div>' +
                 '<div class="col-lg-6"><br>' +
-                '<input type="radio" name="groupe_' +random + '">' +
+                '<input type="radio" id="'+IdQuestion+'" name="groupe_' +quizz+ '">' +
                 '</div></div>');
 
 
