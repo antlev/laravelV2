@@ -22,60 +22,76 @@
   </div>
 </div>
 
-  <!-- Menu de navigation -->
-  <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-      <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
-      @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-        <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
-        @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-          @if($topic_as->topic_cat==$cats->cat_id)
-            <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
-          @endif
-        @endforeach
-        </li>
-      @endforeach
-    <ul>
-  </div>
+<div class="clearfix"></div>
 
+<table class="table forum table-striped">
+  <thead>
+    <tr>
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+        <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs">
+          <a href="{{url('forum/'.$cat.'/newTopic')}}" class="fa fa-pencil-square-o pull-right" style="font-size:25px;color:black !important;margin-left:30px"></a>
+        </div>
+        <div class="col-lg-6 col-md-6">
+          <a href="{{url('forum/'.$cat.'/newTopic')}}" class="btn btn-info pull-left" style="margin-left:15px">Créer un Nouveau Topic </a>
+        </div>
+      </div>
 
-  <div class="clearfix"></div>
-
-  <table class="table forum table-striped">
-    <thead>
+      <!-- Menu de navigation -->
+      <div class="dropdown col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
+        <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Navigation Forum
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header" >
+            <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
+          </li>
+          @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+            <li class="dropdown-header">
+              <a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a>
+            </li>
+            @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+              @if($topic_as->topic_cat==$cats->cat_id)
+                <li>
+                  <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a>
+                </li>
+              @endif
+            @endforeach
+          @endforeach
+        </ul>
+      </div>
+      @if(!empty($topic))
+        <th class="cell-stat">
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>Catégorie : {{$catName}}</h3>
+          </div>
+        </th>
+        <th class="cell-stat text-center hidden-xs">Posts</th>
+        <th class="cell-stat-2x hidden-sm hidden-xs">Last Post</th>
+      @endif      
+    </tr>
+  </thead>
+  <tbody>
+    <?php $compteur = 0 ?>
+    @if(empty($topic))
       <tr>
-        <a href="{{url('forum/'.$cat.'/newTopic')}}" class="fa fa-pencil-square-o" style="font-size:25px;color:black !important;margin-left:30px"></a>
-        <a href="{{url('forum/'.$cat.'/newTopic')}}" class="btn btn-info" style="margin-left:15px">Créer un Nouveau Topic </a>
-        @if(!empty($topic))
-          <th class="cell-stat">
-            <h3>{{$catName}}</h3>
-          </th>
-          <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
-          <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
-        @endif      
+        <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
       </tr>
-    </thead>
-    <tbody>
-      <?php $compteur = 0 ?>
-      @if(empty($topic))
-        <tr>
-          <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
-        </tr>
-      @else
+    @else
+      <div id="page">
         @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-          <tr>
+          <tr id="{{$topic_as->topic_id}}">
             <td>
               <h4>
-                <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a>
+                <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}"  style="margin-left:20px" >{{$topic_as->topic_titre}}</a>
               </h4>
             </td>
-            <td class="cell-stat text-center hidden-xs hidden-sm">{{$nbPost[$compteur]}}</td>
+            <td class="cell-stat text-center hidden-xs">{{$nbPost[$compteur]}}</td>
             <!-- TODO error on $lastPostCreator[$compteur] -->
+            <td class="cell-stat hidden-sm hidden-xs">écrit par :</td>
           </tr>
           <?php $compteur++ ?>
-        @endforeach
+          @endforeach
+        </div>
       @endif
     </tbody>
   </table>
@@ -84,9 +100,32 @@
   </body>
 
   <footer>
-    <i class="fa fa-facebook-5x"></i>
-    <a href="{{url('forum')}}" class="btn btn-warning">Revenir à l'index </a>
-    <h2> [[Footer]]</h2>
+    </br>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <i class="fa fa-facebook-5x"></i>
+      <a href="{{url('forum')}}" class="btn btn-warning" style="margin-left:20px">Revenir à l'index </a>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <button id="next" class="btn btn-success pull-right" style="margin-right:20px">Suivant</button>
+      </br>
+    </div>
   </footer>
 </html> 
+
+<script>
+    $(function(){
+      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+      $('#next').click(function() {
+        $.ajax({
+          url: './{{$cat}}/next',
+          type: "post",
+          data: {'lastTopicPrinted': $('table tr:last').attr('id') },
+          success: function(data){ 
+            $('#page').html(data);
+          }
+        });  
+      });      
+    })
+
+</script>
 

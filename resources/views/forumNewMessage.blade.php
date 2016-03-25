@@ -71,7 +71,7 @@ $(function() {
       $.ajax({
           url: 'saveMsg',
           type: "post",
-          data: {'msg': $('#msgToSend').val() },
+          data: {'ms g': $('#msgToSend').val() },
           success: function(data){
             window.location.href = "{{url('forum/'.$cat.'/'.$topic_id)}}";
           }

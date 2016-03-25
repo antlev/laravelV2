@@ -65,9 +65,9 @@
             <td>
                <h4><a href="{{url('forum/'.$cat->cat_id)}}">{{$cat->cat_nom}}</a><br><small>{{$cat->cat_desc}}</small></h4> <!-- href renvoie l'id de la categorie au controleur si l'on clique dessus -->
             </td>
-            <td class="text-center hidden-xs hidden-sm"><a href="#">{{forumController::getNbTopic($cat->cat_id)}}</a></td>
-            <td class="text-center hidden-xs hidden-sm"><a href="#">152123</a></td>
-            <td class="hidden-xs hidden-sm">by <a href="#">Jane Doe</a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
+            <td class="text-center hidden-xs hidden-sm"><a href="#">{{forumController::getNbTopicByCat($cat->cat_id)}}</a></td>
+            <td class="text-center hidden-xs hidden-sm"><a href="#">{{forumController::getNbPostByCat($cat->cat_id)}}</a></td>
+            <td class="hidden-xs hidden-sm">by <a href="#">{{forumController::getLastPostByCat($cat->cat_id)}}</a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
           </tr>
           @endif
         @endforeach

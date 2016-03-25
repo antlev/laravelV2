@@ -34,6 +34,7 @@ class forumController extends Controller{
 			'nbTopic' => $nbTopic,
 			'topic' => $topic);
 
+
 		return view('forumIndexView', $data);
 		// Renvoie la vue avec les categories ,les sous categories contenues dans les categories, et le nombre de topic par sous categorie
 	}
@@ -44,12 +45,12 @@ class forumController extends Controller{
 
 		$categories = forumController::getCategories();
 		$catName = forumController::getCatName($cat); // retourne le nom de la catégorie avec son id
-		$topic = $this->getTopicFromCat($cat);
+		$topic = $this->getTopicFromCatLimit($cat,1);
 		$nbPost = array();
 		$lastPostId = array();
 		$lastPostCreator = array();
 		foreach ($topic as $value) {
-			array_push($nbPost, forumController::getNbPost($value->topic_id));
+			array_push($nbPost, forumController::getNbPostByTopic($value->topic_id));
 			array_push($lastPostId, forumController::__getLastPostId($value->topic_id));
 			if ( forumController::__getLastPostCreator($value->topic_id) != null ) {
 				array_push($lastPostCreator, forumController::__getLastPostCreator($value->topic_id));
@@ -67,6 +68,13 @@ class forumController extends Controller{
 			'nbPost' => $nbPost);
 
 		return view('forumCatView',  $data);
+	}
+	// Return the next page to print for the forumCatView
+	public function nextCat($cat){
+
+		$inputData = Input::all();
+		$firstTopicToPrint = $inputData['lastTopicPrinted'] + 1;
+		return  $this->getTopicFromCatLimit($cat,$firstTopicToPrint);
 	}
 
 	// Affiche la page affichant les posts de la catégorie et topic passés en paramètre
@@ -91,6 +99,7 @@ class forumController extends Controller{
 	public function newTopic($cat){
 		$categories = forumController::getCategories();
 		$catName = forumController::getCatName($cat);
+		// TODO Check variable to be used
 		$topic = forumController::getTopicFromCat($cat);
 		$topics = $this->getAllTopic();
 
@@ -156,6 +165,10 @@ class forumController extends Controller{
 			WHERE topic_cat = '$cat'
 			ORDER BY topic_id");
 	}	
+	// Renvoie les topics appartenant à une catégorie entrée en paramètre
+	public function getTopicFromCatLimit($cat,$firstTopicToPrint){
+		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToPrint)->take(10)->get();
+	}
 	// Renvoie tous les topics
 	public function getAllTopic(){
 
@@ -186,13 +199,21 @@ class forumController extends Controller{
 		return DB::table('forum_post')->select('post_createur')->where('post_topic_id', '=', $topic_id)->orderBy('post_id', 'desc')->first();
 	}
 
+	public function getLastPostByCat(){
+
+	}
+
 	// Renvoie le nombre de topic
 	public function getNbTopic($cat){
 
 		return DB::table('forum_topic')->where('topic_cat', '=', $cat)->count();
 	}
 
-	public function getNbPost($topic_id){
+	public function getNbPostByTopic($topic_id){
+		return DB::table('forum_post')->where('post_topic_id', '=', $topic_id)->count();
+	}
+
+	public function getNbPostByCat($cat){
 		return DB::table('forum_post')->where('post_topic_id', '=', $topic_id)->count();
 	}
 
