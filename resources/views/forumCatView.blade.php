@@ -22,27 +22,26 @@
   </div>
 </div>
 
-<!-- Menu de navigation -->
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
-    @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-      <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
-      @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-        @if($topic_as->topic_cat==$cats->cat_id)
-          <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
-        @endif
+  <!-- Menu de navigation -->
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu">
+      <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
+      @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+        <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
+        @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+          @if($topic_as->topic_cat==$cats->cat_id)
+            <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
+          @endif
+        @endforeach
+        </li>
       @endforeach
-      </li>
-    @endforeach
-  <ul>
-</div>
-
-
-    <div class="clearfix"></div>
+    <ul>
   </div>
+
+
+  <div class="clearfix"></div>
 
   <table class="table forum table-striped">
     <thead>
@@ -50,32 +49,35 @@
         <a href="{{url('forum/'.$cat.'/newTopic')}}" class="fa fa-pencil-square-o" style="font-size:25px;color:black !important;margin-left:30px"></a>
         <a href="{{url('forum/'.$cat.'/newTopic')}}" class="btn btn-info" style="margin-left:15px">Créer un Nouveau Topic </a>
         @if(!empty($topic))
-        <th class="cell-stat"><h3>{{$catName}}</h3></th>
-        <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
-        <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
+          <th class="cell-stat">
+            <h3>{{$catName}}</h3>
+          </th>
+          <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
+          <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
         @endif      
       </tr>
     </thead>
-
-
     <tbody>
+      <?php $compteur = 0 ?>
       @if(empty($topic))
-        <tr><h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3></tr>
+        <tr>
+          <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
+        </tr>
       @else
-
-      @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-      <tr>
-        <td>
-          <h4><a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></h4>
-        </td>
- 
-
-        <td class="cell-stat text-center hidden-xs hidden-sm">post: 0</td>
-        <td class="cell-stat hidden-xs hidden-sm">last_post: 0</td>
-      </tr>
-      @endforeach
+        @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+          <tr>
+            <td>
+              <h4>
+                <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a>
+              </h4>
+            </td>
+            <td class="cell-stat text-center hidden-xs hidden-sm">{{$nbPost[$compteur]}}</td>
+            <!-- TODO error on $lastPostCreator[$compteur] -->
+            <td class="cell-stat hidden-xs hidden-sm">created by :{{$compteur}} {{Auth::getPrenombyId($lastPostCreator[$compteur])}} {{Auth::getNombyId($lastPostCreator[$compteur])}}</td>
+          </tr>
+          <?php $compteur++ ?>
+        @endforeach
       @endif
-
     </tbody>
   </table>
 

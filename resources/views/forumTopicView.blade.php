@@ -66,11 +66,12 @@
         </div>
         @if(Auth::isAdmin())
           <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right" style="height:55px">   
-            <button id="supMessage{{$id}}" class="btn btn-success" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
-            <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-success" style="margin-left:15px">Editer</a> 
+            <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
+            <button id="supMessage{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
           </div>
         @else(Auth::id() == $post->post_createur)
           <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
+            <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
             <button id="supMessage{{$id}}"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
           </div>
         @endif

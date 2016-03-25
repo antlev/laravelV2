@@ -65,13 +65,16 @@ $(function() {
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
 
   $('#saveMsgTopic').click(function() {
-    if($('#msgTopic').val() == " " || $('#titleTopic').val() == " "){
+    if($('#msgTopic').val() == " " ) {
       alert('Votre message est vide');
-    } else{
+      // TODO : condition else if pas correcte
+    } else if ( $('#titleTopic').val() == " " ) {
+      alert('Votre titre est vide');
+    } else {
       alert('toto');
       $.ajax({
         // Envoie des données en post
-        url: '../saveMsgTopic/{{$cat}}',
+        url: '../{{$cat}}/saveMsgTopic',
         type: 'post',
         data: {'titleTopic': $('#titleTopic').val(),'msgTopic': $('#msgTopic').val() },
         success: function(data){

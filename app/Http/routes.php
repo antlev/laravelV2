@@ -89,9 +89,10 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::post('/forum/{cat}/{topic}/saveMsg','forumController@postMessage');
 
+    Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
+
 	// Route::get('/forum/{cat}', 'forumController@newTopic');
 
 	//Route::get('/forum/{cat}/newTopic', 'forumController@redirect');//
-	Route::post('/forum/saveMsgTopic/{cat}',"forumController@postTopic");
 
 });
