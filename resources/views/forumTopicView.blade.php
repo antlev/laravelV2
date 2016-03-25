@@ -42,6 +42,10 @@
   </div>
 
   <div class="clearfix">
+    <h2>
+      <div> Vous êtes dans la catégorie : {{$catName}} </div> 
+    </br>
+    </h2>
     <h3>
       <a href=""> Topic : {{$topic[0]->topic_titre}}</a>
     </h3>
