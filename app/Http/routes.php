@@ -78,15 +78,15 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/forum/{cat}', 'forumController@cat');
 	Route::post('/forum/{cat}/next', 'forumController@nextCat');
 
-	// La ligne suivante DOIT SE TROUVER AVANT la ligne 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
+	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::get('/forum/{cat}/newTopic', 'forumController@newTopic');
-	Route::get('/forum/{cat}/{topic}/newMessage','forumController@newMessage');
-	Route::post('/forum/{cat}/{topic}/supMessage','forumController@supMessage');
+	Route::get('/forum/{cat}/{topic}/newMessage','forumController@newPost');
+	Route::post('/forum/{cat}/{topic}/supMessage','forumController@supPost');
 
-	Route::get('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editMessageView');
+	Route::get('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editPostView');
 	
-	Route::post('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editMessage');
-	// La ligne suivante DOIT SE TROUVER AVANT la ligne 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
+	Route::post('/forum/{cat}/{topic}/{post_id}/editMessage','forumController@editPost');
+	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
 
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');

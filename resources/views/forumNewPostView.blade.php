@@ -27,18 +27,36 @@
   </div>
 </div>
 
+<!-- Menu de navigation -->
+<div class="dropdown">
+  <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu">
+    <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
+    @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+      <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
+      @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+        @if($topic_as->topic_cat==$cats->cat_id)
+          <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
+        @endif
+      @endforeach
+      </li>
+    @endforeach
+  <ul>
+</div>
+
 <h4 style="margin-left:15px">Message : </h4>
 
   <table class="table forum table-striped">
     <thead>
         <th class="cell-stat"></th>
-        <textarea rows="10" id="msgToSend" class="form-control"> {{$messageToEdit}}</textarea>
+        <textarea rows="10" id="msgToSend" class="form-control"></textarea>
     </thead>
   </table>
     
   </br>
   <a href="{{url('forum/'.$cat.'/'.$topic_id)}}" class="btn btn-warning" style="margin-left:15px"> Revenir au topic </a>
-  <button class="btn btn-info" style="margin-left:15px" id="editMessage"> Editer votre message </button>
+  <button class="btn btn-info" style="margin-left:15px" id="saveMsg"> Sauvegarder votre message </button>
 
 </html> 
 
@@ -46,16 +64,14 @@
 $(function() { 
   
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-  $('#editMessage').click(function() {
-    alert('ok');
+  $('#saveMsg').click(function() {
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
-      // TODO voulez vous supprimer votre message
     } else{
       $.ajax({
-          url: 'editMessage',
+          url: 'saveMsg',
           type: "post",
-          data: {'msgToSend': $('#msgToSend').val() },
+          data: {'msg': $('#msgToSend').val() },
           success: function(data){
             window.location.href = "{{url('forum/'.$cat.'/'.$topic_id)}}";
           }

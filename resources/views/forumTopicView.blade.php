@@ -64,8 +64,9 @@
 
     <?php $messagExist = 0 ?> <!-- On initialise messagExist à 0 -->
     <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
-    @foreach($posts as $post) <!-- On affiche les catégories -->
-      <div class="col-lg-12 col-md-12 col-xs-12 panel panel-default">
+    
+    <div class="col-lg-12 col-md-12 col-xs-12 panel panel-info">
+      @foreach($posts as $post) <!-- On affiche les catégories -->
         @if($post->post_topic_id==$topic[0]->topic_id)
           <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
           <div class="panel-body panel-info" style="min-height:70px">
@@ -74,7 +75,7 @@
           </div>
           
 
-          <div class="panel-footer" style="height:55px" >
+          <div class="panel-footer panel-info" style="height:55px" >
             <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8"> 
               <div>créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
             </div>
@@ -100,30 +101,30 @@
 
 
         @endif
-      </div>
-      <script>
-        $('#supMessage{{$id}}').click(function() {
-          $.ajax({
-              url: '{{$topic[0]->topic_id}}/supMessage',
-              type: "post",
-              data: {'post_id': $(this).attr('data-id') },
-              success: function(data){
-                window.location.href = ""; // On redirige sur la même page
-              }
-          });  
-        });
-        $('#editMessage{{$id}}').click(function() {
-          $.ajax({
-              url: '{{$topic[0]->topic_id}}/editMessage',
-              type: "post",
-              data: {'post_id': $(this).attr('data-id') },
-              success: function(data){
-                window.location.href = "";
-              }
-          });  
-        });
-      </script>
-    @endforeach
+        <script>
+          $('#supMessage{{$id}}').click(function() {
+            $.ajax({
+                url: '{{$topic[0]->topic_id}}/supMessage',
+                type: "post",
+                data: {'post_id': $(this).attr('data-id') },
+                success: function(data){
+                  window.location.href = ""; // On redirige sur la même page
+                }
+            });  
+          });
+          $('#editMessage{{$id}}').click(function() {
+            $.ajax({
+                url: '{{$topic[0]->topic_id}}/editMessage',
+                type: "post",
+                data: {'post_id': $(this).attr('data-id') },
+                success: function(data){
+                  window.location.href = "";
+                }
+            });  
+          });
+        </script>
+      @endforeach
+    </div>
 
     @if($messagExist==0) <!-- Si aucun message ne doit être affiché -->
       <tr><h3> Aucun message n'est sauvegardé pour ce topic '{{$topic[0]->topic_titre}}' </h3></tr>
