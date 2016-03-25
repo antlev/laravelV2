@@ -32,17 +32,17 @@
             type: "post",
             success: function(data){
                 obj = $.parseJSON(data);
-                var general = 1;
+                var general = 2;
                 for(var i=0;i<obj.length;i++) {
                     general++;
                     var idd = obj[i].id;
                     $('#lastquizz').before('' +
                             '<div class="col-lg-12" id="quizz_'+obj[i].id+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;' +
-                            '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+')">' +
+                            '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+','+general+')">' +
                             '<i style="color:green;cursor:pointer" class="fa fa-plus-circle" ></i>Ajouter une réponse</button>&nbsp;<br>' +
                             '</div>' +
                             '<div class="col-lg-12" id="quizzreponse_'+obj[i].id+'">'+
-                            '<div class="col-lg-6" id="rep_'+idd+'" style="font-weight:normal">Réponse : ' +
+                            '<div class="col-lg-6" id="rep_'+general+'" style="font-weight:normal">Réponse : ' +
                             '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + general + '"><br>' +
                             '</div>' +
                             '<div class="col-lg-6"><br>' +
@@ -71,7 +71,7 @@ $(':radio').each(function() {
     else { BonneReponse=""; }
 
     var item1 = {
-        "data": { "Question": idquestion,"Reponse":id,"BonneReponse":BonneReponse,"PhraseReponse":$('#'+id).val()}
+        "data": { "Question": idquestion,"Reponse":id,"BonneReponse":BonneReponse,"PhraseReponse":$('#reponse_'+id).val()}
     };
     values.push(item1);
 
@@ -90,13 +90,14 @@ $(':radio').each(function() {
                     });
             });
     });
-    function addQ(quizz) {
-        var IdQuestion="";
-
+    function addQ(quizz,x) {
+        var j = 0;
         $(':radio').each(function() {
-            IdQuestion++;
-        })
+            j++;
 
+        })
+        j = j+3;
+        var IdQuestion = j;
         var id = event.target.id;
         $('#quizz_'+quizz).after(
                 '<div class="col-lg-12" id="quizzreponse_'+quizz+'">'+

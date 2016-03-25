@@ -60,11 +60,11 @@ $data = json_decode($data);
 
 
             $idquestion = str_replace("group_","",$questionreponse->data->Question);
-            if($questionreponse->data->BonneReponse!="") {
+           
                 array_push($Question, array('BonneReponse' => $questionreponse->data->BonneReponse, 'question' => $questionreponse->data->Question));
-            }
+
             DB::table('quizz_reponse')->insert([
-                ['reponse_reponse' => $questionreponse->data->Reponse,'idquestion_reponse'=>PhraseReponse]
+                ['reponse_reponse' => $questionreponse->data->PhraseReponse,'idquestion_reponse'=>$questionreponse->data->Question]
             ]);
 
 
