@@ -86,7 +86,6 @@ $data = json_decode($data);
     }
     public function checkAnswer() {
         $data = Input::get('answer');
-dd($data);
 
     }
     public function getgame() {
