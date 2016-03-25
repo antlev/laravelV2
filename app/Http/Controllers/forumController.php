@@ -45,10 +45,12 @@ class forumController extends Controller{
 		$catName = forumController::getCatName($cat); // retourne le nom de la catégorie avec son id
 		$topic = $this->getTopicFromCat($cat);
 		$nbPost = array();
-		$lastPost = array();
+		$lastPostId = array();
+		$lastPostCreator = array();
 		foreach ($topic as $value) {
 			array_push($nbPost, forumController::getNbPost($value->topic_id));
-			array_push($lastPost, forumController::__getLastPost($value->topic_id));
+			array_push($lastPostId, forumController::__getLastPostId($value->topic_id));
+			array_push($lastPostCreator, forumController::__getLastPostCreator($value->topic_id));
 		}
 
 
@@ -57,8 +59,10 @@ class forumController extends Controller{
 			'categories' =>  $categories,
 			'catName' => $catName,
 			'cat' => $cat,
-			'lastPost' => $lastPost,
+			'lastPostId' => $lastPostId,
+			'lastPostCreator' => $lastPostCreator,
 			'nbPost' => $nbPost);
+
 
 
 		return view('forumCatView',  $data);
@@ -173,8 +177,12 @@ class forumController extends Controller{
 	public function __getLastTopicId(){
 		return DB::table('forum_topic')->select('topic_id')->last();
 	}
-	public function __getLastPost($topic_id){
-		return DB::table('forum_post')->select('topic_id', 'createur_id')->where('post_topic_id', '=', $topic_id)->max('post_id');
+	public function __getLastPostId($topic_id){
+		return DB::table('forum_post')->select('topic_id')->where('post_topic_id', '=', $topic_id)->max('post_id');
+	}
+	public function __getLastPostCreator($topic_id){
+		// TODO
+		return DB::table('forum_post')->select('post_createur')->where('post_topic_id', '=', $topic_id)->max('post_id');
 	}
 
 	// Renvoie le nombre de topic TODO
