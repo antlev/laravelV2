@@ -50,6 +50,37 @@ $data = json_decode($data);
 
 
     }
+    public function QuestionReponse() {
+
+        $data = Input::get('QuestionReponse');
+        $data = json_decode($data);
+         $Question = array();
+
+        foreach($data->values as $key => $questionreponse) {
+            //dd($data->values[0]->data->Question);
+          //  dd($questionreponse->data->BonneReponse);
+
+            $idquestion = str_replace("group_","",$questionreponse->data->Question);
+
+         array_push($Question, array('BonneReponse'=>$questionreponse->data->BonneReponse,'question'=>$questionreponse->data->Question));
+
+            DB::table('quizz_reponse')->insert([
+                ['reponse_reponse' => $questionreponse->data->Reponse,'idquestion_reponse'=>$idquestion]
+            ]);
+
+
+        }
+        foreach($Question as $q) {
+            $idquestion = str_replace("group_","",$q['question']);
+
+            DB::table('quizz')->where('id',$idquestion)->update(array('idreponse' => $q['BonneReponse']));
+
+
+}
+
+            return '1';
+
+    }
     public function getTheme($id) {
         $theme = DB::table('sports')->where('id_sports', $id)->first();
         return $theme;

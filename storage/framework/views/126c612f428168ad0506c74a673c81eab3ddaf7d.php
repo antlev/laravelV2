@@ -39,7 +39,7 @@
                             '<button class="btn btn-default addQuestion_'+obj[i].id+'" id="addQuestion_'+obj[i].id+'" onclick="addQ('+idd+','+randomized+')">' +
                             '<i style="color:green;cursor:pointer" class="fa fa-plus-circle" ></i>Ajouter une réponse</button>&nbsp;<br>' +
                             '</div>' +
-                            '<div class="col-lg-12" id="quizzdemerde_'+obj[i].id+'">'+
+                            '<div class="col-lg-12" id="quizzreponse_'+obj[i].id+'">'+
                             '<div class="col-lg-6" id="rep_'+idd+'" style="font-weight:normal">Réponse : ' +
                             '<input type="text" style="width:60% !important" class="form-control" id="reponsee_' + randomized + '"><br>' +
                             '</div>' +
@@ -48,7 +48,7 @@
                             '</div></div>');
 
                     general++;
-                    var j = i;
+
 
 
                 }
@@ -58,20 +58,52 @@
 
 
 $('#finished').click(function() {
+    var values = [];
+    swal({
+        title: "Confirmation Quizz",
+        text: "Valider puor confirmer",
+        type: "info",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true, },
+            function(){
+                setTimeout(function(){
+                    swal("Enregistrement terminé vous allez etre redirigé");
+                    window.location.href  = "<?php echo e(url('quizz/reponse')); ?>";
+                }, 2000);
+            });
+
 $(':radio').each(function() {
+    var BonneReponse = ""
+    var id = $(this).attr("id");
 
-   console.log($(this.context));
+    if($(this).prop('checked')) { BonneReponse = $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''); }
+    else { BonneReponse=""; }
+    var item1 = {
+        "data": { "Question": $(this).attr('id'),"Reponse": $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''),"BonneReponse":BonneReponse}
+    };
+    values.push(item1);
+
+
 });
-
-
+    jsonvar = JSON.stringify({ values });
+    $.ajax({
+        url: 'questionreponse',
+        type: "post",
+        data:{ 'QuestionReponse':jsonvar } ,
+        success: function(data){
+           // window.location.href  = "<?php echo e(url('quizz/reponse')); ?>";
+          if(data==1) {  }
+        }
+    });
 });
 
 
     });
     function addQ(quizz,random) {
         var id = event.target.id;
-        $('#quizzdemerde_'+quizz).after(
-                '<div class="col-lg-12">'+
+        $('#quizz_'+quizz).after(
+                '<div class="col-lg-12" id="quizzreponse_'+quizz+'">'+
                 '<div class="col-lg-6" style="font-weight:normal">' + 'Réponse : ' +
                 '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random()) + '">' +
                 '<br>' +

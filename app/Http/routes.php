@@ -53,7 +53,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('quizz/getgame','quizzController@getgame');
 	Route::get('quizz/game','quizzController@gamepage');
     Route::post('quizz/checkanswer','quizzController@checkAnswer');
-
+	Route::post('quizz/questionreponse','quizzController@QuestionReponse');
 //profil
 	Route::post('auth/{id}', 'Auth\AuthController@getUserName');
     Route::post('changeUserInfo','HomeController@changeUserInfo');

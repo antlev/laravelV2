@@ -60,19 +60,39 @@
 
 
 $('#finished').click(function() {
+    var values = [];
+
+
 $(':radio').each(function() {
+    var BonneReponse = ""
+    var id = $(this).attr("id");
 
-   console.log($(this.context));
+    if($(this).prop('checked')) { BonneReponse = $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''); }
+    else { BonneReponse=""; }
+    var item1 = {
+        "data": { "Question": $(this).attr('id'),"Reponse": $('#'+id).parent().prev().find('input').attr('id').replace('reponsee_',''),"BonneReponse":BonneReponse}
+    };
+    values.push(item1);
+
+
 });
-
-
+    jsonvar = JSON.stringify({ values });
+    $.ajax({
+        url: 'questionreponse',
+        type: "post",
+        data:{ 'QuestionReponse':jsonvar } ,
+        success: function(data){
+           // window.location.href  = "{{url('quizz/reponse')}}";
+          if(data==1) {  }
+        }
+    });
 });
 
 
     });
     function addQ(quizz,random) {
         var id = event.target.id;
-        $('#quizzdemerde_'+quizz).after(
+        $('#quizz_'+quizz).after(
                 '<div class="col-lg-12" id="quizzreponse_'+quizz+'">'+
                 '<div class="col-lg-6" style="font-weight:normal">' + 'Réponse : ' +
                 '<input type="text" style="width:60% !important" class="form-control" id="reponse_' + Math.floor((Math.random() * 10) + Math.random() * 100 + Math.random() * 10 / Math.random()) + '">' +
