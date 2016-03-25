@@ -50,7 +50,7 @@
                             '</div></div>');
 
                     general++;
-                    var j = i;
+
 
 
                 }
