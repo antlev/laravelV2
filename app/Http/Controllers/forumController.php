@@ -123,7 +123,7 @@ class forumController extends Controller{
 	private function __getCatName($cat){ 
 		return DB::table('forum_categorie')->where('cat_id',$cat)->value('cat_nom');
 	}
-	//Return a table containing all posts of the topic in parameter
+	// Return a table containing all posts of the topic in parameter
 	private function __getPosts($topic){ 
 		//return DB::table('forum_post')->select('*')->orderBy('post_time','asc');
 
@@ -217,6 +217,12 @@ class forumController extends Controller{
 			->count();
 	}
 
+	private function __getPostByCreatorId($id){
+		return DB::table('forum_post')
+			->where('post_createur', $id)
+			->get();
+	}
+
 	public function __getNbPostByTopic($topic_id){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
@@ -293,23 +299,36 @@ class forumController extends Controller{
 	// Function called by 'routes' which insert the new topic into the database
 	public function createTopic($cat){
 		$inputData = Input::all(); 
-		$createurId = Auth::id();
+		$creatorId = Auth::id();
 		$messageTopic = $inputData['msgTopic'];
 		$titleTopic = $inputData['titleTopic'];
 		var_dump($messageTopic);
 		var_dump($titleTopic);
-		var_dump($createurId);
+		var_dump($creatorId);
 		var_dump($cat);
 
 		// Topic creation
 		DB::table('forum_topic')->insert(
-			['topic_titre' => $titleTopic, 'topic_createur' => $createurId, 'topic_time' => date('Y-m-d H:i:s'), 'topic_cat' => $cat]
+			['topic_titre' => $titleTopic, 'topic_createur' => $creatorId, 'topic_time' => date('Y-m-d H:i:s'), 'topic_cat' => $cat]
 		);
 		$postTopicId = $this->__getLastTopicId();
 		// Post insertion 
 		DB::table('forum_post')->insert(
-			['post_createur' => $createurId, 'post_texte' => $messageTopic, 'post_topic_id' => $postTopicId->topic_id, 'post_time' => date('Y-m-d H:i:s')]
+			['post_createur' => $creatorId, 'post_texte' => $messageTopic, 'post_topic_id' => $postTopicId->topic_id, 'post_time' => date('Y-m-d H:i:s')]
 		);
+
+	}
+
+	public function myPosts($id){
+		// TODO Checks user auth 
+		$userId = Auth::id();
+		if( Auth::isAdmin() ){
+			dd($this->__getPostByCreatorId($id));
+		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+
+		} else {
+			dd("sorry you don't have permission to edit this message");
+		}
 
 	}
 

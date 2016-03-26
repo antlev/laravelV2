@@ -26,7 +26,7 @@
     <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
       <li role="presentation" class="active"><a href="#">Home</a></li>
       <li role="presentation"><a href="#">Profil</a></li>
-      <li role="presentation"><a href="#">Mes Messages</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
     </ul>
     </br>
     </br>
