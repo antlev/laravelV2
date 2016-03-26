@@ -73,6 +73,9 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('forum/test' ,'forumController@test');
 
 	//Forum
+	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}', 'forumController@cat');');'
+	Route::get('/forum/admin','forumController@adminView');
+	
 	Route::get('/forum/{id}/myPosts', 'forumController@myPosts');
 
 
@@ -95,6 +98,7 @@ Route::group(['middleware' => 'web'], function () {
 
 
     Route::post('/forum/{cat}/{topic}/saveMsg','forumController@postMessage');
+
 
 
 

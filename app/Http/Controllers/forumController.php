@@ -116,6 +116,27 @@ class forumController extends Controller{
 		return view('forumNewPostView',$data);
 	}
 
+	public function myPosts($id){
+		// TODO Checks user auth 
+		$userId = Auth::id();
+		if( Auth::isAdmin() ){
+			$data = $this->__getPostByCreatorId($id);
+			return view('forumMyPostsView', $data);
+		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+
+		} else {
+			dd("sorry you don't have permission to edit this message");
+		}
+	}
+
+	public function adminView(){
+		if( Auth::isAdmin() ){
+			return view('forumAdminView');
+		} else {
+			return view('forumIndexView');				
+		}
+	}
+
 	// DATABASE REQUESTS
 	// SELECTION SQL REQUESTS :
 
@@ -319,18 +340,7 @@ class forumController extends Controller{
 
 	}
 
-	public function myPosts($id){
-		// TODO Checks user auth 
-		$userId = Auth::id();
-		if( Auth::isAdmin() ){
-			dd($this->__getPostByCreatorId($id));
-		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 
-		} else {
-			dd("sorry you don't have permission to edit this message");
-		}
-
-	}
 
 	// Function used to test some code
 	public function test(){
