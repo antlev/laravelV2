@@ -20,6 +20,14 @@
       </div>
     </div>
 
+    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+      <li role="presentation" class="active"><a href="#">Home</a></li>
+      <li role="presentation"><a href="#">Profil</a></li>
+      <li role="presentation"><a href="#">Mes Messages</a></li>
+    </ul>
+
+
+
     <div>
       <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
         <h2>
@@ -65,69 +73,63 @@
     <?php $messagExist = 0 ?> <!-- On initialise messagExist à 0 -->
     <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
     
-    <div class="col-lg-12 col-md-12 col-xs-12 panel panel-info">
-      @foreach($posts as $post) <!-- On affiche les catégories -->
-        @if($post->post_topic_id==$topic[0]->topic_id)
-          <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
-          <div class="panel-body panel-info" style="min-height:70px">
-            <div> {{$post->post_texte}}  </div>
-            <?php $id++ ?>   
-          </div>
-          
+    @foreach($posts as $post) <!-- On affiche les catégories -->
+      <div class="row">
 
-          <div class="panel-footer panel-info" style="height:55px" >
-            <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8"> 
-              <div>créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
+        <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
+          @if($post->post_topic_id==$topic[0]->topic_id)
+            <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
+            <div class="panel-body panel-info" style="min-height:70px">
+              <div> {{$post->post_texte}}  </div>
+              <?php $id++ ?>   <!-- On incrémente la variable id à chaque post -->
             </div>
-            @if(Auth::isAdmin())
-              <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4 pull-right">   
-                <!-- Button 'Editer un message' -->
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                  <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
-                </div>
-                <!-- Button 'Supprimer un message' -->
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                  <button id="supMessage{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
-                </div>
+            
+
+            <div class="panel-footer panel-info" style="height:55px" >
+              <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8"> 
+                <div>créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
               </div>
-            @else(Auth::id() == $post->post_createur)
-              <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
-                <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editMessage')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
-                <button id="supMessage{{$id}}"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editMessage')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
-              </div>
-            @endif
+              @if(Auth::isAdmin())
+                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4">   
+                  <!-- Button 'Editer un message' -->
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
+                  </div>
+                  <!-- Button 'Supprimer un message' -->
+                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <button id="supPost{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
+                  </div>
+                </div>
+              @else(Auth::id() == $post->post_createur)
+                <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
+                  <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
+                  <button id="supPost{{$id}}"  href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
+                </div>
+              @endif
+            </div>
           </div>
+        </div>
 
 
 
-        @endif
-        <script>
-          $('#supMessage{{$id}}').click(function() {
-            $.ajax({
-                url: '{{$topic[0]->topic_id}}/supMessage',
-                type: "post",
-                data: {'post_id': $(this).attr('data-id') },
-                success: function(data){
-                  window.location.href = ""; // On redirige sur la même page
-                }
-            });  
-          });
-          $('#editMessage{{$id}}').click(function() {
-            $.ajax({
-                url: '{{$topic[0]->topic_id}}/editMessage',
-                type: "post",
-                data: {'post_id': $(this).attr('data-id') },
-                success: function(data){
-                  window.location.href = "";
-                }
-            });  
-          });
-        </script>
-      @endforeach
-    </div>
+      @endif
+      <script>
+        $('#supPost{{$id}}').click(function() {
+          alert('ok');
+          $.ajax({
+              url: '{{$topic[0]->topic_id}}/supPost',
+              type: "post",
+              data: {'postId': $(this).attr('data-id') },
+              success: function(data){
+                window.location.href = ""; // On redirige sur la même page
+              }
+          });  
+        });
+      </script>
+    @endforeach
 
     @if($messagExist==0) <!-- Si aucun message ne doit être affiché -->
-      <tr><h3> Aucun message n'est sauvegardé pour ce topic '{{$topic[0]->topic_titre}}' </h3></tr>
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h3>Aucun message n'est sauvegardé pour ce topic '{{$topic[0]->topic_titre}}' </h3></div>
     @endif
 
 

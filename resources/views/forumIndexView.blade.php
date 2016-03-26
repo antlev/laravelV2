@@ -23,6 +23,12 @@
     </div>
   </div>
 
+  <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+    <li role="presentation" class="active"><a href="#">Home</a></li>
+    <li role="presentation"><a href="#">Profil</a></li>
+    <li role="presentation"><a href="#">Mes Messages</a></li>
+  </ul>
+
   <!-- Menu de navigation -->
   <div class="dropdown">
     <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum

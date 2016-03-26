@@ -38,7 +38,7 @@
     
   </br>
   <a href="{{url('forum/'.$cat.'/'.$topic_id)}}" class="btn btn-warning" style="margin-left:15px"> Revenir au topic </a>
-  <button class="btn btn-info" style="margin-left:15px" id="editMessage"> Editer votre message </button>
+  <button class="btn btn-info" style="margin-left:15px" id="editPost"> Editer votre message </button>
 
 </html> 
 
@@ -46,14 +46,14 @@
 $(function() { 
   
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-  $('#editMessage').click(function() {
+  $('#editPost').click(function() {
     alert('ok');
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
       // TODO voulez vous supprimer votre message
     } else{
       $.ajax({
-          url: 'editMessage',
+          url: 'editPost',
           type: "post",
           data: {'msgToSend': $('#msgToSend').val() },
           success: function(data){

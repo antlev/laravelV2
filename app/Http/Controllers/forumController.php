@@ -243,10 +243,10 @@ class forumController extends Controller{
 		]);
 	}
 
-	public function supMessage($cat,$topic){
+	public function supPost($cat,$topic){
 		        
 	    $inputData = Input::all(); 
-	    $postId = $inputData['post_id'];
+	    $postId = $inputData['postId'];
 
 	    DB::table('forum_post')
 	    	->where('post_id', '=', $postId)
@@ -254,15 +254,15 @@ class forumController extends Controller{
 	}
 
 	// Function called in gt by 'routes' which return the 'forumEditPostView'
-	public function editPostView($cat,$topic_id,$postId){
+	public function editPostView($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post
 		$editorId = Auth::id();
 		if( Auth::isAdmin() ){
 			$postToEdit = $this->__getPostMessageById($postId)[0]->post_texte;
 			$data = array(
-				'post_id' => $postId,
+				'postId' => $postId,
 				'cat' => $cat,
-				'topic_id' => $topic_id,
+				'topic_id' => $topicId,
 				'postToEdit' => $postToEdit);
 
 			return view('forumEditPostView',$data);
@@ -282,7 +282,7 @@ class forumController extends Controller{
 		$postToReplace = $inputData['msgToSend'];
 
 		if( Auth::isAdmin() ){
-			DB::table('forum_post')->where('post_id', '=', $post_id)->update(['post_texte' => $postToReplace]);
+			DB::table('forum_post')->where('post_id', '=', $postId)->update(['post_texte' => $postToReplace]);
 		} else if( $editeurId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			dd('it s ok go on');
 		} else {
