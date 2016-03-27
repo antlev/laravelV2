@@ -16,33 +16,33 @@
   <body>
 
 
-    <div class="container" style="margin-top: 35px">
-      <div class="page-header page-heading">
-          <img src="{{asset('img/logo.png')}}" style="width:8%">
-        <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+      <div class="page-header page-heading col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div>
+          <img class="col-lg-offset-2 col-md-offset-1 col-md-1 hidden-sm hidden-xs" src="{{asset('img/logo.png')}}" style="width:6%">
+          <h1 class="col-lg-10 col-md-7 col-sm-offset-2 col-xs-12" onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+        </div>
       </div>
-    </div>
 
     <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
       <li role="presentation" class="active"><a href="#">Home</a></li>
-      <li role="presentation"><a href="#">Profil</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
     </ul>
     </br>
     </br>
 
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
       <div class="col-lg-2 col-md-2 col-sm-2 hidden-xs">
         <a href="{{url('forum/'.$cat.'/newTopic')}}" class="fa fa-pencil-square-o pull-right" style="font-size:25px;color:black !important;margin-left:30px"></a>
       </div>
-      <div class="col-lg-6 col-md-6">
-        <a href="{{url('forum/'.$cat.'/newTopic')}}" class="btn btn-info pull-left" style="margin-left:15px">Créer un Nouveau Topic </a>
+      <div class="col-lg-6 col-md-6 col-sm-7 col-xs-12">
+        <a href="{{url('forum/'.$cat.'/newTopic')}}" class="btn btn-info col-xs-12" style="margin-left:15px">Créer un Nouveau Topic </a>
       </div>
     </div>
 
     <!-- Menu de navigation -->
-    <div class="dropdown col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
-      <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown">Navigation Forum
+    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">

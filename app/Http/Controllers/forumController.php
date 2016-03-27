@@ -116,12 +116,37 @@ class forumController extends Controller{
 		return view('forumNewPostView',$data);
 	}
 
-	public function myPosts($id){
+	public function myPosts($auth){
 		// TODO Checks user auth 
 		$userId = Auth::id();
+
+
 		if( Auth::isAdmin() ){
-			$data = $this->__getPostByCreatorId($id);
+			$posts = $this->__getPostByCreatorId($auth);
+			$postCat = array();
+			$test = 0;
+			foreach ($posts as $post) {
+				$test++;
+				array_push($postCat, $this->__getCatFromTopic($post->post_topic_id));
+			}
+			$data = array(
+				'posts' => $posts,
+				'postCat' => $postCat);
 			return view('forumMyPostsView', $data);
+		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+
+		} else {
+			dd("sorry you don't have permission to edit this message");
+		}
+	}
+	public function myProfil($auth){
+		// TODO Checks user auth 
+		$userId = Auth::id();
+
+
+		if( Auth::isAdmin() ){
+			$data = array();
+			return view('forumMyProfilView', $data);
 		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 
 		} else {
@@ -186,12 +211,18 @@ class forumController extends Controller{
 			FROM forum_topic");
 	}
 	// Return the topic given a a parameter
-	private function __getTopic($topic){
+	private function __getTopic($topicId){
 
 		return DB::select("SELECT *
 			FROM forum_topic
-			WHERE topic_id = '$topic'");
+			WHERE topic_id = '$topicId'");
 	}
+	public function __getCatFromTopic($topicId){
+
+		return DB::table('forum_topic')
+			->where('topic_id', $topicId)
+			->value('topic_cat');
+	}	
 	private function __getCreatorPostById($post_id){
 		return DB::table('forum_post')
 		->where('post_id', '=', $post_id)
@@ -344,10 +375,7 @@ class forumController extends Controller{
 
 	// Function used to test some code
 	public function test(){
-		DB::table('forum_topic')->insert(
-			['topic_titre' => "titre", 'topic_createur' => 2, 'topic_time' => date('Y-m-d H:i:s'), 'topic_cat' => 1]
-		);
-		dd('stop test');
+		dd($this->__getCatFromTopic(39));
 	}
 }
 ?>

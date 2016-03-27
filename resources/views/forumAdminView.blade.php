@@ -23,30 +23,51 @@
   <div>
     <h2 class="col-lg-offset-1 col-lg-11">Supprimer tous les posts d'un utilisateur</h2>
     <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">Par id</div>
-      <input class="col-lg-8 " rows="10" id="msgToSend" class="form-control"></input>
+      <div class="col-lg-1">
+        <h4>Par id</h4>
+      </div>
+      <input class="col-lg-8" rows="10" id="supById" class="form-control"></input>
+      <button class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
     </div>
-    <div class="col-lg-offset-1">
-      <div class="col-lg-1">Par nom</div>
-      <input class="col-lg-8" rows="10" id="msgToSend" class="form-control"></input>
+    <div class="col-lg-offset-1 col-lg-11">
+      <div class="col-lg-1">
+        <h4>Prenom</h4>
+      </div>
+      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+      <div class="col-lg-1 col-lg-offset-1 ">
+        <h4>Nom</h4>
+      </div>
+      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+      <button class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
     </div>
   </div>
 
   <div>
     <h2 class="col-lg-offset-1 col-lg-11">Afficher tous les posts d'un utilisateur</h2>
     <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">Par id</div>
-      <input class="col-lg-8 " rows="10" id="msgToSend" class="form-control"></input>
+      <div class="col-lg-1">
+        <h4>Par id</h4>
+      </div>
+      <input class="col-lg-8" rows="10" id="supById" class="form-control"></input>
+      <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
     </div>
-    <div class="col-lg-offset-1">
-      <div class="col-lg-1">Par nom</div>
-      <input class="col-lg-8" rows="10" id="msgToSend" class="form-control"></input>
+    <div class="col-lg-offset-1 col-lg-11">
+      <div class="col-lg-1">
+        <h4>Prenom</h4>
+      </div>
+      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+      <div class="col-lg-1 col-lg-offset-1 ">
+        <h4>Nom</h4>
+      </div>
+      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+      <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
     </div>
   </div>
 
-  <div class="col-lg-12">
+  <div class="col-lg-offset-9">
     </br>
-    <a href="{{url('forum')}}" class="btn btn-warning" style="margin-left:15px"> Revenir à l'index du forum</a>
+    </br>
+    <a href="{{url('forum')}}" class="btn btn-success" style="margin-left:15px"> Revenir à l'index du forum</a>
   </div> 
 
 

@@ -76,7 +76,8 @@ Route::group(['middleware' => 'web'], function () {
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}', 'forumController@cat');');'
 	Route::get('/forum/admin','forumController@adminView');
 	
-	Route::get('/forum/{id}/myPosts', 'forumController@myPosts');
+	Route::get('/forum/{auth}/myPosts', 'forumController@myPosts');
+	Route::get('/forum/{auth}/myProfil', 'forumController@myProfil');
 
 
 	Route::get('/forum/', 'forumController@index');

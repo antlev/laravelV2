@@ -207,6 +207,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
         'SQLCommand'   => App\Models\projetLbl::class,
+        'forumController' => App\Http\Controllers\forumController::class,
 
     ],
 
