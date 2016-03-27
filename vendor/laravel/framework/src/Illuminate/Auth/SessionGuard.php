@@ -788,7 +788,7 @@ return $nb;
         }
         return $message_out;
     }
-  public function getNamebyId($id) { //recupere le nom de la personne grace a son id
+  public function getNameById($id) { //recupere le nom de la personne grace a son id
    
     $user = DB::table('users')
         ->where('id', $id)
@@ -827,7 +827,7 @@ public function getRoleById($id) {
     return $user->id_role;
 
 }
-  public function getPrenombyId($id) { //recupere le nom de la personne grace a son id
+  public function getPrenomById($id) { //recupere le nom de la personne grace a son id
    
     $user = DB::table('users')->where('id', $id)->first();
     return $user->prenom;
@@ -838,7 +838,7 @@ public function getSexebyId($id) { //recupere le nom de la personne grace a son 
     return $user->civilite;
     }
 
-  public function getNombyId($id) { //recupere le nom de la personne grace a son id
+  public function getNomById($id) { //recupere le nom de la personne grace a son id
    
     $user = DB::table('users')->where('id', $id)->first();
     return $user->nom;

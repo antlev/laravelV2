@@ -20,32 +20,42 @@
 
 
 
-<div class="container" style="margin-top: 35px">
-  <div class="page-header page-heading">
-    <img src="{{asset('img/logo.png')}}" style="width:8%">
-    <h1 href="{{url('forum')}}" >Forum De La Maison Des Ligues</h1>
+  <div class="container" style="margin-top: 35px">
+    <div class="page-header page-heading">
+      <img src="{{asset('img/logo.png')}}" style="width:8%">
+      <h1 href="{{url('forum')}}" >Forum De La Maison Des Ligues</h1>
+    </div>
   </div>
-</div>
 
-<!-- Menu de navigation -->
-<div class="dropdown">
-  <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
-  <span class="caret"></span></button>
-  <ul class="dropdown-menu">
-    <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
-    @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-      <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
-      @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-        @if($topic_as->topic_cat==$cats->cat_id)
-          <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
-        @endif
-      @endforeach
+  <!-- Menu de navigation -->
+  <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+    <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li class="dropdown-header" >
+        <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
       </li>
-    @endforeach
-  <ul>
-</div>
+      @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+        <li class="dropdown-header">
+          <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+            <h4>{{$cats->cat_nom}}</h4>
+          </a>
+        </li>
+        @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+          @if($topic_as->topic_cat==$cats->cat_id)
+            <li>
+              <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                <h5>{{$topic_as->topic_titre}}</h5>
+              </a>
+            </li>
+          @endif
+        @endforeach
+      @endforeach
+    </ul>
+  </div>
 
-<h4 style="margin-left:15px">Message : </h4>
+  <h4 style="margin-left:15px">Message : </h4>
 
   <table class="table forum table-striped">
     <thead>

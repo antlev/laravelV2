@@ -32,7 +32,7 @@
   <table class="table forum table-striped">
     <thead>
         <th class="cell-stat"></th>
-        <textarea rows="10" id="msgToSend" class="form-control"> {{$postToEdit}}</textarea>
+        <textarea rows="10" id="msgToSend" class="form-control">{{$postToEdit}}</textarea>
     </thead>
   </table>
     

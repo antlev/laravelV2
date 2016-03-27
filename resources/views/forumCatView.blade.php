@@ -24,7 +24,7 @@
       </div>
 
     <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-      <li role="presentation" class="active"><a href="#">Home</a></li>
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Home</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
     </ul>
@@ -51,12 +51,16 @@
         </li>
         @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
           <li class="dropdown-header">
-            <a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a>
+            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+              <h4>{{$cats->cat_nom}}</h4>
+            </a>
           </li>
-          @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
             @if($topic_as->topic_cat==$cats->cat_id)
               <li>
-                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a>
+                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                  <h5>{{$topic_as->topic_titre}}</h5>
+                </a>
               </li>
             @endif
           @endforeach

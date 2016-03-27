@@ -28,23 +28,33 @@
     <li role="presentation"><a href="#">Mes Messages</a></li>
   </ul>
 
-  <!-- Menu de navigation -->
-  <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle pull-right" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu">
-      <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
-      @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-        <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
-        @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-          @if($topic_as->topic_cat==$cats->cat_id)
-            <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
-          @endif
-        @endforeach
+    <!-- Menu de navigation -->
+    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header" >
+          <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
         </li>
-      @endforeach
-    <ul>
-  </div>
+        @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+          <li class="dropdown-header">
+            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+              <h4>{{$cats->cat_nom}}</h4>
+            </a>
+          </li>
+          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+            @if($topic_as->topic_cat==$cats->cat_id)
+              <li>
+                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                  <h5>{{$topic_as->topic_titre}}</h5>
+                </a>
+              </li>
+            @endif
+          @endforeach
+        @endforeach
+      </ul>
+    </div>
     
   <table class="table forum table-striped">
     <thead>
@@ -56,13 +66,14 @@
         </th> 
         <th class="cell-stat text-center hidden-xs hidden-sm">Topics</th>
         <th class="cell-stat text-center hidden-xs hidden-sm">Posts</th>
-        <th class="cell-stat-2x hidden-xs hidden-sm">Last Post</th>
+        <th class="cell-stat-2x hidden-xs hidden-sm">Dernier Post</th>
       </tr>
     </thead>
 
 
     
       <tbody>
+        <?php $numCat = 0 ?>
         @foreach($categories as $cat)  <!-- On affiche les sous_catégories -->
           @if($forum_as->forum_id == $cat->forum_id) <!-- Uniquement si elles appartiennent à la catégorie affichée -->
           <tr>
@@ -70,11 +81,12 @@
             <td>
                <h4><a href="{{url('forum/'.$cat->cat_id)}}">{{$cat->cat_nom}}</a><br><small>{{$cat->cat_desc}}</small></h4> <!-- href renvoie l'id de la categorie au controleur si l'on clique dessus -->
             </td>
-            <td class="text-center hidden-xs hidden-sm"><a href="#">{{App::make(forumController)->getNbTopicByCat($cat->cat_id)}}</a></td>
-            <td class="text-center hidden-xs hidden-sm"><a href="#">{{App::make(forumController)->getNbPostByCat($cat->cat_id)}}</a></td>
-            <td class="hidden-xs hidden-sm">by <a href="#">{{App::make(forumController)->getLastPostByCat($cat->cat_id)}}</a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
+            <td class="text-center hidden-xs hidden-sm"><h4>{{$nbTopic[$numCat]}}</h4></td>
+            <td class="text-center hidden-xs hidden-sm"><h4>{{$nbPost[$numCat]}}</h4></td>
+              <td class="hidden-xs hidden-sm">by <a href="#">{{Auth::getPrenomById($lastPostCreator[$numCat]->post_createur or 1 ) }} {{Auth::getNomById($lastPostCreator[$numCat]->post_createur or 1) }}</a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
           </tr>
           @endif
+          <?php $numCat++ ?>
         @endforeach
       </tbody>
     @endforeach

@@ -22,25 +22,39 @@ class forumController extends Controller{
 	public function index(){
 
 		$forum = $this->__getForum();
-		$categories = $this->__getCategories();
+		$categories = $this->__getAllCategories();
 		$nbTopic = array();
+		$nbPost = array();
+		$lastPost = array();
+		$lastPostCreator = array();
+
+		foreach ($categories as $cat) {
+			array_push($nbTopic, $this->getNbTopicByCat($cat->cat_id));
+			array_push($nbPost, $this->getNbPostByCat($cat->cat_id));
+			//array_push($lastPost, $this->__getLastPostByCat($cat->cat_id));
+			array_push($lastPostCreator, $this->__getLastPostCreator($cat->cat_id));
+		}
 		//$nbTopic = $this->__getNbTopic($categories);
-		$topic = $this->__getAllTopic();
+		$topics = $this->__getAllTopics();
+
 		
 		$data = array(
 			'forum' =>  $forum,
 			'categories' =>  $categories,
 			'nbTopic' => $nbTopic,
-			'topic' => $topic);
+			'nbPost' => $nbPost,
+			'lastPostCreator' => $lastPostCreator,
+			'topics' => $topics);
 
 		return view('forumIndexView', $data);
 	}
 
 	// Return the forumCatView with correct informations
 	public function cat($cat){
-		$categories = $this->__getCategories();
+		$categories = $this->__getAllCategories();
 		$catName = $this->__getCatName($cat); // retourne le nom de la catégorie avec son id
-		$topic = $this->__getTopicFromCatLimit($cat,1);
+		$topic = $this->__getTopicFromCatLimit($cat,0);
+		$topics = $this->__getAllTopics();
 		$nbPost = array();
 		$lastPostId = array();
 		$lastPostCreator = array();
@@ -55,6 +69,7 @@ class forumController extends Controller{
 
 		$data = array(
 			'topic' => $topic,
+			'topics' => $topics,
 			'categories' =>  $categories,
 			'catName' => $catName,
 			'cat' => $cat,
@@ -76,12 +91,14 @@ class forumController extends Controller{
 		$posts = $this->__getPosts($topic_id);
 		$catName = $this->__getCatName($cat); // retourne le nom de la catégorie avec son id
 		$topic = $this->__getTopic($topic_id);
-		$categories = $this->__getCategories(); // Permet de rediriger vers chaque catégories dans un menu déroulant
+		$categories = $this->__getAllCategories(); // Permet de rediriger vers chaque catégories dans un menu déroulant
+		$topics = $this->__getAllTopics();
 
 		$data = array(
 			'posts' => $posts,
 			'catName' => $catName,
 			'topic' => $topic,
+			'topics' => $topic,
 			'cat' => $cat,
 			'categories' => $categories);
 
@@ -89,11 +106,11 @@ class forumController extends Controller{
 	}
 	// Return the forumNewTopicView with correct informations
 	public function newTopic($cat){
-		$categories = $this->__getCategories();
+		$categories = $this->__getAllCategories();
 		$catName = $this->__getCatName($cat);
 		// TODO Check variable to be used
 		$topic = $this->__getTopicFromCat($cat);
-		$topics = $this->__getAllTopic();
+		$topics = $this->__getAllTopics();
 
 		$data = array(
 		'categories' => $categories,
@@ -105,8 +122,8 @@ class forumController extends Controller{
 	}
 	// Return the newPostView with correct informations
 	public function newPost($cat,$topic_id){
-		$categories = $this->__getCategories();
-		$topics = $this->__getAllTopic();
+		$categories = $this->__getAllCategories();
+		$topics = $this->__getAllTopics();
 
 		$data = array(
 			'categories' => $categories,
@@ -185,7 +202,7 @@ class forumController extends Controller{
 			ORDER BY forum_id ASC");
 	}
 	// Return all categories
-	private function __getCategories(){
+	private function __getAllCategories(){
 
 		return DB::select("SELECT cat_id, cat_nom, cat_ordre, forum_id, cat_desc
 			FROM forum_categorie
@@ -205,7 +222,7 @@ class forumController extends Controller{
 		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToPrint)->take(10)->get();
 	}
 	// Return all topics
-	private function __getAllTopic(){
+	private function __getAllTopics(){
 
 		return DB::select("SELECT *
 			FROM forum_topic");
@@ -257,8 +274,13 @@ class forumController extends Controller{
 	}
 
 	// Return the last post creator's id of a certain category
-	private function __getLastPostByCat(){
-
+	private function __getLastPostCreatorByCat(){
+		return DB::table('forum_post')
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
+			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')			
+			->select('post_createur')
+			->orderBy('post_id', 'desc')
+			->first();
 	}
 
 	// Return the number of topic which are in a category
@@ -283,7 +305,12 @@ class forumController extends Controller{
 
 	public function getNbPostByCat($cat){
 		return DB::table('forum_post')
-			->where('post_topic_id', '=', $topic_id)
+			->where('post_topic_id', '=', $cat)
+			->count();
+	}
+	public function getNbTopicByCat($cat){
+		return DB::table('forum_topic')
+			->where('topic_cat', '=', $cat)
 			->count();
 	}
 
