@@ -70,42 +70,32 @@ Route::group(['middleware' => 'web'], function () {
 	// Route::get('suivi_mot_passe', 'alexController@suivi_mot_passe');
 	// Route::get('suivi_reserve', 'alexController@suivi_reserve');
 
-    Route::get('forum/test' ,'forumController@test');
 
-	//Forum
+//Forum
+	// Only use for tests
+	Route::get('forum/test' ,'forumController@test');
+	Route::get('/forum/', 'forumController@index');
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}', 'forumController@cat');');'
 	Route::get('/forum/admin','forumController@adminView');
-	
 	Route::get('/forum/{auth}/myPosts', 'forumController@myPosts');
 	Route::get('/forum/{auth}/myProfil', 'forumController@myProfil');
-
-
-	Route::get('/forum/', 'forumController@index');
-
-	Route::get('/forum/{cat}', 'forumController@cat');
 	Route::post('/forum/{cat}/next', 'forumController@nextCat');
-
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::get('/forum/{cat}/newTopic', 'forumController@newTopic');
-	Route::get('/forum/{cat}/{topic}/newMessage','forumController@newPost');
+		// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
+	Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
+	Route::get('/forum/{cat}/{topic}/newPost','forumController@newPost');
+    Route::post('/forum/{cat}/{topic}/savePost','forumController@postMessage');
 	Route::post('/forum/{cat}/{topic}/supPost','forumController@supPost');
 
 	Route::get('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPostView');
-	
 	Route::post('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPost');
-	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
-	Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
+
+	
+
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
+	Route::get('/forum/{cat}', 'forumController@cat');
 
 
-    Route::post('/forum/{cat}/{topic}/saveMsg','forumController@postMessage');
-
-
-
-
-
-	// Route::get('/forum/{cat}', 'forumController@newTopic');
-
-	//Route::get('/forum/{cat}/newTopic', 'forumController@redirect');//
 
 });

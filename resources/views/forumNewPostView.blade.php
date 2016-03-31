@@ -66,7 +66,7 @@
     
   </br>
   <a href="{{url('forum/'.$cat.'/'.$topic_id)}}" class="btn btn-warning" style="margin-left:15px"> Revenir au topic </a>
-  <button class="btn btn-info" style="margin-left:15px" id="saveMsg"> Sauvegarder votre message </button>
+  <button class="btn btn-info" style="margin-left:15px" id="savePost"> Sauvegarder votre Post </button>
 
 </html> 
 
@@ -74,12 +74,12 @@
 $(function() { 
   
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-  $('#saveMsg').click(function() {
+  $('#savePost').click(function() {
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
     } else{
       $.ajax({
-          url: 'saveMsg',
+          url: 'savePost',
           type: "post",
           data: {'msg': $('#msgToSend').val() },
           success: function(data){

@@ -219,7 +219,7 @@ class forumController extends Controller{
 	// Return the topics which are in the category passed as a parameter
 	// This function start with topic firstTopicToPrint and return x TODO(define x) topics max
 	private function __getTopicFromCatLimit($cat,$firstTopicToPrint){
-		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToPrint)->take(10)->get();
+		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToPrint)->take(2)->get();
 	}
 	// Return all topics
 	private function __getAllTopics(){

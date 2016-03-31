@@ -16,9 +16,9 @@
 
   <div class="container" style="margin-top: 35px">
     <div class="page-header page-heading">
-        <img src="{{asset('img/logo.png')}}" style="width:8%">
-        <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
-      <p class="lead">Bienvenue sur le forum de la maison des ligues</p>
+      <img src="{{asset('img/logo.png')}}" style="width:8%">
+      <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+      <h4 class="lead">Bonjour {{Auth::getPrenomById(Auth::id())}} {{Auth::getNomById(Auth::id())}} </h4>
     </div>
   </div>
 
@@ -29,7 +29,7 @@
   </ul>
 
     <!-- Menu de navigation -->
-    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+    <div class="dropdown col-lg-offset-6 col-lg-6 col-md-6 col-md-offset-6 col-sm-6 col-sm-offset-6">
       <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
         <span class="caret"></span>
       </button>
@@ -55,7 +55,7 @@
         @endforeach
       </ul>
     </div>
-    
+
   <table class="table forum table-striped">
     <thead>
       @foreach($forum as $forum_as) <!-- On affiche les catégories -->
@@ -83,7 +83,7 @@
             </td>
             <td class="text-center hidden-xs hidden-sm"><h4>{{$nbTopic[$numCat]}}</h4></td>
             <td class="text-center hidden-xs hidden-sm"><h4>{{$nbPost[$numCat]}}</h4></td>
-              <td class="hidden-xs hidden-sm">by <a href="#">{{Auth::getPrenomById($lastPostCreator[$numCat]->post_createur or 1 ) }} {{Auth::getNomById($lastPostCreator[$numCat]->post_createur or 1) }}</a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
+              <td class="hidden-xs hidden-sm">by <a href="#"></a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
           </tr>
           @endif
           <?php $numCat++ ?>

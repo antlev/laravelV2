@@ -63,7 +63,7 @@
         @endforeach
       </ul>
     </div>
-    
+
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
       <h3>
         <div> Topic : {{$topic[0]->topic_titre}}</div>
@@ -144,7 +144,7 @@
     </div>
     <!-- Button 'Ecrire un nouveau message' -->
     <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
-      <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/newMessage')}}" class="btn btn-info" style="margin-left:15px">Ecrire un nouveau message </a>
+      <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/newPost')}}" class="btn btn-info" style="margin-left:15px">Ecrire un nouveau message </a>
     </div>
   </footer>
 </html> 
