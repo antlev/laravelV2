@@ -55,6 +55,8 @@ class forumController extends Controller{
 		$catName = $this->__getCatName($cat); // retourne le nom de la catégorie avec son id
 		$topic = $this->__getTopicFromCatLimit($cat,0);
 		$topics = $this->__getAllTopics();
+		$lastTopicFromCat = $this->__getLastTopicIdByCat($cat)->topic_id;
+
 		$nbPost = array();
 		$lastPostId = array();
 		$lastPostCreator = array();
@@ -70,6 +72,7 @@ class forumController extends Controller{
 		$data = array(
 			'topic' => $topic,
 			'topics' => $topics,
+			'lastTopicFromCat' => $lastTopicFromCat,
 			'categories' =>  $categories,
 			'catName' => $catName,
 			'cat' => $cat,
@@ -82,8 +85,8 @@ class forumController extends Controller{
 	// Return the next pages to print for the forumCatView
 	public function nextCat($cat){
 		$inputData = Input::all();
-		$firstTopicToPrint = $inputData['lastTopicPrinted'] + 1;
-		return  $this->__getTopicFromCatLimit($cat,$firstTopicToPrint);
+		$firstTopicToPrint = $inputData['lastTopicPrinted'];
+		return  json_encode($this->__getTopicFromCatLimit($cat,$firstTopicToPrint));
 	}
 
 	// Return the forumTopicView with correct informations
@@ -255,6 +258,14 @@ class forumController extends Controller{
 	private function __getLastTopicId(){
 		return DB::table('forum_topic')
 		->select('topic_id')
+		->orderBy('topic_id', 'desc')
+		->first();
+	}
+
+	private function __getLastTopicIdByCat($cat){
+		return DB::table('forum_topic')
+		->select('topic_id')
+		->where('topic_cat', $cat)
 		->orderBy('topic_id', 'desc')
 		->first();
 	}

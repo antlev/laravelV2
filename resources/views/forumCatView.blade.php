@@ -89,26 +89,16 @@
             <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
           </tr>
         @else
-          <div id="page">
-            @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-              <tr id="{{$topic_as->topic_id}}">
-                <td>
-                  <h4>
-                    <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}"  style="margin-left:20px" >{{$topic_as->topic_titre}}</a>
-                  </h4>
-                </td>
-                <td class="cell-stat text-center hidden-xs">{{$nbPost[$compteur]}}</td>
-                <!-- TODO error on $lastPostCreator[$compteur] -->
-                <td class="cell-stat hidden-sm hidden-xs">écrit par :</td>
-              </tr>
-              <?php $compteur++ ?>
-            @endforeach
-          </div>
+            <tr id="topics">
+
+
+            </tr>
         @endif
       </tbody>
     </table>
   </body>
-
+        
+  <?php $lastTopicPrinted = 0 ?>
   <footer>
     </br>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
@@ -116,6 +106,7 @@
       <a href="{{url('forum')}}" class="btn btn-warning" style="margin-left:20px">Revenir à l'index </a>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+      <!-- TODO print button only when it s necessary-->
       <button id="next" class="btn btn-success pull-right" style="margin-right:20px">Suivant</button>
       </br>
     </div>
@@ -123,7 +114,27 @@
 </html> 
 
 <script>
+
     $(function(){
+      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+      
+        $.ajax({
+          url: './{{$cat}}/next',
+          type: "post",
+          data: {'lastTopicPrinted': 0 },
+          success: function(data){ 
+            console.log(data)
+            for(var i=0;i<data.length;i++) { 
+            $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+
+            } 
+/*            $lastTopicPrinted = data[size-1].topic_id;
+*/        }
+      });  
+         
+    
+
+
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
       $('#next').click(function() {
         alert('next');
@@ -132,11 +143,26 @@
           type: "post",
           data: {'lastTopicPrinted': $('table tr:last').attr('id') },
           success: function(data){ 
-            $('#page').html(data);
-          }
-        });  
-      });      
-    })
+            for(var i=0;i<data.length;i++) { 
+            $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+            }
+          } 
+        });      
+      });
+    });
 
 </script>
 
+  @foreach($topic as $topic_as) <!-- On affiche les catégories -->
+    <tr id="{{$topic_as->topic_id}}">
+      <td>
+        <h4>
+          <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}"  style="margin-left:20px" >{{$topic_as->topic_titre}}</a>
+        </h4>
+      </td>
+      <td class="cell-stat text-center hidden-xs">{{$nbPost[$compteur]}}</td>
+      <!-- TODO error on $lastPostCreator[$compteur] -->
+      <td class="cell-stat hidden-sm hidden-xs">posté par :</td>
+    </tr>
+    <?php $compteur++ ?>
+  @endforeach
