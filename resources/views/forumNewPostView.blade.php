@@ -27,46 +27,57 @@
     </div>
   </div>
 
-  <!-- Menu de navigation -->
-  <div class="dropdown col-lg-6 col-md-6 col-sm-6">
-    <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu">
-      <li class="dropdown-header" >
-        <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
-      </li>
-      @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-        <li class="dropdown-header">
-          <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
-            <h4>{{$cats->cat_nom}}</h4>
-          </a>
+  <div>
+
+    <h4 class=" col-lg-offset-1 col-lg-5 col-md-offset-1 col-md-5 col-sm-offset-1 col-sm-5 hidden-xs" >Votre Message : </h4>
+
+    <!-- Menu de navigation -->
+    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header" >
+          <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
         </li>
-        @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-          @if($topic_as->topic_cat==$cats->cat_id)
-            <li>
-              <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
-                <h5>{{$topic_as->topic_titre}}</h5>
-              </a>
-            </li>
-          @endif
+        @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+          <li class="dropdown-header">
+            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+              <h4>{{$cats->cat_nom}}</h4>
+            </a>
+          </li>
+          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+            @if($topic_as->topic_cat==$cats->cat_id)
+              <li>
+                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                  <h5>{{$topic_as->topic_titre}}</h5>
+                </a>
+              </li>
+            @endif
+          @endforeach
         @endforeach
-      @endforeach
-    </ul>
+      </ul>
+    </div>
+    <h4 class="hidden-lg hidden-md hidden-sm" >Votre Message : </h4>
   </div>
 
-  <h4 style="margin-left:15px">Message : </h4>
 
   <table class="table forum table-striped">
     <thead>
         <th class="cell-stat"></th>
-        <textarea rows="10" id="msgToSend" class="form-control"></textarea>
+        <div class="col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-offset-1 col-sm-10">
+          <textarea rows="10" id="msgToSend" class="form-control "></textarea>
+        </div>
     </thead>
   </table>
     
   </br>
-  <a href="{{url('forum/'.$cat.'/'.$topic_id)}}" class="btn btn-warning" style="margin-left:15px"> Revenir au topic </a>
-  <button class="btn btn-info" style="margin-left:15px" id="savePost"> Sauvegarder votre Post </button>
+  <div class="col-lg-offset-1 col-lg-2 col-md-offset-1 col-md-2 col-sm-offset-1 col-sm-2">
+      <a href="{{url('forum/'.$cat.'/'.$topic_id)}}" class="btn btn-warning" style="margin-left:15px"> Revenir au topic </a>
+  </div>
+  <div class="col-lg-offset-6 col-lg-2 col-md-offset-5 col-md-2 col-sm-offset-5 col-sm-2">
+      <button class=" btn btn-info" style="margin-left:15px" id="savePost"> Sauvegarder votre Post </button>
+  </div>
 
 </html> 
 

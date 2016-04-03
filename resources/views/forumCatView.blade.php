@@ -125,7 +125,9 @@
           success: function(data){ 
             console.log(data)
             for(var i=0;i<data.length;i++) { 
-            $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+              console.log(data[i]+"::"+i)
+
+              $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
 
             } 
 /*            $lastTopicPrinted = data[size-1].topic_id;
@@ -144,7 +146,7 @@
           data: {'lastTopicPrinted': $('table tr:last').attr('id') },
           success: function(data){ 
             for(var i=0;i<data.length;i++) { 
-            $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+              $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
             }
           } 
         });      

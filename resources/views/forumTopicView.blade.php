@@ -29,39 +29,42 @@
 
 
     <div>
-      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-10">
         <h2>
           <div class="col-lg-10 hidden-sm hidden-xs">Catégorie : {{$catName}}</div>
           <div class="hidden-lg hidden-md">{{$catName}}</div>
         </h2>
       </div>
 
-    <!-- Menu de navigation -->
-    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
-      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li class="dropdown-header" >
-          <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
-        </li>
-        @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-          <li class="dropdown-header">
-            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
-              <h4>{{$cats->cat_nom}}</h4>
-            </a>
-          </li>
-          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-            @if($topic_as->topic_cat==$cats->cat_id)
-              <li>
-                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
-                  <h5>{{$topic_as->topic_titre}}</h5>
+      <!-- Menu de navigation -->
+      <div class="col-lg-offset-4 col-lg-2  col-md-offset-3 col-md-2 col-sm-offset-2 col-sm-2">
+        <div class="dropdown ">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Navigation Forum
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header" >
+              <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
+            </li>
+            @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+              <li class="dropdown-header">
+                <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+                  <h4>{{$cats->cat_nom}}</h4>
                 </a>
               </li>
-            @endif
-          @endforeach
-        @endforeach
-      </ul>
+              @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+                @if($topic_as->topic_cat==$cats->cat_id)
+                  <li>
+                    <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                      <h5>{{$topic_as->topic_titre}}</h5>
+                    </a>
+                  </li>
+                @endif
+              @endforeach
+            @endforeach
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
@@ -88,13 +91,13 @@
             
 
             <div class="panel-footer panel-info" style="height:55px" >
-              <div class="col-lg-10 col-md-8 col-sm-8 col-xs-8"> 
-                <div>créé le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
+              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12"> 
+                <div>posté le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
               </div>
               @if(Auth::isAdmin())
-                <div class="col-lg-2 col-md-4 col-sm-4 col-xs-4">   
+                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">   
                   <!-- Button 'Editer un message' -->
-                  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                  <div class="col-lg-5 col-md-6 col-sm-6 col-xs-6">
                     <a href="{{url('forum/'.$cat.'/'.$topic[0]->topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
                   </div>
                   <!-- Button 'Supprimer un message' -->
@@ -137,9 +140,11 @@
 
 
   </body>
+  </br>
+  </br>
   <footer>
     <!-- Button 'Revenir aux catégories' -->
-    <div class="col-lg-9 col-md-8 col-sm-6 col-xs-12">
+    <div class=" col-lg-offset-1 col-lg-8 col-md-offset-1 col-md-7 col-sm-6 col-xs-12">
       <a href="{{url('forum/'.$cat.'/')}}" class="btn btn-warning" style="margin-left:15px">Revenir aux catégories</a>
     </div>
     <!-- Button 'Ecrire un nouveau message' -->
