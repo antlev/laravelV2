@@ -20,63 +20,105 @@
 
 
   </head>
-  <div>
-    <h2 class="col-lg-offset-1 col-lg-11">Supprimer tous les posts d'un utilisateur</h2>
-    <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">
-        <h4>Par id</h4>
+  <body>
+    <div>
+      <h2 class="col-lg-offset-1 col-lg-11">Supprimer tous les posts d'un utilisateur</h2>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Par id</h4>
+        </div>
+        <input class="col-lg-8" rows="10" id="idToSup" class="form-control"></input>
+        <button  id="supById" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
       </div>
-      <input class="col-lg-8" rows="10" id="supById" class="form-control"></input>
-      <button class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Prenom</h4>
+        </div>
+        <input class="col-lg-3" rows="10" id="surnameToSup" class="form-control"></input>
+        <div class="col-lg-1 col-lg-offset-1 ">
+          <h4>Nom</h4>
+        </div>
+        <input class="col-lg-3" rows="10" id="nameToSup" class="form-control"></input>
+        <button id="supByName" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+      </div>
     </div>
-    <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">
-        <h4>Prenom</h4>
+
+    <div>
+      <h2 class="col-lg-offset-1 col-lg-11">Afficher tous les posts d'un utilisateur</h2>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Par id</h4>
+        </div>
+        <input class="col-lg-8" rows="10"  class="form-control"></input>
+        <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
       </div>
-      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
-      <div class="col-lg-1 col-lg-offset-1 ">
-        <h4>Nom</h4>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Prenom</h4>
+        </div>
+        <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+        <div class="col-lg-1 col-lg-offset-1 ">
+          <h4>Nom</h4>
+        </div>
+        <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+        <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
       </div>
-      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
-      <button class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
     </div>
-  </div>
 
-  <div>
-    <h2 class="col-lg-offset-1 col-lg-11">Afficher tous les posts d'un utilisateur</h2>
-    <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">
-        <h4>Par id</h4>
-      </div>
-      <input class="col-lg-8" rows="10" id="supById" class="form-control"></input>
-      <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
-    </div>
-    <div class="col-lg-offset-1 col-lg-11">
-      <div class="col-lg-1">
-        <h4>Prenom</h4>
-      </div>
-      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
-      <div class="col-lg-1 col-lg-offset-1 ">
-        <h4>Nom</h4>
-      </div>
-      <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
-      <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
-    </div>
-  </div>
-
-  <div class="col-lg-offset-9">
-    </br>
-    </br>
-    <a href="{{url('forum')}}" class="btn btn-success" style="margin-left:15px"> Revenir à l'index du forum</a>
-  </div> 
-
-
-
-
-
-
-
-
+    <div class="col-lg-offset-9">
+      </br>
+      </br>
+      <a href="{{url('forum')}}" class="btn btn-success" style="margin-left:15px"> Revenir à l'index du forum</a>
+    </div> 
   </body>
 </html> 
 
+<script>
+
+    $(function(){
+      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+      
+      $('#supById').click(function() {
+        if( $('#idToSup').val() == ''){
+          alert('Please enter an id')
+        } else {
+                  $.ajax({
+          url: './admin/supById',
+          type: "post",
+          data: {'idToSup': $('#idToSup').val() },
+          success: function(data){ 
+            if(data == 0){
+              alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+            } else {
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+            }
+          } 
+        });
+        }      
+      });
+
+      $('#supByName').click(function() {
+        if( $('#surnameToSup').val() == '' || $('#nameToSup').val() == '' ){
+          alert('Veulliez entrer un nom et un prénom');
+        } else {
+          $.ajax({
+          url: './admin/supByName',
+          type: "post",
+          data: {'nameToSup': $('#nameToSup').val(), 'surnameToSup': $('#surnameToSup').val() },
+          success: function(data){
+            console.log(data); 
+            if(data == -1){
+              alert("Plusieurs utilisateur correspondent veuillez supprimer avec l'id");
+            } else if (data == 1) {
+              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+            } else {
+              alert('Aucun post ne correspond à votre requête')
+            }
+          } 
+        });
+        }      
+      });
+  });
+
+</script>

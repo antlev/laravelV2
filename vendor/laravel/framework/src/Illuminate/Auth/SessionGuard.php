@@ -813,6 +813,15 @@ return $nb;
       }
   }
 
+  public function getIdByName($name,$surname){
+    //TODO request sql
+    return DB::table('users')
+        ->select('id')
+        ->where('nom',$name)
+        ->where('prenom',$surname)
+        ->get();
+  }
+
 
   public function changeUserInfo($column,$info) { 
 
@@ -827,7 +836,7 @@ public function getRoleById($id) {
     return $user->id_role;
 
 }
-  public function getPrenomById($id) { //recupere le nom de la personne grace a son id
+        public function getPrenomById($id) { //recupere le nom de la personne grace a son id
    
     $user = DB::table('users')->where('id', $id)->first();
     return $user->prenom;
@@ -863,4 +872,6 @@ public function getSexebyId($id) { //recupere le nom de la personne grace a son 
     {
         return $this->viaRemember;
     }
+
+
 }

@@ -349,6 +349,37 @@ class forumController extends Controller{
 	    	->delete();
 	}
 
+	public function supPostById(){
+ 		$inputData = Input::all();
+	    $idToSup = $inputData['idToSup'];
+
+	    return DB::table('forum_post')
+	    	->where('post_createur', '=', $idToSup)
+	    	->delete();
+	}
+	private function __supPostById($idToSup){
+	    return DB::table('forum_post')
+	    	->where('post_createur', '=', $idToSup)
+	    	->delete();
+	}
+
+
+	public function supPostByName(){
+ 		$inputData = Input::all();
+	    $nameToSup = $inputData['nameToSup'];
+	   	$surnameToSup = $inputData['surnameToSup'];
+
+	   	if(Auth::getIdByName($nameToSup,$surnameToSup) == null){
+	   		return null;
+	   	} else if(count(Auth::getIdByName($nameToSup,$surnameToSup)) == 1 ){
+			if($this->__supPostById(Auth::getIdByName($nameToSup,$surnameToSup)[0]->id) == 1){
+				return 1;
+			}
+	   	} else {
+	   		return -1;
+	   	}	   	
+	}
+
 	// Function called in gt by 'routes' which return the 'forumEditPostView'
 	public function editPostView($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post

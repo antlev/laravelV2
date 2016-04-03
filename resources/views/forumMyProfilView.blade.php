@@ -20,13 +20,26 @@
         <h1 class="col-lg-10 col-md-7 col-sm-offset-2 col-xs-12" onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
     </div>
+    </br>
 
-    <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-      <div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'>
-        </br>
-        <h2>Nombre de messages postés : </h2>
-        </br> 
+    <div class="col-lg-offset-1 col-lg-11 col-md-offset-1 col-md-11 col-sm-offset-1 col-sm-11">
+      <h2>Profil de : {{Auth::getPrenomById(Auth::id())}} {{Auth::getNomById(Auth::id())}}
+    </div>
+    <div class='col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
+      <div class="col-lg-3 col-md-5 pull-left">
+        <h3>Nombre de messages postés : </h3>
       </div>
+      <div class="col-lg-2 col-md-3">
+        <h4>42 </h4>
+      </div>
+    </div>
+    <div class='col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
+      <div>
+        <h3>Nombre de Topics créés : </h3>
+      </div>
+      <div class="col-lg-2 col-md-3">
+        <h4>42 </h4>
+      </div> 
     </div>
   </body>
 
