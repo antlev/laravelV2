@@ -115,70 +115,30 @@
 
 <script>
 
-    $(function(){
-      var topicData = {
-        topicId : [],
-        topicTitre : [],
-        createur : [],
-      }
-      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-      
-        $.ajax({
-          url: './{{$cat}}/next',
-          type: "post",
-          data: {'lastTopicPrinted': 0 },
-          success: function(data){ 
-
-            obj = $.parseJSON(data);
-            for(var i=0;i<obj.length;i++) {
-              topicData.topicId.push(obj[i].topic_id);
-              topicData.topicTitre.push(obj[i].topic_titre);
-              topicData.createur.push(obj[i].topic_createur);
-            }
-          },
-          complete: function(data){
-              $.ajax({
-                url: 'getNomById',
-                type: "post",
-                data: {'idcreator': topicData.createur},
-                success: function(data){
- 
-                  obj = $.parseJSON(data);
-                  console.log(obj);
-
-                  for(var i=0;i<topicData.topicId.length;++i){
-                    console.log(data);
-                    // console.log("test");
-                    $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
-                  }
-                }             
-              });      
-          }
-
-
-
-/*            $lastTopicPrinted = obj[size-1].topic_id;*/
-      });  
-         
+  $(function(){
+    var topicData = {
+      topicId : [],
+      topicTitre : [],
+      createur : [],
+    }
+    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
     
+      $.ajax({
+        url: './{{$cat}}/next',
+        type: "post",
+        data: {'lastTopicPrinted': 0 },
+        success: function(data){ 
+          obj = $.parseJSON(data);
+          console.log("toto"+obj);
+          console.log("titi"+topicData);
 
-
-      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-      $('#next').click(function() {
-        alert('next');
-        $.ajax({
-          url: './{{$cat}}/next',
-          type: "post",
-          data: {'lastTopicPrinted': $('table tr:last').attr('id') },
-          success: function(data){ 
-            obj = $.parseJSON(data);
-            for(var i=0;i<obj.length;i++) {
-              topicData.topicId.push(obj[i].topic_id);
-              topicData.topicTitre.push(obj[i].topic_titre);
-              topicData.createur.push(obj[i].topic_createur);
-            }
-          },
-          complete: function(data){
+          for(var i=0;i<obj.length;i++) {
+            topicData.topicId.push(obj[i].topic_id);
+            topicData.topicTitre.push(obj[i].topic_titre);
+            topicData.createur.push(obj[i].topic_createur);
+          }
+        },
+        complete: function(data){
             $.ajax({
               url: 'getNomById',
               type: "post",
@@ -193,12 +153,58 @@
                   // console.log("test");
                   $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
                 }
+                topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             
             });      
+        }
+
+
+
+/*            $lastTopicPrinted = obj[size-1].topic_id;*/
+    });  
+       
+  
+
+
+    $('#next').click(function() {
+      $.ajax({
+        url: './{{$cat}}/next',
+        type: "post",
+        // Sending request  for the next topic using the last tr id printed
+        data: {'lastTopicPrinted': $('table tr:last').attr('id') },
+        success: function(data){ 
+          obj = $.parseJSON(data);
+          console.log("tutu"+obj);
+          console.log("tata"+topicData);
+
+          for(var i=0;i<obj.length;i++) {
+            topicData.topicId.push(obj[i].topic_id);
+            topicData.topicTitre.push(obj[i].topic_titre);
+            topicData.createur.push(obj[i].topic_createur);
           }
- 
-        });      
-      });
+        },
+        complete: function(data){
+          $.ajax({
+            url: 'getNomById',
+            type: "post",
+            data: {'idcreator': topicData.createur},
+            success: function(data){
+
+              obj = $.parseJSON(data);
+              console.log(obj);
+
+              for(var i=0;i<topicData.topicId.length;++i){
+                console.log(data);
+                // console.log("test");
+                $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+              }
+              topicData.topicId = topicData.topicTitre = topicData.createur = '';       
+            }             
+          });      
+        }
+
+      });      
     });
+  });
 
 </script>

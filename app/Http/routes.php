@@ -80,6 +80,9 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('/forum/admin/supById','forumController@supPostById');
 	Route::post('/forum/admin/supByName','forumController@supPostByName');
 
+	Route::post('/forum/admin/printById','forumController@printPostById');
+	Route::post('/forum/admin/printByName','forumController@printPostByName');
+
 	Route::get('/forum/{auth}/myPosts', 'forumController@myPosts');
 	Route::get('/forum/{auth}/myProfil', 'forumController@myProfil');
 	Route::post('/forum/{cat}/next', 'forumController@nextCat');

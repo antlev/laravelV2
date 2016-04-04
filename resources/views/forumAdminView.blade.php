@@ -49,19 +49,19 @@
         <div class="col-lg-1">
           <h4>Par id</h4>
         </div>
-        <input class="col-lg-8" rows="10"  class="form-control"></input>
-        <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input id="idToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
+        <button id="printById" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
       </div>
       <div class="col-lg-offset-1 col-lg-11">
         <div class="col-lg-1">
           <h4>Prenom</h4>
         </div>
-        <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
+        <input class="col-lg-3" rows="10" id="surnameToPrint" class="form-control"></input>
         <div class="col-lg-1 col-lg-offset-1 ">
           <h4>Nom</h4>
         </div>
-        <input class="col-lg-3" rows="10" id="supByNom" class="form-control"></input>
-        <button class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input class="col-lg-3" rows="10" id="nameToPrint" class="form-control"></input>
+        <button id="printByName" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
       </div>
     </div>
 
@@ -103,22 +103,68 @@
           alert('Veulliez entrer un nom et un prénom');
         } else {
           $.ajax({
-          url: './admin/supByName',
+            url: './admin/supByName',
+            type: "post",
+            // TODO TOCHECK
+            data: {'nameToSup': $('#nameToSup').val(), 'surnameToSup': $('#surnameToSup').val() },
+            success: function(data){
+              console.log(data); 
+              if(data == -1){
+                alert("Plusieurs utilisateur correspondent veuillez supprimer avec l'id");
+              } else if (data == 1) {
+                alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+              } else {
+                alert('Aucun post ne correspond à votre requête')
+              }
+            } 
+          });
+        }      
+      });
+
+      $('#printById').click(function() {
+        if( $('#idToPrint').val() == ''){
+          alert('Please enter an id')
+        } else {
+                  $.ajax({
+          url: './admin/printById',
           type: "post",
-          data: {'nameToSup': $('#nameToSup').val(), 'surnameToSup': $('#surnameToSup').val() },
-          success: function(data){
-            console.log(data); 
-            if(data == -1){
-              alert("Plusieurs utilisateur correspondent veuillez supprimer avec l'id");
-            } else if (data == 1) {
-              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+          data: {'idToPrint': $('#idToPrint').val() },
+          success: function(data){ 
+            if(data == 0){
+              alert("Aucun messages correspond à la requête")
             } else {
-              alert('Aucun post ne correspond à votre requête')
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
             }
           } 
         });
         }      
       });
+
+
+    $('#printByName').click(function() {
+        if( $('#surnameToPrint').val() == '' || $('#nameToPrint').val() == '' ){
+          alert('Veulliez entrer un nom et un prénom');
+        } else {
+          $.ajax({
+            url: './admin/printByName',
+            type: "post",
+            // TODO TOCHECK
+            data: {'nameToPrint': $('#nameToPrint').val(), 'surnameToPrint': $('#surnameToPrint').val() },
+            success: function(data){
+              console.log(data); 
+              if(data == -1){
+                alert("Plusieurs utilisateur correspondent veuillez utiliser l'id");
+              } else if (data == 1) {
+                alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+              } else {
+                alert('Aucun post ne correspond à votre requête')
+              }
+            } 
+          });
+        }      
+      });
+
   });
 
 </script>
