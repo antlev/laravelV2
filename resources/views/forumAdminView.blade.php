@@ -23,96 +23,104 @@
   <body>
     <div>
       <h2 class="col-lg-offset-1 col-lg-11">Supprimer tous les posts d'un utilisateur</h2>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11 col-md-6">
+        <div class="col-lg-2">
           <h4>Par id  du créateur</h4>
         </div>
-        <input class="col-lg-8" rows="10" id="idToSup" class="form-control"></input>
-        <button  id="supById" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+        <input class="col-lg-7" rows="10" id="idToSup" class="form-control"></input>
+        <button  id="supById" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
       </div>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11 col-md-6">
+        <div class="col-lg-2">
           <h4>Par pseudo  du créateur</h4>
         </div>
-        <input class="col-lg-8" rows="10" id="pseudoToSup" class="form-control"></input>
-        <button  id="supByPseudo" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+        <input class="col-lg-7" rows="10" id="pseudoToSup" class="form-control"></input>
+        <button  id="supByPseudo" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
       </div>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
-          <h4>Prenom du créateur</h4>
+      <div class="col-lg-offset-1 col-lg-11 col-md-12">
+        <div class="col-md-4 col-lg-5">
+          <div class="col-lg-6 ">
+            <h4>Prenom du créateur</h4>
+          </div>
+          <input class="col-lg-6" rows="10" id="surnameToSup" class="form-control"></input>
         </div>
-        <input class="col-lg-3" rows="10" id="surnameToSup" class="form-control"></input>
-        <div class="col-lg-1 col-lg-offset-1 ">
-          <h4>Nom  du créateur</h4>
+        <div class="col-md-6 col-lg-7">
+          <div class="col-lg-3 col-lg-offset-1 ">
+            <h4>Nom  du créateur</h4>
+          </div>
+          <input class="col-lg-2" rows="10" id="nameToSup" class="form-control"></input>
+          <button id="supByName" class="btn btn-warning col-lg-offset-1 col-lg-2 col-md-offset-1">Supprimer</button>
         </div>
-        <input class="col-lg-3" rows="10" id="nameToSup" class="form-control"></input>
-        <button id="supByName" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
       </div>
     </div>
     <div>
       <h2 class="col-lg-offset-1 col-lg-11">Supprimer un post</h2>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11 col-md-4">
+        <div class="col-lg-2">
           <h4>Par id  du post</h4>
         </div>
-        <input class="col-lg-8" rows="10" id="postIdToSup" class="form-control"></input>
-        <button  id="supByPostId" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+        <input class="col-lg-7" rows="10" id="postIdToSup" class="form-control"></input>
+        <button  id="supByPostId" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
       </div>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11  col-md-6">
+        <div class="col-lg-2">
           <h4>Par date  du post</h4>
         </div>
-        <input class="col-lg-8" rows="10" id="DateToSup" class="form-control"></input>
-        <button  id="supByDate" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+        <input class="col-lg-7" rows="10" id="DateToSup" class="form-control"></input>
+        <button  id="supByDate" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
       </div>
     </div>
 
     <div>
-      <h2 class="col-lg-offset-1 col-lg-11">Afficher tous les posts d'un utilisateur</h2>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <h2 class="col-lg-offset-1 col-lg-11 col-md-12">Afficher tous les posts d'un utilisateur</h2>
+      <div class="col-lg-offset-1 col-lg-11 col-md-6">
+        <div class="col-lg-2">
           <h4>Par id du créateur</h4>
         </div>
-        <input id="idToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
-        <button id="printById" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input id="idToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
+        <button id="printById" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
       </div>
 
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11  col-md-6">
+        <div class="col-lg-2">
           <h4>Par pseudo du créateur</h4>
         </div>
-        <input id="pseudoToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
-        <button id="printByPseudo" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input id="pseudoToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
+        <button id="printByPseudo" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
       </div>
       <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
-          <h4>Prenom du créateur</h4>
+        <div class="col-md-6 col-lg-5">
+          <div class="col-lg-5">
+            <h4>Prenom du créateur</h4>
+          </div>
+          <input class="col-lg-5" rows="10" id="surnameToPrint" class="form-control"></input>
         </div>
-        <input class="col-lg-3" rows="10" id="surnameToPrint" class="form-control"></input>
-        <div class="col-lg-1 col-lg-offset-1 ">
-          <h4>Nom du créateur</h4>
+        <div class="col-md-6 col-lg-7">
+          <div class="col-lg-3 ">
+            <h4>Nom du créateur</h4>
+          </div>
+          <input class="col-lg-4" rows="10" id="nameToPrint" class="form-control"></input>
+          <button id="printByName" class="btn btn-primary col-lg-offset-1 col-lg-2 col-md-offset-1">Afficher</button>
         </div>
-        <input class="col-lg-3" rows="10" id="nameToPrint" class="form-control"></input>
-        <button id="printByName" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
       </div>
     </div>
 
         <div>
-      <h2 class="col-lg-offset-1 col-lg-11">Afficher un post</h2>
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <h2 class="col-lg-offset-1 col-lg-11 col-md-12">Afficher un post</h2>
+      <div class="col-lg-offset-1 col-lg-11  col-md-6">
+        <div class="col-lg-2">
           <h4>Par id du post</h4>
         </div>
-        <input id="postIdToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
-        <button id="printByPostId" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input id="postIdToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
+        <button id="printByPostId" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
       </div>
 
-      <div class="col-lg-offset-1 col-lg-11">
-        <div class="col-lg-1">
+      <div class="col-lg-offset-1 col-lg-11 col-md-6">
+        <div class="col-lg-2">
           <h4>Par date du post</h4>
         </div>
-        <input id="dateToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
-        <button id="printByDate" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
+        <input id="dateToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
+        <button id="printByDate" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
       </div>
     </div>
 

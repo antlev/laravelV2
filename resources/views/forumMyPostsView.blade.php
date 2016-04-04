@@ -54,7 +54,7 @@
             <div class="col-lg-5 col-md-6 col-sm-6 col-xs-5">  
               <!-- Button 'Voir la discussion' -->
               <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                <a href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-success" style="margin-left:15px">Voir la discussion</a> 
+                <a href="{{url('/forum/'.$postCat[$id-1].'/'.$post->post_topic_id)}}" class="btn btn-success" style="margin-left:15px">Voir la discussion</a> 
               </div> 
               <!-- Button 'Editer un message' -->
               <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-4">
@@ -89,6 +89,26 @@
             }
         });  
       });
+      
+      $('#editPost{{$id}}').click(function() {
+        alert('ok');
+        window.location.href = "";
+
+      });
+
+      $('#goToPost{{$id}}').click(function() {
+        alert('ok');
+        $.ajax({
+            url: '{{$post->post_topic_id}}/supPost',
+            type: "post",
+            data: {'postId': $(this).attr('data-id') },
+            success: function(data){
+              window.location.href = ""; // On redirige sur la même page
+            }
+        });  
+      });
+
+
     </script>
   @endforeach
 

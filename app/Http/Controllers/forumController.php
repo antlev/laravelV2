@@ -25,7 +25,6 @@ class forumController extends Controller{
 		$categories = $this->__getAllCategories();
 		$nbTopic = array();
 		$nbPost = array();
-		$lastPost = array();
 		$lastPostCreator = array();
 
 		foreach ($categories as $cat) {
@@ -155,11 +154,10 @@ class forumController extends Controller{
 		if( Auth::isAdmin() ){
 			$posts = $this->__getPostByCreatorId($auth);
 			$postCat = array();
-			$test = 0;
 			foreach ($posts as $post) {
-				$test++;
 				array_push($postCat, $this->__getCatFromTopic($post->post_topic_id));
 			}
+
 			$data = array(
 				'posts' => $posts,
 				'postCat' => $postCat);

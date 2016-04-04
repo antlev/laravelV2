@@ -83,7 +83,7 @@
             </td>
             <td class="text-center hidden-xs hidden-sm"><h4>{{$nbTopic[$numCat]}}</h4></td>
             <td class="text-center hidden-xs hidden-sm"><h4>{{$nbPost[$numCat]}}</h4></td>
-              <td class="hidden-xs hidden-sm">by <a href="#"></a><br><small><i class="fa fa-clock-o"></i> 3 months ago</small></td>
+              <td class="hidden-xs hidden-sm">by <a href="#"></a><br><small><i class="fa fa-clock-o"></i>{{$lastPostCreator[$numCat]}}</small></td>
           </tr>
           @endif
           <?php $numCat++ ?>

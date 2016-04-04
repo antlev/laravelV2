@@ -151,13 +151,13 @@
                 for(var i=0;i<topicData.topicId.length;++i){
                   console.log(data);
                   // console.log("test");
+                  var topic = topicData.topicId;
                   $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
                 }
                 topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             
             });      
         }
-
 
 
 /*            $lastTopicPrinted = obj[size-1].topic_id;*/
@@ -196,7 +196,7 @@
               for(var i=0;i<topicData.topicId.length;++i){
                 console.log(data);
                 // console.log("test");
-                $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                $('#topics').append("<tr id='href{{"+topicData.topicId[i]+"}}'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
               }
               topicData.topicId = topicData.topicTitre = topicData.createur = '';       
             }             
@@ -205,6 +205,19 @@
 
       });      
     });
+    
+
+      $('#id').click(function() {
+          window.location.href = "'forum/'.$cat.'/'";
+      });
+
+
+
+
+
+
   });
 
 </script>
+
+

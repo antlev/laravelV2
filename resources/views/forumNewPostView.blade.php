@@ -84,7 +84,9 @@
 <script>
 $(function() { 
   
+
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+  // Requête ajax permettant de sauvegarder le message en post
   $('#savePost').click(function() {
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
@@ -94,6 +96,7 @@ $(function() {
           type: "post",
           data: {'msg': $('#msgToSend').val() },
           success: function(data){
+            // On redirige ensuite
             window.location.href = "{{url('forum/'.$cat.'/'.$topic_id)}}";
           }
       });  
