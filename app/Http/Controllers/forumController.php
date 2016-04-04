@@ -210,6 +210,12 @@ class forumController extends Controller{
 			ORDER BY post_time ASC");
 	}
 
+	private function __getPost($postId){
+		return DB::table('forum_post')
+			->where('post_id', $postId)
+			->get();
+	}
+
 	private function __getForum(){
 		return DB::select("SELECT forum_id, forum_cat_id, forum_name, forum_desc
 			FROM forum_forum
@@ -401,16 +407,26 @@ class forumController extends Controller{
 			return null;
 	   	}	   	
 	}
-	public function printPostById(){
+
+	public function supPostByPostId(){
  		$inputData = Input::all();
-	    $idToSup = $inputData['idToSup'];
+	    $postIdToSup = $inputData['postIdToSup'];
+
+	   	return DB::table('forum_post')
+	   		->where('post_id',$postIdToSup) 
+	   		->delete();	
+	}
+
+	public function getPostById(){
+ 		$inputData = Input::all();
+	    $idToPrint = $inputData['idToPrint'];
 
 	    return DB::table('forum_post')
-	    	->where('post_createur', '=', $idToSup)
+	    	->where('post_createur', '=', $idToPrint)
 	    	->get();
 	}
 
-	public function printPostByName(){
+	public function getPostByName(){
  		$inputData = Input::all();
 	    $nameToSup = $inputData['nameToSup'];
 	   	$surnameToSup = $inputData['surnameToSup'];
@@ -427,6 +443,31 @@ class forumController extends Controller{
 	   	}	   
 	}
 
+	public function getPostByPseudo(){
+ 		$inputData = Input::all();
+	    $pseudoToPrint = $inputData['pseudoToPrint'];
+	    $idCreator = Auth::getIdByPseudo($pseudoToPrint)[0]->id;
+
+	    return DB::table('forum_post')
+	    	->where('post_createur', '=', $idCreator)
+	    	->get();
+	}
+
+	public function getPostByPostId(){
+ 		$inputData = Input::all();
+	    return $this->__getPost($inputData['postIdToPrint']);
+	}
+/*	TODO
+	public function getPostByDate(){
+ 		$inputData = Input::all();
+	    $pseudoToPrint = $inputData['pseudoToPrint'];
+	    $idCreator = Auth::getIdByPseudo($pseudoToPrint)[0]->id;
+
+	    return DB::table('forum_post')
+	    	->where('post_createur', '=', $idCreator)
+	    	->get();
+	}
+*/
 	// Function called in gt by 'routes' which return the 'forumEditPostView'
 	public function editPostView($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post

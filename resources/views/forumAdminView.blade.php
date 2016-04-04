@@ -49,6 +49,23 @@
         <button id="supByName" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
       </div>
     </div>
+    <div>
+      <h2 class="col-lg-offset-1 col-lg-11">Supprimer un post</h2>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Par id  du post</h4>
+        </div>
+        <input class="col-lg-8" rows="10" id="postIdToSup" class="form-control"></input>
+        <button  id="supByPostId" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+      </div>
+      <div class="col-lg-offset-1 col-lg-11">
+        <div class="col-lg-1">
+          <h4>Par date  du post</h4>
+        </div>
+        <input class="col-lg-8" rows="10" id="DateToSup" class="form-control"></input>
+        <button  id="supByDate" class="btn btn-warning col-lg-offset-1 col-lg-1">Supprimer</button>
+      </div>
+    </div>
 
     <div>
       <h2 class="col-lg-offset-1 col-lg-11">Afficher tous les posts d'un utilisateur</h2>
@@ -92,7 +109,7 @@
 
       <div class="col-lg-offset-1 col-lg-11">
         <div class="col-lg-1">
-          <h4>Par date</h4>
+          <h4>Par date du post</h4>
         </div>
         <input id="dateToPrint" class="col-lg-8" rows="10"  class="form-control"></input>
         <button id="printByDate" class="btn btn-primary col-lg-offset-1 col-lg-1">Afficher</button>
@@ -159,7 +176,6 @@
         if( $('#pseudoToSup').val() == ''){
           alert('Veulliez entrer un pseudo svp');
         } else {
-          alert('toto');
           $.ajax({
             url: './admin/supByPseudo',
             type: "post",
@@ -177,6 +193,48 @@
         }      
       });
 
+      $('#supByPostId').click(function() {
+        if( $('#postIdToSup').val() == ''){
+          alert('Please enter an id')
+        } else {
+                  $.ajax({
+          url: './admin/supByPostId',
+          type: "post",
+          data: {'postIdToSup': $('#postIdToSup').val() },
+          success: function(data){ 
+            console.log(data); 
+            if(data == 0){
+              alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+            } else {
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#supByPostId').val()+" ont été supprimé" );
+            }
+          } 
+        });
+        }      
+      });
+
+      $('#supByPostDate').click(function() {
+        if( $('#postDateToSup').val() == ''){
+          alert('Please enter an id')
+        } else {
+          $.ajax({
+            url: './admin/supByPostDate',
+            type: "post",
+            data: {'postDateToSup': $('#postDateToSup').val() },
+            success: function(data){
+            console.log(data); 
+              if(data == 0){
+                alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+              } else {
+                //TODO afficher id
+                alert("Tous les messages de l'utilisateur (id) "+$('#supByPostDate').val()+" ont été supprimé" );
+              }
+            } 
+          });
+        }      
+      });
+
       $('#printById').click(function() {
         if( $('#idToPrint').val() == ''){
           alert('Please enter an id')
@@ -186,6 +244,7 @@
           type: "post",
           data: {'idToPrint': $('#idToPrint').val() },
           success: function(data){ 
+            console.log(data);
             if(data == 0){
               alert("Aucun messages correspond à la requête")
             } else {
@@ -197,7 +256,28 @@
         }      
       });
 
+      $('#printByPseudo').click(function() {
+        if( $('#pseudoToPrint').val() == ''){
+          alert('Please enter an pseudo')
+        } else {
+                  $.ajax({
+          url: './admin/printByPseudo',
+          type: "post",
+          data: {'pseudoToPrint': $('#pseudoToPrint').val() },
+          success: function(data){
+            console.log(data);S 
+            if(data == 0){
+              alert("Aucun messages correspond à la requête")
+            } else {
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+            }
+          } 
+        });
+        }      
+      });
 
+//TODO
     $('#printByName').click(function() {
         if( $('#surnameToPrint').val() == '' || $('#nameToPrint').val() == '' ){
           alert('Veulliez entrer un nom et un prénom');
@@ -221,6 +301,49 @@
         }      
       });
 
+
+
+      $('#printByPostId').click(function() {
+        if( $('#postIdToPrint').val() == ''){
+          alert('Please enter an id')
+        } else {
+                  $.ajax({
+          url: './admin/printByPostId',
+          type: "post",
+          data: {'postIdToPrint': $('#postIdToPrint').val() },
+          success: function(data){ 
+            console.log(data);
+            if(data == 0){
+              alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+            } else {
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#printByPostId').val()+" ont été supprimé" );
+            }
+          } 
+        });
+        }      
+      });
+
+      $('#printByPostDate').click(function() {
+        if( $('#postDateToPrint').val() == ''){
+          alert('Please enter an id')
+        } else {
+                  $.ajax({
+          url: './admin/printByPostDate',
+          type: "post",
+          data: {'postDateToPrint': $('#postDateToPrint').val() },
+          success: function(data){ 
+            console.log(data);
+            if(data == 0){
+              alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+            } else {
+              //TODO afficher id
+              alert("Tous les messages de l'utilisateur (id) "+$('#printByPostDate').val()+" ont été supprimé" );
+            }
+          } 
+        });
+        }      
+      });
   });
 
 </script>

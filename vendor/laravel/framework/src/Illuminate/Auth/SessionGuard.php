@@ -814,7 +814,6 @@ return $nb;
   }
 
   public function getIdByName($name,$surname){
-    //TODO request sql
     return DB::table('users')
         ->select('id')
         ->where('nom',$name)
@@ -823,7 +822,6 @@ return $nb;
   }
 
    public function getIdByPseudo($name){
-    //TODO request sql
     return DB::table('users')
         ->select('id')
         ->where('name',$name)
