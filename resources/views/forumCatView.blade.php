@@ -82,19 +82,19 @@
           @endif      
         </tr>
       </thead>
-      <tbody>
         <?php $compteur = 0 ?>
         @if(empty($topic))
+        <tbody>
           <tr>
             <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
           </tr>
+        </tbody>
         @else
-            <tr id="topics">
+            <tbody id="topics">
 
 
-            </tr>
+            </tbody>
         @endif
-      </tbody>
     </table>
   </body>
         
@@ -116,6 +116,11 @@
 <script>
 
     $(function(){
+      var topicData = {
+        topicId : [],
+        topicTitre : [],
+        createur : [],
+      }
       $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
       
         $.ajax({
@@ -123,15 +128,36 @@
           type: "post",
           data: {'lastTopicPrinted': 0 },
           success: function(data){ 
-            console.log(data)
-            for(var i=0;i<data.length;i++) { 
-              console.log(data[i]+"::"+i)
 
-              $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+            obj = $.parseJSON(data);
+            for(var i=0;i<obj.length;i++) {
+              topicData.topicId.push(obj[i].topic_id);
+              topicData.topicTitre.push(obj[i].topic_titre);
+              topicData.createur.push(obj[i].topic_createur);
+            }
+          },
+          complete: function(data){
+              $.ajax({
+                url: 'getNomById',
+                type: "post",
+                data: {'idcreator': topicData.createur},
+                success: function(data){
+ 
+                  obj = $.parseJSON(data);
+                  console.log(obj);
 
-            } 
-/*            $lastTopicPrinted = data[size-1].topic_id;
-*/        }
+                  for(var i=0;i<topicData.topicId.length;++i){
+                    console.log(data);
+                    // console.log("test");
+                    $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                  }
+                }             
+              });      
+          }
+
+
+
+/*            $lastTopicPrinted = obj[size-1].topic_id;*/
       });  
          
     
@@ -145,8 +171,9 @@
           type: "post",
           data: {'lastTopicPrinted': $('table tr:last').attr('id') },
           success: function(data){ 
-            for(var i=0;i<data.length;i++) { 
-              $('#topics').append("<tr id='"+data[i].topic_id+"'><td><h4><a href='{{url('forum/'.$cat.'/'."+data[i].topic_id+")}}' style='margin-left:20px'>"+data[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
+            obj = $.parseJSON(data);
+            for(var i=0;i<obj.length;i++) { 
+              $('#topics').append("<tr id='"+obj[i].topic_id+"'><td><h4 class='col-lg-offset-1'><a href='{{url('forum/'.$cat.'/'."+obj[i].topic_id+")}}' style='margin-left:20px'>"+obj[i].topic_titre+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :</td></tr>");
             }
           } 
         });      
@@ -154,17 +181,3 @@
     });
 
 </script>
-
-  @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-    <tr id="{{$topic_as->topic_id}}">
-      <td>
-        <h4>
-          <a href="{{url('forum/'.$cat.'/'.$topic_as->topic_id)}}"  style="margin-left:20px" >{{$topic_as->topic_titre}}</a>
-        </h4>
-      </td>
-      <td class="cell-stat text-center hidden-xs">{{$nbPost[$compteur]}}</td>
-      <!-- TODO error on $lastPostCreator[$compteur] -->
-      <td class="cell-stat hidden-sm hidden-xs">posté par :</td>
-    </tr>
-    <?php $compteur++ ?>
-  @endforeach

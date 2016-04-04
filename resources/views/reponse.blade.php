@@ -32,7 +32,7 @@ $.ajax({
       success: function(data){
          obj = $.parseJSON(data);
          for(var i=0;i<obj.length;i++) { 
-      $('#lastquizz').before('<div class="col-lg-12" id="quizz_'+i+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;<i style="color:green;cursor:pointer" class="fa fa-plus-circle" id="#addQuestion"></i>&nbsp;Ajouter une réponse<br> <div class="col-lg-6" style="font-weight:normal">Réponse: <input type="text" style="width:60% !important" class="form-control" id="reponse_'+obj[i]+'"><br></div><div class="col-lg-6"><br><input type="checkbox"></div></div>');
+      $('#lastquizz').before('<div class="col-lg-12" aid="quizz_'+i+'" style="font-weight:bold"> Question ' +  obj[i].id + ' : ' + obj[i].nom + '? &nbsp;<i style="color:green;cursor:pointer" class="fa fa-plus-circle" id="#addQuestion"></i>&nbsp;Ajouter une réponse<br> <div class="col-lg-6" style="font-weight:normal">Réponse: <input type="text" style="width:60% !important" class="form-control" id="reponse_'+obj[i]+'"><br></div><div class="col-lg-6"><br><input type="checkbox"></div></div>');
        
           }
        }

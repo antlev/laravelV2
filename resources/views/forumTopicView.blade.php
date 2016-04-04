@@ -160,3 +160,7 @@
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
   });
 </script>
+
+href='{{url('forum/'.$cat.'/'.obj[i].topic_id)}}'
+
+             $('#topics').append("<tr id='"+obj[i].topic_id+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>obj[i].topic_titre</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :"+{{Auth::getNomById(obj[i].topic_createur)}}+"</td></tr>");

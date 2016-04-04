@@ -83,6 +83,17 @@ class forumController extends Controller{
 		return view('forumCatView',  $data);
 	}
 	// Return the next pages to print for the forumCatView
+	public function getNomById(){
+			// $data = Input::get('idcreator');
+			$data = $_POST['idcreator'];
+			$creator = array();
+			foreach($data as $creatorId){
+				// array_push($creator, Auth::getNameById($creatorId));
+				$creator[] = Auth::getNameById($creatorId);
+			}
+     	return json_encode($creator);
+	}
+	
 	public function nextCat($cat){
 		$inputData = Input::all();
 		$firstTopicToPrint = $inputData['lastTopicPrinted'];
