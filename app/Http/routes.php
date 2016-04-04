@@ -79,6 +79,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/forum/admin','forumController@adminView');
 	Route::post('/forum/admin/supById','forumController@supPostById');
 	Route::post('/forum/admin/supByName','forumController@supPostByName');
+	Route::post('/forum/admin/supByPseudo','forumController@supPostByPseudo');
 
 	Route::post('/forum/admin/printById','forumController@printPostById');
 	Route::post('/forum/admin/printByName','forumController@printPostByName');

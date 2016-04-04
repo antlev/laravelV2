@@ -822,6 +822,14 @@ return $nb;
         ->get();
   }
 
+   public function getIdByPseudo($name){
+    //TODO request sql
+    return DB::table('users')
+        ->select('id')
+        ->where('name',$name)
+        ->get();
+  } 
+
 
   public function changeUserInfo($column,$info) { 
 

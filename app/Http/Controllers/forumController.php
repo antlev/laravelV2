@@ -391,6 +391,16 @@ class forumController extends Controller{
 	   	}	   	
 	}
 
+	public function supPostByPseudo(){
+ 		$inputData = Input::all();
+	    $pseudoToSup = $inputData['pseudoToSup'];
+
+	   	if(Auth::getIdByPseudo($pseudoToSup)[0]->id == 1){
+	   		return $this->__supPostById(Auth::getIdByPseudo($pseudoToSup)[0]->id);
+	   	} else {
+			return null;
+	   	}	   	
+	}
 	public function printPostById(){
  		$inputData = Input::all();
 	    $idToSup = $inputData['idToSup'];
