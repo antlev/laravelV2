@@ -20,12 +20,18 @@
 
 
 
-  <div class="container" style="margin-top: 35px">
-    <div class="page-header page-heading">
-      <img src="{{asset('img/logo.png')}}" style="width:8%">
-      <h1 href="{{url('forum')}}" >Forum De La Maison Des Ligues</h1>
+    <div class="container" style="margin-top: 35px">
+      <div class="page-header page-heading col-lg-12 text-center">
+        <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+      </div>
     </div>
-  </div>
+
+    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+    </ul>
+
 
   <div>
 

@@ -15,19 +15,18 @@
   </head>
   <body>
 
-
-      <div class="page-header page-heading col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <div>
-          <img class="col-lg-offset-2 col-md-offset-1 col-md-1 hidden-sm hidden-xs" src="{{asset('img/logo.png')}}" style="width:6%">
-          <h1 class="col-lg-10 col-md-7 col-sm-offset-2 col-xs-12" onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
-        </div>
+    <div class="container" style="margin-top: 35px">
+      <div class="page-header page-heading col-lg-12 text-center">
+        <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
+    </div>
 
     <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-      <li role="presentation" class="active"><a href="{{url('forum/')}}">Home</a></li>
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
     </ul>
+
     </br>
     </br>
 
@@ -146,7 +145,7 @@
                 obj = $.parseJSON(data);
                 for(var i=0;i<topicData.topicId.length;++i){
                   var topic = topicData.topicId;
-                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>toto</td><td class='cell-stat hidden-sm hidden-xs'>Posté par "+obj[i]+"</td></tr>");
                 }
                 topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             
@@ -177,7 +176,7 @@
             success: function(data){
               obj = $.parseJSON(data);
               for(var i=0;i<topicData.topicId.length;++i){
-                $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='toto' style='margin-left:20px'></a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
               }
               topicData.topicId = topicData.topicTitre = topicData.createur = '';       
             }             

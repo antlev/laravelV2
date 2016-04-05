@@ -15,62 +15,69 @@
 
   <body>
     <div class="container" style="margin-top: 35px">
-      <div class="page-header page-heading">
+      <div class="page-header page-heading col-lg-12 text-center">
         <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
     </div>
 
     <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-      <li role="presentation" class="active"><a href="#">Home</a></li>
-      <li role="presentation"><a href="#">Profil</a></li>
-      <li role="presentation"><a href="#">Mes Messages</a></li>
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
     </ul>
 
-
-
     <div>
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-10">
+      <div class="col-lg-6 col-md-5 col-sm-6 col-xs-10">
         <h2>
-          <div class="col-lg-10 hidden-sm hidden-xs">Catégorie : {{$catName}}</div>
-          <div class="hidden-lg hidden-md">{{$catName}}</div>
-        </h2>
-      </div>
+          <div class="col-lg-offset-2 col-lg-8 hidden-sm hidden-xs">
+            <a>Catégorie : {{$catName}}</a>
+          </div>
+          <div class="hidden-lg hidden-md">
+            <a>{{$catName}}</a>
+          </div>
 
-      <!-- Menu de navigation -->
-      <div class="col-lg-offset-4 col-lg-2  col-md-offset-3 col-md-2 col-sm-offset-2 col-sm-2">
-        <div class="dropdown ">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Navigation Forum
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li class="dropdown-header" >
-              <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
-            </li>
-            @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-              <li class="dropdown-header">
-                <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
-                  <h4>{{$cats->cat_nom}}</h4>
-                </a>
+        </h2>            
+      </div>
+      <div class="col-lg-6 col-md-7 col-sm-6 col-xs-10">
+        <div class="col-lg-offset-1 col-lg-2 ">
+          <button class="btn btn-success" href="{{url('forum/'.$cat.'/')}}">Revenir à la catégorie</button>
+        </div>
+        <!-- Menu de navigation -->
+        <div class="col-lg-2 col-md-2 col-sm-offset-2 col-sm-2">
+          <div class="dropdown ">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Navigation Forum
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-header" >
+                <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
               </li>
-              @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-                @if($topic_as->topic_cat==$cats->cat_id)
-                  <li>
-                    <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
-                      <h5>{{$topic_as->topic_titre}}</h5>
-                    </a>
-                  </li>
-                @endif
+              @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+                <li class="dropdown-header">
+                  <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+                    <h4>{{$cats->cat_nom}}</h4>
+                  </a>
+                </li>
+                @foreach($topics as $topic_as) <!-- On affiche les catégories -->
+                  @if($topic_as->topic_cat==$cats->cat_id)
+                    <li>
+                      <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
+                        <h5>{{$topic_as->topic_titre}}</h5>
+                      </a>
+                    </li>
+                  @endif
+                @endforeach
               @endforeach
-            @endforeach
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
-      <h3>
+    <div class="col-lg-offset-1  col-md-12 col-sm-12 col-xs-12">
+      <h2>
         <div> Topic : {{$topic[0]->topic_titre}}</div>
-      </h3>
+      </h2>
     </div>
 
       
@@ -85,7 +92,7 @@
           @if($post->post_topic_id==$topic[0]->topic_id)
             <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
             <div class="panel-body panel-info" style="min-height:70px">
-              <div> {{$post->post_texte}}  </div>
+              <h3> {{$post->post_texte}}  </h3>
               <?php $id++ ?>   <!-- On incrémente la variable id à chaque post -->
             </div>
             
@@ -120,12 +127,12 @@
       @endif
       <script>
         $('#supPost{{$id}}').click(function() {
-          alert('ok');
           $.ajax({
               url: '{{$topic[0]->topic_id}}/supPost',
               type: "post",
               data: {'postId': $(this).attr('data-id') },
               success: function(data){
+                alert('Votre post a bien été supprimé')
                 window.location.href = ""; // On redirige sur la même page
               }
           });  
@@ -161,6 +168,3 @@
   });
 </script>
 
-href='{{url('forum/'.$cat.'/'.obj[i].topic_id)}}'
-
-             $('#topics').append("<tr id='"+obj[i].topic_id+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>obj[i].topic_titre</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par :"+{{Auth::getNomById(obj[i].topic_createur)}}+"</td></tr>");
