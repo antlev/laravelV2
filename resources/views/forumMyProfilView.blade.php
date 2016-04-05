@@ -25,15 +25,15 @@
     <div class="col-lg-offset-1 col-lg-11 col-md-offset-1 col-md-11 col-sm-offset-1 col-sm-11">
       <h2>Profil de : {{Auth::getPrenomById(Auth::id())}} {{Auth::getNomById(Auth::id())}}
     </div>
-    <div class='col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
-      <div class="col-lg-3 col-md-5 pull-left">
+    <div class='col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
+      <div class="col-lg-4 col-md-5 pull-left">
         <h3>Nombre de messages postés : </h3>
       </div>
       <div class="col-lg-2 col-md-3">
         <h4>42 </h4>
       </div>
     </div>
-    <div class='col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
+    <div class='col-lg-offset-2 col-lg-18 col-md-offset-2 col-md-10  col-sm-offset-2 col-xs-offset-2'>
       <div>
         <h3>Nombre de Topics créés : </h3>
       </div>

@@ -129,8 +129,6 @@
         data: {'lastTopicPrinted': 0 },
         success: function(data){ 
           obj = $.parseJSON(data);
-          console.log("toto"+obj);
-          console.log("titi"+topicData);
 
           for(var i=0;i<obj.length;i++) {
             topicData.topicId.push(obj[i].topic_id);
@@ -144,27 +142,18 @@
               type: "post",
               data: {'idcreator': topicData.createur},
               success: function(data){
-
+      
                 obj = $.parseJSON(data);
-                console.log(obj);
-
                 for(var i=0;i<topicData.topicId.length;++i){
-                  console.log(data);
-                  // console.log("test");
                   var topic = topicData.topicId;
-                  $('#topics').append("<tr id='"+topicData.topicId[i]+"'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
                 }
                 topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             
             });      
         }
-
-
 /*            $lastTopicPrinted = obj[size-1].topic_id;*/
     });  
-       
-  
-
 
     $('#next').click(function() {
       $.ajax({
@@ -174,9 +163,6 @@
         data: {'lastTopicPrinted': $('table tr:last').attr('id') },
         success: function(data){ 
           obj = $.parseJSON(data);
-          console.log("tutu"+obj);
-          console.log("tata"+topicData);
-
           for(var i=0;i<obj.length;i++) {
             topicData.topicId.push(obj[i].topic_id);
             topicData.topicTitre.push(obj[i].topic_titre);
@@ -189,35 +175,21 @@
             type: "post",
             data: {'idcreator': topicData.createur},
             success: function(data){
-
               obj = $.parseJSON(data);
-              console.log(obj);
-
               for(var i=0;i<topicData.topicId.length;++i){
-                console.log(data);
-                // console.log("test");
-                $('#topics').append("<tr id='href{{"+topicData.topicId[i]+"}}'><td><h4 class='col-lg-offset-1' ><a style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+                $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='toto' style='margin-left:20px'></a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
               }
               topicData.topicId = topicData.topicTitre = topicData.createur = '';       
             }             
-          });      
+          });    
         }
-
       });      
     });
-    
 
       $('#id').click(function() {
           window.location.href = "'forum/'.$cat.'/'";
       });
-
-
-
-
-
-
   });
-
 </script>
 
 
