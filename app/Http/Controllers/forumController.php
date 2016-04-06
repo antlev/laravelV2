@@ -176,17 +176,17 @@ class forumController extends Controller{
 			$topicData = Input::get('topicData');
 			$creatorName = array();
 			$nbPost = array();
-			foreach($topicData as $creator => $creatorId){
-				dd($creatorId);
-				$creatorName[] = Auth::getNameById($creatorId);
-				$nbPost[] = __getNbPostByTopic();
+			for($i = 0 ; $i < sizeof($topicData['topicId']) ; $i++){
+				$creatorName[] = Auth::getNameById($topicData['createur'][$i]);
+				$nbPost[] = $this->__getNbPostByTopic($i);
 			}
 			//TODO RETURN DATA ARRAY WITH NBPOST AND OTHER INFO
 			$topicData = array(
+				'topicData' => $topicData,
 				'creatorName' => $creatorName,
 				'nbPost' => $nbPost);
 		// json_encode while encode data to be usable in the jQuery request
-     	return json_encode($creator);
+     	return json_encode($topicData);
 	}
 	public function nextCat($cat){
 		$inputData = Input::all(); // Getting data from Post_Request

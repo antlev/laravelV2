@@ -114,42 +114,27 @@
 </html> 
 
 <script>
-
   $(function(){
     var topicData = {
       topicId : [],
       topicTitre : [],
       createur : [],
     }
-    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-    
+    $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });   
       $.ajax({
         url: './{{$cat}}/next',
         type: "post",
         data: {'lastTopicPrinted': 0 },
         success: function(data){ 
-          console.log("data");
-          console.log(data);
-
           obj = $.parseJSON(data);
-          console.log("parseJSON")
-          console.log("obj");
-          console.log(obj);
-
-
-          console.log("obj.topics[0]");
-          console.log(obj.topics[0]);
-          console.log("obj.topics[0].topic_createur");
-          console.log(obj.topics[0].topic_createur);
-          console.log("obj.topics[0].topic_id");
           console.log(obj.topics[0].topic_id);
-            // TODO push not working!
+                  console.log(topicData);
+
           for(var i=0;i<obj.nbPost.length;i++) {
-            topicData.topicId.push(obj.topics[i].topic_id);
+            topicData.topicId.push(1);
             topicData.createur.push(obj.topics[i].topic_createur);
             topicData.topicTitre.push(obj.topics[i].topic_titre);
-        }          
-
+          }         
         },
         complete: function(data){
             $.ajax({
@@ -157,21 +142,15 @@
               type: "post",
               data: {'topicData': topicData},
               success: function(data){
-                var topic;
-                console.log('toto');
-                console.log(data['topicId'][0]);
-                console.log(data['nbPost'][0]);
-/*                console.log(data);
-*/                for(var i=0;i<topicData.length;++i){
-                    topic = topicData.topicId;
-                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par </td></tr>");
-
+                obj = $.parseJSON(data);
+                console.log(obj['nbPost'][0]);
+                for(var i=0;i<obj['nbPost'].length;++i){
+                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost']+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['createur']+"</td></tr>");
                 }
-                topicData.topicId = topicData.topicTitre = topicData.createur = '';
-              }             
+/*                topicData.topicId = topicData.topicTitre = topicData.createur = '';
+*/              }             
             });      
         }
-/*            $lastTopicPrinted = obj[size-1].topic_id;*/
     });  
 
     $('#next').click(function() {
