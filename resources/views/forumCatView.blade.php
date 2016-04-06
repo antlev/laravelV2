@@ -20,12 +20,13 @@
         <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
     </div>
-
-    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
-      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
-      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
-    </ul>
+  <!-- Barre de navigation -->
+  <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+    <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+    <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+    <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+    <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
+  </ul>
 
     </br>
     </br>
@@ -128,12 +129,17 @@
         data: {'lastTopicPrinted': 0 },
         success: function(data){ 
           obj = $.parseJSON(data);
+          console.log(obj.topics[0].topic_createur);
+          console.log(topicData.createur);
 
+          topicData.createur = obj.topics.topic_createur ;
+            // TODO push not working!
           for(var i=0;i<obj.length;i++) {
-            topicData.topicId.push(obj[i].topic_id);
-            topicData.topicTitre.push(obj[i].topic_titre);
-            topicData.createur.push(obj[i].topic_createur);
-          }
+            topicData.topicId.push(obj.topics[i].topic_id);
+            topicData.topicTitre.push(obj.topics[i].topic_titre);
+/*            topicData.createur.push(obj.topics[i].topic_createur);
+*/          }
+          console.log(topicData.topicTitre);
         },
         complete: function(data){
             $.ajax({
@@ -141,11 +147,10 @@
               type: "post",
               data: {'idcreator': topicData.createur},
               success: function(data){
-      
-                obj = $.parseJSON(data);
-                for(var i=0;i<topicData.topicId.length;++i){
-                  var topic = topicData.topicId;
-                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>toto</td><td class='cell-stat hidden-sm hidden-xs'>Posté par "+obj[i]+"</td></tr>");
+                var topic;
+                console.log(data);
+                for(var i=0;i<topicData.length;++i){
+                   topic = topicData.topicId;
                 }
                 topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             
@@ -161,6 +166,8 @@
         // Sending request  for the next topic using the last tr id printed
         data: {'lastTopicPrinted': $('table tr:last').attr('id') },
         success: function(data){ 
+          console.log('obj');
+          console.log(obj);
           obj = $.parseJSON(data);
           for(var i=0;i<obj.length;i++) {
             topicData.topicId.push(obj[i].topic_id);

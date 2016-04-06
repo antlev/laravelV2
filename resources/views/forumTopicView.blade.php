@@ -19,12 +19,14 @@
         <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
     </div>
-
-    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
-      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
-      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
-    </ul>
+  <!-- Barre de navigation -->
+  <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+    <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+    <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+    <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+    <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
+    <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
+  </ul>
 
     <div>
       <div class="col-lg-6 col-md-5 col-sm-6 col-xs-10">
@@ -76,7 +78,8 @@
 
     <div class="col-lg-offset-1  col-md-12 col-sm-12 col-xs-12">
       <h2>
-        <div> Topic : {{$topic[0]->topic_titre}}</div>
+        <!-- TODO URL -->
+        <a href="{{url('forum/'.)}}"> Topic : {{$topic[0]->topic_titre}}</div>
       </h2>
     </div>
 
@@ -99,7 +102,7 @@
 
             <div class="panel-footer panel-info" style="height:55px" >
               <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12"> 
-                <div>posté le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </div>
+                <div>posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}}</div>
               </div>
               @if(Auth::isAdmin())
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">   

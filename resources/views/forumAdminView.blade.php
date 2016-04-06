@@ -14,11 +14,16 @@
     <div class="container" style="margin-top: 35px">
       <h1 onclick="location.href='{{url('forum')}}'" >Admin du Forum De La Maison Des Ligues</h1>
     </div>
-
-  </br>
-  </br>  
-
-
+    </br>
+    <!-- Barre de navigation -->
+    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+      <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
+      <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
+    </ul>
+    </br>  
   </head>
   <body>
     <div>
@@ -141,7 +146,7 @@
         if( $('#idToSup').val() == ''){
           alert('Please enter an id')
         } else {
-                  $.ajax({
+          $.ajax({
           url: './admin/supById',
           type: "post",
           data: {'idToSup': $('#idToSup').val() },
@@ -149,7 +154,6 @@
             if(data == 0){
               alert("Aucun messages correspondant à la requête n'a pu être supprimé")
             } else {
-              //TODO afficher id
               alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
             }
           } 

@@ -20,11 +20,13 @@
       <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
     </div>
   </div>
-
+  <!-- Barre de navigation -->
   <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
     <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
     <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
     <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+    <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
+    <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
   </ul>
   </br>
 

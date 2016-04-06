@@ -14,17 +14,25 @@
     </style>
   </head>
   <body>
-    <div class="page-header page-heading col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <div>
-        <img class="col-lg-offset-2 col-md-offset-1 col-md-1 hidden-sm hidden-xs" src="{{asset('img/logo.png')}}" style="width:6%">
-        <h1 class="col-lg-10 col-md-7 col-sm-offset-2 col-xs-12" onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
+    <div class="container" style="margin-top: 35px">
+      <div class="page-header page-heading col-lg-12 text-center">
+        <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
       </div>
     </div>
+
+    <!-- Barre de navigation -->
+    <ul class="nav nav-pills col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+      <li role="presentation" class="active"><a href="{{url('forum/')}}">Index</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
+      <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
+      <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
+      <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
+    </ul>
 
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
       <div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'>
         </br>
-        <h2>Vos messages</h2>
+          <h2>Vous avez posté {{$nbPost}} messages sur le forum</h2>
         </br>   
       </div>
     </div>
@@ -36,7 +44,9 @@
     @foreach($posts as $post) <!-- On affiche les catégories -->
     <div class="row">
       <div class=" col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-        <h3>Message {{$id}}
+          <h3>Message n°{{$id}}
+            <a href="{{url('forum/'.$post->topic_cat.'/'.$post->topic_id)}}"> (Topic:{{$post->topic_titre}})</a>
+            <a href="{{url('forum/'.$post->topic_cat)}}"> (Catégorie:{{$post->cat_nom}})</a></h3>
       </div>
       <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
         <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
