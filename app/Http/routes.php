@@ -72,36 +72,39 @@ Route::group(['middleware' => 'web'], function () {
 
 
 //Forum
-	// Only use for tests
-	Route::get('forum/test' ,'forumController@test');
+
+	// Index
 	Route::get('/forum/', 'forumController@index');
+	// Admin
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}', 'forumController@cat');');'
 	Route::get('/forum/admin','forumController@adminView');
+	// Suppression methods
 	Route::post('/forum/admin/supById','forumController@supPostById');
 	Route::post('/forum/admin/supByName','forumController@supPostByName');
 	Route::post('/forum/admin/supByPseudo','forumController@supPostByPseudo');
 	Route::post('/forum/admin/supByPostId','forumController@supPostByPostId');
 	Route::post('/forum/admin/supByPostDate','forumController@supPostByDate');
-
+	// Print methods
 	Route::post('/forum/admin/printById','forumController@getPostById');
 	Route::post('/forum/admin/printByName','forumController@getPostByName');
 	Route::post('/forum/admin/printByPseudo','forumController@getPostByPseudo');
 	Route::post('/forum/admin/printByPostId','forumController@getPostByPostId');
 	Route::post('/forum/admin/printByPostDate','forumController@getPostByPostDate');
-
+	Route::post('/forum/getPostInfoById','forumController@getPostInfoById');
+	// Profil 
 	Route::get('/forum/{auth}/myPosts', 'forumController@myPosts');
 	Route::get('/forum/{auth}/myProfil', 'forumController@myProfil');
+
 	Route::post('/forum/{cat}/next', 'forumController@nextCat');
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::get('/forum/{cat}/newTopic', 'forumController@newTopic');
 	// The following line MUST BE PLACED BEFORE the line 'Route::get('/forum/{cat}/{topic}', 'forumController@topic');'
 	Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
-	Route::get('/forum/{cat}/{topic}/newPost','forumController@newPost');
     Route::post('/forum/{cat}/{topic}/savePost','forumController@postMessage');
 	Route::post('/forum/{cat}/{topic}/supPost','forumController@supPost');
-	Route::post('/forum/getPostInfoById','forumController@getPostInfoById');
-	Route::get('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPostView');
 	Route::post('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPost');
+	Route::get('/forum/{cat}/{topic}/newPost','forumController@newPost');
+	Route::get('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPostView');
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
 	Route::get('/forum/{cat}', 'forumController@cat');
 

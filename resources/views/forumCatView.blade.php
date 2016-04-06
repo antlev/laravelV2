@@ -90,10 +90,8 @@
           </tr>
         </tbody>
         @else
-            <tbody id="topics">
-
-
-            </tbody>
+            <tbody id="topics"></tbody>
+            <!-- ajax request will print the post to print here -->
         @endif
     </table>
   </body>
@@ -115,75 +113,81 @@
 
 <script>
   $(function(){
+    // We instanciate an array to store the topic data to print
     var topicData = {
       topicId : [],
-      topicTitre : [],
-      createur : [],
+      topicTitle : [],
+      creator : [],
     }
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });   
+      // First ajax post request will get the next topics to print
       $.ajax({
         url: './{{$cat}}/next',
         type: "post",
-        data: {'lastTopicPrinted': 0 },
+        data: {'lastTopicPrinted': 0 }, //We want to start by the first topic so we set the variable lastTopicPrinted to 0
         success: function(data){ 
-          obj = $.parseJSON(data);
+          obj = $.parseJSON(data); // Parse the data which has been encode using JSON
           for(var i=0;i<obj.nbPost.length;i++) {
-            topicData.topicId.push(obj.topics[i].topic_id);
-            topicData.createur.push(obj.topics[i].topic_createur);
-            topicData.topicTitre.push(obj.topics[i].topic_titre);
+            topicData.topicId.push(obj.topics[i].topic_id); // For each data needed we set the topicData
+            topicData.creator.push(obj.topics[i].topic_createur);
+            topicData.topicTitle.push(obj.topics[i].topic_titre);
           }         
         },
-        complete: function(data){
+        complete: function(data){ // When request is completed
+            // Secondajax post request the will get number of post and the name of the topic creator
             $.ajax({
               url: 'getPostInfoById',
               type: "post",
               data: {'topicData': topicData},
               success: function(data){
-                obj = $.parseJSON(data);
-                for(var i=0;i<obj['nbPost'].length;++i){
-                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
+                obj = $.parseJSON(data); // Parse the data which has been encode using JSON
+                for(var i=0;i<obj['nbPost'].length;++i){ // for each post 
+                    // we append those line containing correct values at the correct place (using #topics)
+                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
                 }
-/*                topicData.topicId = topicData.topicTitre = topicData.createur = '';
+/*                topicData.topicId = topicData.topicTitle = topicData.creator = '';
 */              }             
             });      
         }
     });  
 
     $('#next').click(function() {
+      // First ajax post request will get the next topics to print
       $.ajax({
         url: './{{$cat}}/next',
         type: "post",
         // Sending request  for the next topic using the last tr id printed
-        data: {'lastTopicPrinted': $('table tr:last').attr('id') },
-
+        data: {'lastTopicPrinted': $('table tr:last').attr('id') }, // get and send the last printed 'id' tr to get the next topics to print
         success: function(data){ 
-          obj = $.parseJSON(data);
+          obj = $.parseJSON(data); // Parse the data which has been encode using JSON
           for(var i=0;i<obj.nbPost.length;i++) {
             topicData.topicId.push(obj.topics[i].topic_id);
-            topicData.createur.push(obj.topics[i].topic_createur);
-            topicData.topicTitre.push(obj.topics[i].topic_titre);
+            topicData.creator.push(obj.topics[i].topic_createur);
+            topicData.topicTitle.push(obj.topics[i].topic_titre);
           }
         },
-        complete: function(data){
+        complete: function(data){ // When request is completed
+          // Secondajax post request the will get number of post and the name of the topic creator
           $.ajax({
             url: 'getPostInfoById',
             type: "post",
             data: {'topicData': topicData},
             success: function(data){
-              obj = $.parseJSON(data);
-              for(var i=0;i<obj['nbPost'].length;++i){
-                $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
+              obj = $.parseJSON(data); // Parse the data which has been encode using JSON
+              for(var i=0;i<obj['nbPost'].length;++i){ // for each post
+                // Append those line containing correct values at the correct place (using #topics)
+                $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
               }
-              topicData.topicId = topicData.topicTitre = topicData.createur = '';       
+              topicData.topicId = topicData.topicTitle = topicData.creator = '';       
             }             
           });    
         }
       });      
     });
 
-      $('#id').click(function() {
-          window.location.href = "'forum/'.$cat.'/'";
-      });
+    $('#id').click(function() {
+        window.location.href = "'forum/'.$cat.'/'";
+    });
   });
 </script>
 

@@ -17,14 +17,13 @@ class forumController extends Controller{
     {
         $this->middleware('auth');
     }
-
   /**
 	Functions used to return the views
 	All these functions get the necessary data and 
 	return the view passing all the data in an array
   */
-    // Return the forumIndexView with correct data
-	public function index(){
+    // Return the forumIndexView with correct data (route : /forum/)
+	public function index(){ 
 		$forum = $this->__getForum();
 		$categories = $this->__getAllCategories(); // Get all categories for nav
 		$nbTopic = array(); // Store the number of topic for each categorie
@@ -52,7 +51,7 @@ class forumController extends Controller{
 		// Return the view passing $data as a parameter
 		return view('forumIndexView', $data);
 	}
-	// Return the forumCatView with correct data
+	// Return the forumCatView with correct data (route : /forum/{cat})
 	public function cat($cat){
 		$categories = $this->__getAllCategories(); // Get all categories for nav
 		$catName = $this->__getCatName($cat); // Get the categorie name using the id
@@ -64,8 +63,8 @@ class forumController extends Controller{
 		$lastPostCreator = array();
 
 		foreach ($topic as $value) { // For each topics
-			array_push($nbPost, $this->__getNbPostByTopic($value->topic_id)); // we get the number of posts
-			array_push($lastPostId, $this->__getLastPostId($value->topic_id)); // we get the last post
+			array_push($nbPost, $this->__getNbPostByTopic($value->topic_id)); // get the number of posts
+			array_push($lastPostId, $this->__getLastPostId($value->topic_id)); // get the last post
 			if ( $this->__getLastPostCreator($value->topic_id) != null ) {
 				array_push($lastPostCreator, $this->__getLastPostCreator($value->topic_id)); // and the creator of the last post
 			}
@@ -83,12 +82,12 @@ class forumController extends Controller{
 			'nbPost' => $nbPost);
 		return view('forumCatView',  $data);
 	}
-	// Return the forumTopicView with correct data
+	// Return the forumTopicView with correct data (route : /forum/{cat}/{topic})
 	public function topic($cat,$topic_id){
 		$posts = $this->__getPosts($topic_id);
-		$catName = $this->__getCatName($cat); // retourne le nom de la catégorie avec son id
+		$catName = $this->__getCatName($cat); // Return the categori name using it's id
 		$topic = $this->__getTopic($topic_id);
-		$categories = $this->__getAllCategories(); // Permet de rediriger vers chaque catégories dans un menu déroulant
+		$categories = $this->__getAllCategories(); // Get all categories for navigation menu
 		$topics = $this->__getAllTopics();
 		$data = array(
 			'posts' => $posts,
@@ -99,11 +98,10 @@ class forumController extends Controller{
 			'categories' => $categories);
 		return view('forumTopicView', $data);
 	}
-	// Return the forumNewTopicView with correct data
+	// Return the forumNewTopicView with correct data (route : /forum/{cat}/newTopic)
 	public function newTopic($cat){
 		$categories = $this->__getAllCategories(); // Get all categories for nav
 		$catName = $this->__getCatName($cat); // Get the parent categorie name
-		// TODO Check variable to be used
 		$topic = $this->__getTopicFromCat($cat); // Get all the topics in the categorie passed as a parameter
 		$topics = $this->__getAllTopics(); // Get all topics
 		$data = array(
@@ -114,7 +112,7 @@ class forumController extends Controller{
 		'topic' => $topic);
 		return view('forumNewTopicView',$data);
 	}
-	// Return the newPostView with correct data
+	// Return the newPostView with correct data (route : )
 	public function newPost($cat,$topic_id){
 		$categories = $this->__getAllCategories(); // Get all categories for nav
 		$topics = $this->__getAllTopics(); // Get all topics
@@ -125,7 +123,7 @@ class forumController extends Controller{
 			'topics' => $topics);
 		return view('forumNewPostView',$data);
 	}
-	// Return the forumMyPostsView with correct data
+	// Return the forumMyPostsView with correct data (route : /forum/{auth}/myPosts)
 	public function myPosts($auth){
 		$posts = $this->__getPostByCreatorId($auth);
 		$postCat = array();
@@ -148,6 +146,7 @@ class forumController extends Controller{
 			dd("Sorry you don't have permission to edit this message");
 		}
 	}
+	// Return forumMyProfilView (route : /forum/{auth}/myProfil )
 	public function myProfil($auth){
 		// Checks the authenticity of the user
 		if( Auth::isAdmin() ){
@@ -159,7 +158,7 @@ class forumController extends Controller{
 			dd("sorry you don't have permission to edit this message");
 		}
 	}
-	// Return the adminView
+	// Return the adminView (route : /forum/admin)
 	public function adminView(){
 		if( Auth::isAdmin() ){ // We checks that the user is an admin
 			return view('forumAdminView');
@@ -177,10 +176,9 @@ class forumController extends Controller{
 			$creatorName = array();
 			$nbPost = array();
 			for($i = 0 ; $i < sizeof($topicData['topicId']) ; $i++){
-				$creatorName[] = Auth::getNameById($topicData['createur'][$i]);
+				$creatorName[] = Auth::getNameById($topicData['creator'][$i]);
 				$nbPost[] = $this->__getNbPostByTopic($i);
 			}
-			//TODO RETURN DATA ARRAY WITH NBPOST AND OTHER INFO
 			$topicData = array(
 				'topicData' => $topicData,
 				'creatorName' => $creatorName,
@@ -224,26 +222,24 @@ class forumController extends Controller{
 	*/
 	public function postMessage($cat,$topic){
 		// Retreive data
-        $inputData = Input::all(); 
+        $inputData = Input::all();  // Get the data send in post
 		$createurId = Auth::id();
 		$post = $inputData['msg'];
-		
 		// SQL request to insert data into the database
 		DB::table('forum_post')->insert([
 			['post_createur' => $createurId, 'post_texte' => $post, 'post_time' => date('Y-m-d H:i:s') , 'post_topic_id' => $topic ]
 		]);
 	}
-	public function supPost($cat,$topic){
-		        
-	    $inputData = Input::all(); 
-	    $postId = $inputData['postId'];
+	public function supPost($cat,$topic){		        
+	    $inputData = Input::all();  // Get the data send in post
+	    $postId = $inputData['postId']; // Get the data send in post
 
 	    DB::table('forum_post')
 	    	->where('post_id', '=', $postId)
 	    	->delete();
 	}
 	public function supPostById(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $idToSup = $inputData['idToSup'];
 
 	    return DB::table('forum_post')
@@ -256,7 +252,7 @@ class forumController extends Controller{
 	    	->delete();
 	}
 	public function supPostByName(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $nameToSup = $inputData['nameToSup'];
 	   	$surnameToSup = $inputData['surnameToSup'];
 
@@ -271,7 +267,7 @@ class forumController extends Controller{
 	   	}	   	
 	}
 	public function supPostByPseudo(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $pseudoToSup = $inputData['pseudoToSup'];
 
 	   	if(Auth::getIdByPseudo($pseudoToSup)[0]->id == 1){
@@ -281,7 +277,7 @@ class forumController extends Controller{
 	   	}	   	
 	}
 	public function supPostByPostId(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $postIdToSup = $inputData['postIdToSup'];
 
 	   	return DB::table('forum_post')
@@ -289,7 +285,7 @@ class forumController extends Controller{
 	   		->delete();	
 	}
 	public function getPostById(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $idToPrint = $inputData['idToPrint'];
 
 	    return DB::table('forum_post')
@@ -297,7 +293,7 @@ class forumController extends Controller{
 	    	->get();
 	}
 	public function getPostByName(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $nameToSup = $inputData['nameToSup'];
 	   	$surnameToSup = $inputData['surnameToSup'];
 	   	dd(Auth::getIdByName($nameToSup,$surnameToSup));
@@ -313,7 +309,7 @@ class forumController extends Controller{
 	   	}	   
 	}
 	public function getPostByPseudo(){
- 		$inputData = Input::all();
+ 		$inputData = Input::all(); // Get the data send in post
 	    $pseudoToPrint = $inputData['pseudoToPrint'];
 	    $idCreator = Auth::getIdByPseudo($pseudoToPrint)[0]->id;
 
@@ -360,7 +356,7 @@ class forumController extends Controller{
 	public function editPost($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post
 		$editeurId = Auth::id();
-		$inputData = Input::all(); 
+		$inputData = Input::all();  // Get the data send in post
 		$postToReplace = $inputData['msgToSend'];
 
 		if( Auth::isAdmin() ){
@@ -373,7 +369,7 @@ class forumController extends Controller{
 	}
 	// Function called by 'routes' which insert the new topic into the database
 	public function createTopic($cat){
-		$inputData = Input::all(); 
+		$inputData = Input::all();  // Get the data send in post
 		$creatorId = Auth::id();
 		$messageTopic = $inputData['msgTopic'];
 		$titleTopic = $inputData['titleTopic'];
@@ -504,7 +500,6 @@ class forumController extends Controller{
 		->max('post_id');
 	}
 	private function __getLastPostCreator($topicId){
-		// TODO
 		return DB::table('forum_post')
 			->select('post_createur')
 			->where('post_topic_id', '=', $topicId)
