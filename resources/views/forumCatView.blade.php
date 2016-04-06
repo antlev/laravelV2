@@ -127,11 +127,8 @@
         data: {'lastTopicPrinted': 0 },
         success: function(data){ 
           obj = $.parseJSON(data);
-          console.log(obj.topics[0].topic_id);
-                  console.log(topicData);
-
           for(var i=0;i<obj.nbPost.length;i++) {
-            topicData.topicId.push(1);
+            topicData.topicId.push(obj.topics[i].topic_id);
             topicData.createur.push(obj.topics[i].topic_createur);
             topicData.topicTitre.push(obj.topics[i].topic_titre);
           }         
@@ -143,9 +140,8 @@
               data: {'topicData': topicData},
               success: function(data){
                 obj = $.parseJSON(data);
-                console.log(obj['nbPost'][0]);
                 for(var i=0;i<obj['nbPost'].length;++i){
-                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost']+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['createur']+"</td></tr>");
+                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
                 }
 /*                topicData.topicId = topicData.topicTitre = topicData.createur = '';
 */              }             
@@ -159,25 +155,24 @@
         type: "post",
         // Sending request  for the next topic using the last tr id printed
         data: {'lastTopicPrinted': $('table tr:last').attr('id') },
+
         success: function(data){ 
-          console.log('obj');
-          console.log(obj);
           obj = $.parseJSON(data);
-          for(var i=0;i<obj.length;i++) {
-            topicData.topicId.push(obj[i].topic_id);
-            topicData.topicTitre.push(obj[i].topic_titre);
-            topicData.createur.push(obj[i].topic_createur);
+          for(var i=0;i<obj.nbPost.length;i++) {
+            topicData.topicId.push(obj.topics[i].topic_id);
+            topicData.createur.push(obj.topics[i].topic_createur);
+            topicData.topicTitre.push(obj.topics[i].topic_titre);
           }
         },
         complete: function(data){
           $.ajax({
-            url: 'getNomById',
+            url: 'getPostInfoById',
             type: "post",
-            data: {'idcreator': topicData.createur},
+            data: {'topicData': topicData},
             success: function(data){
               obj = $.parseJSON(data);
-              for(var i=0;i<topicData.topicId.length;++i){
-                  $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj[i]+"</td></tr>");
+              for(var i=0;i<obj['nbPost'].length;++i){
+                $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitre'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
               }
               topicData.topicId = topicData.topicTitre = topicData.createur = '';       
             }             
