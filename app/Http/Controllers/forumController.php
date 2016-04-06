@@ -201,163 +201,9 @@ class forumController extends Controller{
 		return  json_encode($data);
 	}
 
-
 /**
-	DATABASE REQUESTS
-	SELECTION SQL REQUESTS :
-
-	Reminder : the prefix __function() means that function is private
-
+	Methods called from the views
 */
-	// Return the category's name taking it's id as a parameter
-	private function __getCatName($cat){ 
-		return DB::table('forum_categorie')->where('cat_id',$cat)->value('cat_nom');
-	}
-	// Return a table containing all posts of the topic in parameter
-	private function __getPosts($topic){ 
-		//return DB::table('forum_post')->select('*')->orderBy('post_time','asc');
-
-		return DB::select("SELECT *
-			FROM forum_post
-			WHERE post_topic_id = $topic
-			ORDER BY post_time ASC");
-	}
-
-	private function __getPost($postId){
-		return DB::table('forum_post')
-			->where('post_id', $postId)
-			->get();
-	}
-
-	private function __getForum(){
-		return DB::select("SELECT forum_id, forum_cat_id, forum_name, forum_desc
-			FROM forum_forum
-			ORDER BY forum_id ASC");
-	}
-	// Return all categories
-	private function __getAllCategories(){
-
-		return DB::select("SELECT cat_id, cat_nom, cat_ordre, forum_id, cat_desc
-			FROM forum_categorie
-			ORDER BY cat_ordre ASC");
-	}
-	// Return the topics which are in the category passed as a parameter
-	private function __getTopicFromCat($cat){
-
-		return DB::select("SELECT *
-			FROM forum_topic
-			WHERE topic_cat = '$cat'
-			ORDER BY topic_id");
-	}	
-	// Return the topics which are in the category passed as a parameter
-	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
-	private function __getTopicFromCatLimit($cat,$firstTopicToReturn){
-		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToReturn)->take(2)->get();
-	}
-	// Return all topics
-	private function __getAllTopics(){
-
-		return DB::select("SELECT *
-			FROM forum_topic");
-	}
-	// Return the topic given a a parameter
-	private function __getTopic($topicId){
-
-		return DB::select("SELECT *
-			FROM forum_topic
-			WHERE topic_id = '$topicId'");
-	}
-	public function __getCatByTopic($topicId){
-
-		return DB::table('forum_topic')
-			->where('topic_id', $topicId)
-			->value('topic_cat');
-	}	
-	private function __getCreatorPostById($post_id){
-		return DB::table('forum_post')
-		->where('post_id', '=', $post_id)
-		->select('post_createur')
-		->get();
-	}
-	private function __getPostMessageById($post_id){
-		return DB::table('forum_post')
-		->where('post_id', '=', $post_id)
-		->select('post_texte')
-		->get();
-	}
-	private function __getLastTopicId(){
-		return DB::table('forum_topic')
-		->select('topic_id')
-		->orderBy('topic_id', 'desc')
-		->first();
-	}
-
-	private function __getLastTopicIdByCat($cat){
-		return DB::table('forum_topic')
-		->select('topic_id')
-		->where('topic_cat', $cat)
-		->orderBy('topic_id', 'desc')
-		->first();
-	}
-	private function __getLastPostId($topicId){
-		return DB::table('forum_post')
-		->select('topic_id')
-		->where('post_topic_id', '=', $topicId)
-		->max('post_id');
-	}
-	private function __getLastPostCreator($topicId){
-		// TODO
-		return DB::table('forum_post')
-			->select('post_createur')
-			->where('post_topic_id', '=', $topicId)
-			->orderBy('post_id', 'desc')
-			->first();
-	}
-	// Return the last post using categorie id
-	private function __getLastPostByCat($cat){
-		return DB::table('forum_post')
-			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
-			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
-			->where('forum_topic.topic_cat', $cat)			
-			->orderBy('post_id', 'desc')
-			->first();
-	}
-	// Return the last post creator's id of a certain category
-	private function __getLastPostCreatorIdByCat(){
-		return DB::table('forum_post')
-			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
-			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')			
-			->select('post_createur')
-			->orderBy('post_id', 'desc')
-			->first();
-	}
-	// Return the last post date of a certain category
-	private function __getLastPostDateByCat(){
-		return DB::table('forum_post')
-			
-			->select('post_time')
-			->orderBy('post_id', 'desc')
-			->first();
-	}
-	// Return the number of topic which are in a category
-	private function __getNbTopic($cat){
-
-		return DB::table('forum_topic')
-			->where('topic_cat', '=', $cat)
-			->count();
-	}
-	private function __getPostByCreatorId($id){
-		return DB::table('forum_post')
-			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
-			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
-			->where('post_createur', $id)
-			->get();
-	}
-	public function __getNbPostByTopic($topic_id){
-		return DB::table('forum_post')
-			->where('post_topic_id', '=', $topic_id)
-			->count();
-	}
 	public function getNbPostByCat($cat){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $cat)
@@ -368,8 +214,10 @@ class forumController extends Controller{
 			->where('topic_cat', '=', $cat)
 			->count();
 	}
+	/**
 	// INSERTION SQL REQUESTS
 	// function called by 'routes' which save the post into the database 
+	*/
 	public function postMessage($cat,$topic){
 		// Retreive data
         $inputData = Input::all(); 
@@ -428,7 +276,6 @@ class forumController extends Controller{
 			return null;
 	   	}	   	
 	}
-
 	public function supPostByPostId(){
  		$inputData = Input::all();
 	    $postIdToSup = $inputData['postIdToSup'];
@@ -530,7 +377,6 @@ class forumController extends Controller{
 		var_dump($titleTopic);
 		var_dump($creatorId);
 		var_dump($cat);
-
 		// Topic creation
 		DB::table('forum_topic')->insert(
 			['topic_titre' => $titleTopic, 'topic_createur' => $creatorId, 'topic_time' => date('Y-m-d H:i:s'), 'topic_cat' => $cat]
@@ -540,8 +386,173 @@ class forumController extends Controller{
 		DB::table('forum_post')->insert(
 			['post_createur' => $creatorId, 'post_texte' => $messageTopic, 'post_topic_id' => $postTopicId->topic_id, 'post_time' => date('Y-m-d H:i:s')]
 		);
+	}
+
+/**
+	DATABASE REQUESTS
+	SELECTION SQL REQUESTS :
+
+	Reminder : the prefix __function() means that function is private
+
+*/
+	// Return the category's name taking it's id as a parameter
+	private function __getCatName($cat){ 
+		return DB::table('forum_categorie')->where('cat_id',$cat)->value('cat_nom');
+	}
+	// Return a table containing all posts of the topic in parameter
+	private function __getPosts($topic){ 
+		return DB::table('forum_post')
+			->where('post_topic_id', $topic)
+			->orderBy('post_time')
+			->get();
+	}
+
+	private function __getPost($postId){
+		return DB::table('forum_post')
+			->where('post_id', $postId)
+			->get();
+	}
+
+	private function __getForum(){
+		return DB::table('forum_forum')
+			->orderBy('forum_id')
+			->get();
 
 	}
+	// Return all categories
+	private function __getAllCategories(){
+		return DB::table('forum_categorie')
+			->orderBy('cat_ordre')
+			->get();
+/*		return DB::select("SELECT cat_id, cat_nom, cat_ordre, forum_id, cat_desc
+			FROM forum_categorie
+			ORDER BY cat_ordre ASC");*/
+	}
+	// Return the topics which are in the category passed as a parameter
+	private function __getTopicFromCat($cat){
+		return DB::table('forum_topic')
+			->where('topic_cat', $cat)
+			->orderBy('topic_id')
+			->get();
+/*		return DB::select("SELECT *
+			FROM forum_topic
+			WHERE topic_cat = '$cat'
+			ORDER BY topic_id");*/
+	}	
+	// Return the topics which are in the category passed as a parameter
+	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
+	private function __getTopicFromCatLimit($cat,$firstTopicToReturn){
+		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToReturn)->take(2)->get();
+	}
+	// Return all topics
+	private function __getAllTopics(){
+		return DB::table('forum_topic')
+			->get();
+/*		return DB::select("SELECT *
+			FROM forum_topic");*/
+	}
+	// Return the topic given a a parameter
+	private function __getTopic($topicId){
+
+			return DB::table('forum_topic')
+				->where('topic_id', $topicId)
+				->get();
+/*		return DB::select("SELECT *
+			FROM forum_topic
+			WHERE topic_id = '$topicId'");*/
+	}
+	public function __getCatByTopic($topicId){
+
+		return DB::table('forum_topic')
+			->where('topic_id', $topicId)
+			->value('topic_cat');
+	}	
+	private function __getCreatorPostById($post_id){
+		return DB::table('forum_post')
+		->where('post_id', '=', $post_id)
+		->select('post_createur')
+		->get();
+	}
+	private function __getPostMessageById($post_id){
+		return DB::table('forum_post')
+		->where('post_id', '=', $post_id)
+		->select('post_texte')
+		->get();
+	}
+	private function __getLastTopicId(){
+		return DB::table('forum_topic')
+		->select('topic_id')
+		->orderBy('topic_id', 'desc')
+		->first();
+	}
+
+	private function __getLastTopicIdByCat($cat){
+		return DB::table('forum_topic')
+		->select('topic_id')
+		->where('topic_cat', $cat)
+		->orderBy('topic_id', 'desc')
+		->first();
+	}
+	private function __getLastPostId($topicId){
+		return DB::table('forum_post')
+		->select('topic_id')
+		->where('post_topic_id', '=', $topicId)
+		->max('post_id');
+	}
+	private function __getLastPostCreator($topicId){
+		// TODO
+		return DB::table('forum_post')
+			->select('post_createur')
+			->where('post_topic_id', '=', $topicId)
+			->orderBy('post_id', 'desc')
+			->first();
+	}
+	// Return the last post using categorie id
+	private function __getLastPostByCat($cat){
+		return DB::table('forum_post')
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
+			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
+			->where('forum_topic.topic_cat', $cat)			
+			->orderBy('post_id', 'desc')
+			->first();
+	}
+	// Return the last post creator's id of a certain category
+	private function __getLastPostCreatorIdByCat(){
+		return DB::table('forum_post')
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
+			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')			
+			->select('post_createur')
+			->orderBy('post_id', 'desc')
+			->first();
+	}
+	// Return the last post date of a certain category
+	private function __getLastPostDateByCat(){
+		return DB::table('forum_post')
+			
+			->select('post_time')
+			->orderBy('post_id', 'desc')
+			->first();
+	}
+	// Return the number of topic which are in a category
+	private function __getNbTopic($cat){
+
+		return DB::table('forum_topic')
+			->where('topic_cat', '=', $cat)
+			->count();
+	}
+	private function __getPostByCreatorId($id){
+		return DB::table('forum_post')
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
+			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
+			->where('post_createur', $id)
+			->get();
+	}
+	public function __getNbPostByTopic($topic_id){
+		return DB::table('forum_post')
+			->where('post_topic_id', '=', $topic_id)
+			->count();
+	}
+
 	// Function used to test some code
 	public function test(){
 		dd($this->__getCatByTopic(39));
