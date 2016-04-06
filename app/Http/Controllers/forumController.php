@@ -1,34 +1,37 @@
 <?php
 namespace App\Http\Controllers;
 
-use DB;
+use DB; // Allow to use DB request
 use Input;
 use Session;
 use App\Http\Controllers\Controller;
 use App\dataForum;
-use Auth;
+use Auth; // Allowto use directly Auth methods
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector; // Contains the methods used to redirect url
 
 class forumController extends Controller{
 
-	// Checks the authentification of the user
+	// Checks the authentification of the user, the user must be identified to access the forum
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    // Return the forumIndexView with correct informations
+  /**
+	Functions used to return the views
+	All these functions get the necessary data and 
+	return the view passing all the data in an array
+  */
+    // Return the forumIndexView with correct data
 	public function index(){
-
 		$forum = $this->__getForum();
-		$categories = $this->__getAllCategories();
-		$nbTopic = array();
-		$nbPost = array();
-		$lastPost = array(); // to store informations about the last post
-		$lastPostCreator = array(); // to store the name of the last post creator
-
-
+		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$nbTopic = array(); // Store the number of topic for each categorie
+		$nbPost = array(); // Store the number of post for each categorie
+		$lastPost = array(); // Store data about the last post
+		$lastPostCreator = array(); // Store the name of the last post creator
+		// GETTING ALL INFORMATION
 		foreach ($categories as $cat) {
 			array_push($nbTopic, $this->getNbTopicByCat($cat->cat_id));
 			array_push($nbPost, $this->getNbPostByCat($cat->cat_id));
@@ -37,6 +40,7 @@ class forumController extends Controller{
 			array_push($lastPost, $this->__getLastPostByCat($cat->cat_id));
 		}
 		$topics = $this->__getAllTopics();
+		// Puts information into an array to send everything to 'forumIndexView' 
 		$data = array(
 			'forum' =>  $forum,
 			'categories' =>  $categories,
@@ -45,20 +49,19 @@ class forumController extends Controller{
 			'lastPost' => $lastPost,
 			'lastPostCreator' => $lastPostCreator,
 			'topics' => $topics);
+		// Return the view passing $data as a parameter
 		return view('forumIndexView', $data);
 	}
-
-	// Return the forumCatView with correct informations
+	// Return the forumCatView with correct data
 	public function cat($cat){
-		$categories = $this->__getAllCategories(); // return all categories
-		$catName = $this->__getCatName($cat); // return the categorie name using the id
-		$topic = $this->__getTopicFromCatLimit($cat,0); // return a fixed number of topics starting at the id which is the second parameter
-		$topics = $this->__getAllTopics(); // return all topics (for navigation)
-		$lastTopicFromCat = $this->__getLastTopicIdByCat($cat)->topic_id; // return last topic from categorie
-		$nbPost = array();
+		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$catName = $this->__getCatName($cat); // Get the categorie name using the id
+		$topic = $this->__getTopicFromCatLimit($cat,0); // Return a fixed number of topics starting at the id which is the second parameter
+		$topics = $this->__getAllTopics(); // Return all topics (for navigation)
+		$lastTopicFromCat = $this->__getLastTopicIdByCat($cat)->topic_id; // Return last topic from categorie
+		$nbPost = array(); // Store the number of post for each categorie
 		$lastPostId = array();
 		$lastPostCreator = array();
-
 
 		foreach ($topic as $value) { // For each topics
 			array_push($nbPost, $this->__getNbPostByTopic($value->topic_id)); // we get the number of posts
@@ -67,6 +70,7 @@ class forumController extends Controller{
 				array_push($lastPostCreator, $this->__getLastPostCreator($value->topic_id)); // and the creator of the last post
 			}
 		}
+		// Puts information into an array to send everything to 'forumIndexView' 
 		$data = array(
 			'topic' => $topic,
 			'topics' => $topics,
@@ -77,17 +81,15 @@ class forumController extends Controller{
 			'lastPostId' => $lastPostId,
 			'lastPostCreator' => $lastPostCreator,
 			'nbPost' => $nbPost);
-
 		return view('forumCatView',  $data);
 	}
-	// Return the forumTopicView with correct informations
+	// Return the forumTopicView with correct data
 	public function topic($cat,$topic_id){
 		$posts = $this->__getPosts($topic_id);
 		$catName = $this->__getCatName($cat); // retourne le nom de la catégorie avec son id
 		$topic = $this->__getTopic($topic_id);
 		$categories = $this->__getAllCategories(); // Permet de rediriger vers chaque catégories dans un menu déroulant
 		$topics = $this->__getAllTopics();
-
 		$data = array(
 			'posts' => $posts,
 			'catName' => $catName,
@@ -95,51 +97,15 @@ class forumController extends Controller{
 			'topics' => $topic,
 			'cat' => $cat,
 			'categories' => $categories);
-
 		return view('forumTopicView', $data);
 	}
-	// Return the next pages to print for the forumCatView
-	public function getNomById(){
-			
-			$data = Input::get('idcreator');
-/*			$data = $_POST['idcreator'];
-*/			$creator = array();
-			foreach($data as $creatorId){
-				// array_push($creator, Auth::getNameById($creatorId));
-				$creator[] = Auth::getNameById($creatorId);
-			}
-			//TODO RETURN DATA ARRAY WITH NBPOST AND OTHER INFO
-			$data = array(
-				'creator' => $creator,
-				'nbPost' => $nbPost);
-
-/*			dd($creator);
-*/
-     	return json_encode($creator);
-	}
-	
-	public function nextCat($cat){
-		$inputData = Input::all();
-		$firstTopicToPrint = $inputData['lastTopicPrinted'];
-		$nbPost = array();
-		$topics = $this->__getTopicFromCatLimit($cat,$firstTopicToPrint);
-		foreach ($topics as $topic) {
-			$nbPost[] = $this->__getNbPostByTopic($topic->topic_id);
-		}
-		$data = array(
-			'topics' => $topics,
-			'nbPost' => $nbPost);
-		return  json_encode($data);
-	}
-
-	// Return the forumNewTopicView with correct informations
+	// Return the forumNewTopicView with correct data
 	public function newTopic($cat){
-		$categories = $this->__getAllCategories();
-		$catName = $this->__getCatName($cat);
+		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$catName = $this->__getCatName($cat); // Get the parent categorie name
 		// TODO Check variable to be used
-		$topic = $this->__getTopicFromCat($cat);
-		$topics = $this->__getAllTopics();
-
+		$topic = $this->__getTopicFromCat($cat); // Get all the topics in the categorie passed as a parameter
+		$topics = $this->__getAllTopics(); // Get all topics
 		$data = array(
 		'categories' => $categories,
 		'cat' => $cat,
@@ -148,11 +114,10 @@ class forumController extends Controller{
 		'topic' => $topic);
 		return view('forumNewTopicView',$data);
 	}
-	// Return the newPostView with correct informations
+	// Return the newPostView with correct data
 	public function newPost($cat,$topic_id){
-		$categories = $this->__getAllCategories();
-		$topics = $this->__getAllTopics();
-
+		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$topics = $this->__getAllTopics(); // Get all topics
 		$data = array(
 			'categories' => $categories,
 			'cat' => $cat,
@@ -160,54 +125,90 @@ class forumController extends Controller{
 			'topics' => $topics);
 		return view('forumNewPostView',$data);
 	}
-
+	// Return the forumMyPostsView with correct data
 	public function myPosts($auth){
-		// TODO Checks user auth 
-		$userId = Auth::id();
+		$posts = $this->__getPostByCreatorId($auth);
+		$postCat = array();
+		$nbPost = sizeof($posts);
+		foreach ($posts as $post) {
+			// For each post we get the categorie
+			array_push($postCat, $this->__getCatByTopic($post->post_topic_id));
+		}
+		$data = array(
+			'posts' => $posts,
+			'nbPost' => $nbPost,
+			'postCat' => $postCat);
+		// Checks the authenticity of the user
 		if( Auth::isAdmin() ){
-			$posts = $this->__getPostByCreatorId($auth);
-			$postCat = array();
-			$nbPost = sizeof($posts);
-			foreach ($posts as $post) {
-				array_push($postCat, $this->__getCatFromTopic($post->post_topic_id));
-			}
-			$data = array(
-				'posts' => $posts,
-				'nbPost' => $nbPost,
-				'postCat' => $postCat);
 			return view('forumMyPostsView', $data);
-		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
-
+		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			return view('forumMyPostsView', $data);
 		} else {
-			dd("sorry you don't have permission to edit this message");
+			var_dump("Permission denied");
+			dd("Sorry you don't have permission to edit this message");
 		}
 	}
 	public function myProfil($auth){
-		// TODO Checks user auth 
-		$userId = Auth::id();
-
-
+		// Checks the authenticity of the user
 		if( Auth::isAdmin() ){
 			$data = array();
 			return view('forumMyProfilView', $data);
-		} else if( $userId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
-
+		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			return view('forumMyProfilView', $data);
 		} else {
 			dd("sorry you don't have permission to edit this message");
 		}
 	}
-
+	// Return the adminView
 	public function adminView(){
-		if( Auth::isAdmin() ){
+		if( Auth::isAdmin() ){ // We checks that the user is an admin
 			return view('forumAdminView');
-		} else {
-			return view('forumIndexView');				
+		} else { // If not we return the index
+			return index();				
 		}
 	}
 
-	// DATABASE REQUESTS
-	// SELECTION SQL REQUESTS :
+/**
+	Methods called by the jQuery Posts requests
+*/
+	// Return the next pages to print for the forumCatView
+	public function getNomById(){
+			$data = Input::get('idcreator');
+			$creator = array();
+			foreach($data as $creatorId){
+				$creator[] = Auth::getNameById($creatorId);
+			}
+			//TODO RETURN DATA ARRAY WITH NBPOST AND OTHER INFO
+			$data = array(
+				'creator' => $creator,
+				'nbPost' => $nbPost);
+		// json_encode while encode data to be usable in the jQuery request
+     	return json_encode($creator);
+	}
+	public function nextCat($cat){
+		$inputData = Input::all(); // Getting data from Post_Request
+		$firstTopicToReturn = $inputData['lastTopicPrinted'];
+		$nbPost = array();
+		// __getTopicFromCatLimit while return a certain number of topic starting at firstTopicToReturn
+		$topics = $this->__getTopicFromCatLimit($cat,$firstTopicToReturn);
+		foreach ($topics as $topic) {
+			$nbPost[] = $this->__getNbPostByTopic($topic->topic_id);
+		}
+		$data = array(
+			'topics' => $topics,
+			'nbPost' => $nbPost);
+		// json_encode while encode data to be usable in the jQuery request	
+		return  json_encode($data);
+	}
 
+
+/**
+	DATABASE REQUESTS
+	SELECTION SQL REQUESTS :
+
+	Reminder : the prefix __function() means that function is private
+
+*/
 	// Return the category's name taking it's id as a parameter
 	private function __getCatName($cat){ 
 		return DB::table('forum_categorie')->where('cat_id',$cat)->value('cat_nom');
@@ -249,9 +250,9 @@ class forumController extends Controller{
 			ORDER BY topic_id");
 	}	
 	// Return the topics which are in the category passed as a parameter
-	// This function start with topic firstTopicToPrint and return x TODO(define x) topics max
-	private function __getTopicFromCatLimit($cat,$firstTopicToPrint){
-		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToPrint)->take(2)->get();
+	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
+	private function __getTopicFromCatLimit($cat,$firstTopicToReturn){
+		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToReturn)->take(2)->get();
 	}
 	// Return all topics
 	private function __getAllTopics(){
@@ -266,7 +267,7 @@ class forumController extends Controller{
 			FROM forum_topic
 			WHERE topic_id = '$topicId'");
 	}
-	public function __getCatFromTopic($topicId){
+	public function __getCatByTopic($topicId){
 
 		return DB::table('forum_topic')
 			->where('topic_id', $topicId)
@@ -312,8 +313,6 @@ class forumController extends Controller{
 			->orderBy('post_id', 'desc')
 			->first();
 	}
-
-
 	// Return the last post using categorie id
 	private function __getLastPostByCat($cat){
 		return DB::table('forum_post')
@@ -323,8 +322,6 @@ class forumController extends Controller{
 			->orderBy('post_id', 'desc')
 			->first();
 	}
-
-
 	// Return the last post creator's id of a certain category
 	private function __getLastPostCreatorIdByCat(){
 		return DB::table('forum_post')
@@ -334,7 +331,6 @@ class forumController extends Controller{
 			->orderBy('post_id', 'desc')
 			->first();
 	}
-
 	// Return the last post date of a certain category
 	private function __getLastPostDateByCat(){
 		return DB::table('forum_post')
@@ -343,9 +339,6 @@ class forumController extends Controller{
 			->orderBy('post_id', 'desc')
 			->first();
 	}
-
-	
-
 	// Return the number of topic which are in a category
 	private function __getNbTopic($cat){
 
@@ -360,15 +353,11 @@ class forumController extends Controller{
 			->where('post_createur', $id)
 			->get();
 	}
-
-	
-
 	public function __getNbPostByTopic($topic_id){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
 			->count();
 	}
-
 	public function getNbPostByCat($cat){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $cat)
@@ -379,11 +368,10 @@ class forumController extends Controller{
 			->where('topic_cat', '=', $cat)
 			->count();
 	}
-
 	// INSERTION SQL REQUESTS
 	// function called by 'routes' which save the post into the database 
 	public function postMessage($cat,$topic){
-		// Retreive informations
+		// Retreive data
         $inputData = Input::all(); 
 		$createurId = Auth::id();
 		$post = $inputData['msg'];
@@ -393,7 +381,6 @@ class forumController extends Controller{
 			['post_createur' => $createurId, 'post_texte' => $post, 'post_time' => date('Y-m-d H:i:s') , 'post_topic_id' => $topic ]
 		]);
 	}
-
 	public function supPost($cat,$topic){
 		        
 	    $inputData = Input::all(); 
@@ -403,7 +390,6 @@ class forumController extends Controller{
 	    	->where('post_id', '=', $postId)
 	    	->delete();
 	}
-
 	public function supPostById(){
  		$inputData = Input::all();
 	    $idToSup = $inputData['idToSup'];
@@ -417,8 +403,6 @@ class forumController extends Controller{
 	    	->where('post_createur', '=', $idToSup)
 	    	->delete();
 	}
-
-
 	public function supPostByName(){
  		$inputData = Input::all();
 	    $nameToSup = $inputData['nameToSup'];
@@ -434,7 +418,6 @@ class forumController extends Controller{
 	   		return -1;
 	   	}	   	
 	}
-
 	public function supPostByPseudo(){
  		$inputData = Input::all();
 	    $pseudoToSup = $inputData['pseudoToSup'];
@@ -454,7 +437,6 @@ class forumController extends Controller{
 	   		->where('post_id',$postIdToSup) 
 	   		->delete();	
 	}
-
 	public function getPostById(){
  		$inputData = Input::all();
 	    $idToPrint = $inputData['idToPrint'];
@@ -463,7 +445,6 @@ class forumController extends Controller{
 	    	->where('post_createur', '=', $idToPrint)
 	    	->get();
 	}
-
 	public function getPostByName(){
  		$inputData = Input::all();
 	    $nameToSup = $inputData['nameToSup'];
@@ -480,7 +461,6 @@ class forumController extends Controller{
 	   		return -1;
 	   	}	   
 	}
-
 	public function getPostByPseudo(){
  		$inputData = Input::all();
 	    $pseudoToPrint = $inputData['pseudoToPrint'];
@@ -490,7 +470,6 @@ class forumController extends Controller{
 	    	->where('post_createur', '=', $idCreator)
 	    	->get();
 	}
-
 	public function getPostByPostId(){
  		$inputData = Input::all();
 	    return $this->__getPost($inputData['postIdToPrint']);
@@ -526,7 +505,6 @@ class forumController extends Controller{
 			dd("sorry you don't have permission to edit this message");
 		}
 	}
-
 	// Function called in post by 'routes' which modify a message into the database
 	public function editPost($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post
@@ -542,7 +520,6 @@ class forumController extends Controller{
 			dd("sorry you don't have permission to edit this message");
 		}
 	}
-
 	// Function called by 'routes' which insert the new topic into the database
 	public function createTopic($cat){
 		$inputData = Input::all(); 
@@ -565,12 +542,9 @@ class forumController extends Controller{
 		);
 
 	}
-
-
-
 	// Function used to test some code
 	public function test(){
-		dd($this->__getCatFromTopic(39));
+		dd($this->__getCatByTopic(39));
 	}
 }
 ?>
