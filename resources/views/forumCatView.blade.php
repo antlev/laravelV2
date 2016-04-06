@@ -128,29 +128,44 @@
         type: "post",
         data: {'lastTopicPrinted': 0 },
         success: function(data){ 
-          obj = $.parseJSON(data);
-          console.log(obj.topics[0].topic_createur);
-          console.log(topicData.createur);
+          console.log("data");
+          console.log(data);
 
-          topicData.createur = obj.topics.topic_createur ;
+          obj = $.parseJSON(data);
+          console.log("parseJSON")
+          console.log("obj");
+          console.log(obj);
+
+
+          console.log("obj.topics[0]");
+          console.log(obj.topics[0]);
+          console.log("obj.topics[0].topic_createur");
+          console.log(obj.topics[0].topic_createur);
+          console.log("obj.topics[0].topic_id");
+          console.log(obj.topics[0].topic_id);
             // TODO push not working!
-          for(var i=0;i<obj.length;i++) {
+          for(var i=0;i<obj.nbPost.length;i++) {
             topicData.topicId.push(obj.topics[i].topic_id);
+            topicData.createur.push(obj.topics[i].topic_createur);
             topicData.topicTitre.push(obj.topics[i].topic_titre);
-/*            topicData.createur.push(obj.topics[i].topic_createur);
-*/          }
-          console.log(topicData.topicTitre);
+        }          
+
         },
         complete: function(data){
             $.ajax({
-              url: 'getNomById',
+              url: 'getPostInfoById',
               type: "post",
-              data: {'idcreator': topicData.createur},
+              data: {'topicData': topicData},
               success: function(data){
                 var topic;
-                console.log(data);
-                for(var i=0;i<topicData.length;++i){
-                   topic = topicData.topicId;
+                console.log('toto');
+                console.log(data['topicId'][0]);
+                console.log(data['nbPost'][0]);
+/*                console.log(data);
+*/                for(var i=0;i<topicData.length;++i){
+                    topic = topicData.topicId;
+                    $('#topics').append("<tr><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+topicData.topicId[i]+"' style='margin-left:20px'>"+topicData.topicTitre[i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'></td><td class='cell-stat hidden-sm hidden-xs'>posté par </td></tr>");
+
                 }
                 topicData.topicId = topicData.topicTitre = topicData.createur = '';
               }             

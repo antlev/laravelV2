@@ -172,15 +172,18 @@ class forumController extends Controller{
 	Methods called by the jQuery Posts requests
 */
 	// Return the next pages to print for the forumCatView
-	public function getNomById(){
-			$data = Input::get('idcreator');
-			$creator = array();
-			foreach($data as $creatorId){
-				$creator[] = Auth::getNameById($creatorId);
+	public function getPostInfoById(){
+			$topicData = Input::get('topicData');
+			$creatorName = array();
+			$nbPost = array();
+			foreach($topicData as $creator => $creatorId){
+				dd($creatorId);
+				$creatorName[] = Auth::getNameById($creatorId);
+				$nbPost[] = __getNbPostByTopic();
 			}
 			//TODO RETURN DATA ARRAY WITH NBPOST AND OTHER INFO
-			$data = array(
-				'creator' => $creator,
+			$topicData = array(
+				'creatorName' => $creatorName,
 				'nbPost' => $nbPost);
 		// json_encode while encode data to be usable in the jQuery request
      	return json_encode($creator);
@@ -197,7 +200,8 @@ class forumController extends Controller{
 		$data = array(
 			'topics' => $topics,
 			'nbPost' => $nbPost);
-		// json_encode while encode data to be usable in the jQuery request	
+/*		dd($data);
+*/		// json_encode while encode data to be usable in the jQuery request	
 		return  json_encode($data);
 	}
 

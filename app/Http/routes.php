@@ -99,7 +99,7 @@ Route::group(['middleware' => 'web'], function () {
 	Route::get('/forum/{cat}/{topic}/newPost','forumController@newPost');
     Route::post('/forum/{cat}/{topic}/savePost','forumController@postMessage');
 	Route::post('/forum/{cat}/{topic}/supPost','forumController@supPost');
-	Route::post('/forum/getNomById','forumController@getNomById');
+	Route::post('/forum/getPostInfoById','forumController@getPostInfoById');
 	Route::get('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPostView');
 	Route::post('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPost');
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
