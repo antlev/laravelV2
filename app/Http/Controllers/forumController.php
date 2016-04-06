@@ -434,10 +434,6 @@ class forumController extends Controller{
 			->where('topic_cat', $cat)
 			->orderBy('topic_id')
 			->get();
-/*		return DB::select("SELECT *
-			FROM forum_topic
-			WHERE topic_cat = '$cat'
-			ORDER BY topic_id");*/
 	}	
 	// Return the topics which are in the category passed as a parameter
 	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
@@ -448,20 +444,14 @@ class forumController extends Controller{
 	private function __getAllTopics(){
 		return DB::table('forum_topic')
 			->get();
-/*		return DB::select("SELECT *
-			FROM forum_topic");*/
 	}
 	// Return the topic given a a parameter
 	private function __getTopic($topicId){
-
 			return DB::table('forum_topic')
 				->where('topic_id', $topicId)
 				->get();
-/*		return DB::select("SELECT *
-			FROM forum_topic
-			WHERE topic_id = '$topicId'");*/
 	}
-	public function __getCatByTopic($topicId){
+	private function __getCatByTopic($topicId){
 
 		return DB::table('forum_topic')
 			->where('topic_id', $topicId)
@@ -546,15 +536,10 @@ class forumController extends Controller{
 			->where('post_createur', $id)
 			->get();
 	}
-	public function __getNbPostByTopic($topic_id){
+	private function __getNbPostByTopic($topic_id){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
 			->count();
-	}
-
-	// Function used to test some code
-	public function test(){
-		dd($this->__getCatByTopic(39));
 	}
 }
 ?>

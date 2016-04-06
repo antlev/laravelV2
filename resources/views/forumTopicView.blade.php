@@ -32,10 +32,10 @@
       <div class="col-lg-6 col-md-5 col-sm-6 col-xs-10">
         <h2>
           <div class="col-lg-offset-2 col-lg-8 hidden-sm hidden-xs">
-            <a>Catégorie : {{$catName}}</a>
+            <a href="{{url('forum/'.$topic[0]->topic_cat)}}">Catégorie : {{$catName}}</a>
           </div>
           <div class="hidden-lg hidden-md">
-            <a>{{$catName}}</a>
+            <a href="{{url('forum/'.$topic[0]->topic_cat)}}">{{$catName}}</a>
           </div>
 
         </h2>            
@@ -77,10 +77,7 @@
     </div>
 
     <div class="col-lg-offset-1  col-md-12 col-sm-12 col-xs-12">
-      <h2>
-        <!-- TODO URL -->
-        <a href="{{url('forum/'.)}}"> Topic : {{$topic[0]->topic_titre}}</div>
-      </h2>
+      <h2>Topic : {{$topic[0]->topic_titre}}</h2>
     </div>
 
       
