@@ -83,7 +83,7 @@
         </tr>
       </thead>
         <?php $compteur = 0 ?>
-        @if(empty($topic))
+        @if(empty($topic)) <!-- If there is no topic to print -->
         <tbody>
           <tr>
             <h3> Aucun topics n'a été créé dans la catégorie {{$catName}} </h3>
