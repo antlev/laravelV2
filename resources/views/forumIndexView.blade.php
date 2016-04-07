@@ -87,8 +87,7 @@
             <td class="text-center hidden-xs hidden-sm"><h4>{{$nbPost[$numCat]}}</h4></td>
               <td class="hidden-xs hidden-sm">
                 <a href="{{url('forum/'.$lastPost[$numCat]->cat_id.'/'.$lastPost[$numCat]->topic_id)}}">posté par {{$lastPostCreator[$numCat]}}</a><br>
-                <td>le {{$lastPost[$numCat]->post_time}} </td>
-                <small>
+                <small>le {{$lastPost[$numCat]->post_time}}
                 </small>
               </td>
           </tr>

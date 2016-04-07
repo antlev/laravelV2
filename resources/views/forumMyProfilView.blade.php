@@ -43,7 +43,7 @@
             <h3>Nombre de messages postés : </h3>
           </div>
           <div class="col-lg-2 col-md-6">
-            <h3>42 </h3>
+            <h3>{{$nbPost}}</h3>
           </div>
         </div>
       </div>
@@ -55,7 +55,7 @@
             <h3>Nombre de Topics créés : </h3>
           </div>
           <div class="col-lg-2 col-md-6">
-            <h3>42 </h3>
+            <h3>{{$nbTopic}}</h3>
           </div>
         </div>
       </div>

@@ -105,6 +105,7 @@ $(function() {
           type: "post",
           data: {'msg': $('#msgToSend').val() },
           success: function(data){
+            alert('Votre message a été posté avec succès') ; 
             // On redirige ensuite
             window.location.href = "{{url('forum/'.$cat.'/'.$topic_id)}}";
           }

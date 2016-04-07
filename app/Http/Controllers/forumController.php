@@ -26,6 +26,7 @@ class forumController extends Controller{
 	public function index(){ 
 		$forum = $this->__getForum();
 		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$topics = $this->__getAllTopics(); // for navigation
 		$nbTopic = array(); // Store the number of topic for each categorie
 		$nbPost = array(); // Store the number of post for each categorie
 		$lastPost = array(); // Store data about the last post
@@ -38,7 +39,6 @@ class forumController extends Controller{
 			array_push($lastPostCreator, Auth::getNameById($this->__getLastPostCreatorIdByCat($cat->cat_id)->post_createur));
 			array_push($lastPost, $this->__getLastPostByCat($cat->cat_id));
 		}
-		$topics = $this->__getAllTopics();
 		// Puts information into an array to send everything to 'forumIndexView' 
 		$data = array(
 			'forum' =>  $forum,
@@ -105,11 +105,11 @@ class forumController extends Controller{
 		$topic = $this->__getTopicFromCat($cat); // Get all the topics in the categorie passed as a parameter
 		$topics = $this->__getAllTopics(); // Get all topics
 		$data = array(
-		'categories' => $categories,
-		'cat' => $cat,
-		'catName' => $catName,
-		'topics' => $topics,
-		'topic' => $topic);
+			'categories' => $categories,
+			'cat' => $cat,
+			'catName' => $catName,
+			'topics' => $topics,
+			'topic' => $topic);
 		return view('forumNewTopicView',$data);
 	}
 	// Return the newPostView with correct data (route : )
@@ -126,8 +126,8 @@ class forumController extends Controller{
 	// Return the forumMyPostsView with correct data (route : /forum/{auth}/myPosts)
 	public function myPosts($auth){
 		$posts = $this->__getPostByCreatorId($auth);
-		$postCat = array();
 		$nbPost = sizeof($posts);
+		$postCat = array();
 		foreach ($posts as $post) {
 			// For each post we get the categorie
 			array_push($postCat, $this->__getCatByTopic($post->post_topic_id));
@@ -137,25 +137,25 @@ class forumController extends Controller{
 			'nbPost' => $nbPost,
 			'postCat' => $postCat);
 		// Checks the authenticity of the user
-		if( Auth::isAdmin() ){
-			return view('forumMyPostsView', $data);
-		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+		if( Auth::isAdmin() || Auth::id() == $this->__getCreatorPostById($post_id)[0] ){  // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			return view('forumMyPostsView', $data);
 		} else {
-			var_dump("Permission denied");
-			dd("Sorry you don't have permission to edit this message");
+			dd("Vous n'avez pas le droit d'accèder à cette page");
 		}
 	}
 	// Return forumMyProfilView (route : /forum/{auth}/myProfil )
 	public function myProfil($auth){
+		$data = array();
+		$nbPost = $this->__getNbPostByCreatorId($auth);
+		$nbTopic = $this->__getNbTopicByCreatorId($auth);
+		$data = array(
+			'nbPost' => $nbPost,
+			'nbTopic' => $nbTopic);
 		// Checks the authenticity of the user
-		if( Auth::isAdmin() ){
-			$data = array();
-			return view('forumMyProfilView', $data);
-		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+		if( Auth::isAdmin() || Auth::id() == $this->__getCreatorPostById($post_id)[0] ){  // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			return view('forumMyProfilView', $data);
 		} else {
-			dd("sorry you don't have permission to edit this message");
+			dd("Vous n'avez pas le droit d'accèder à cette page");
 		}
 	}
 	// Return the adminView (route : /forum/admin)
@@ -539,6 +539,16 @@ class forumController extends Controller{
 	private function __getNbPostByTopic($topic_id){
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
+			->count();
+	}
+	private function __getNbPostByCreatorId($creatorId){
+		return DB::table('forum_post')
+			->where('post_createur', '=', $creatorId)
+			->count();
+	}
+	private function __getNbTopicByCreatorId($creatorId){
+		return DB::table('forum_topic')
+			->where('topic_createur', '=', $creatorId)
 			->count();
 	}
 }

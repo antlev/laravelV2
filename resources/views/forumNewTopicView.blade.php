@@ -40,7 +40,7 @@
   <!-- Menu de navigation -->
   <div class="col-lg-6">
     <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle col-lg-2 col-md-2 col-sm-12 col-xs-12" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-5 col-lg-3 col-md-2 col-sm-12 col-xs-12" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
       <span class="caret"></span></button>
       <ul class="dropdown-menu">
         <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
