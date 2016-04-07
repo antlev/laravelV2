@@ -188,7 +188,7 @@ class forumController extends Controller{
 	}
 	public function nextCat($cat){
 		$inputData = Input::all(); // Getting data from Post_Request
-		$firstTopicToReturn = $inputData['lastTopicPrinted'];
+		$firstTopicToReturn = $inputData['lastTopicPrinted']+1;
 		$nbPost = array();
 		// __getTopicFromCatLimit while return a certain number of topic starting at firstTopicToReturn
 		$topics = $this->__getTopicFromCatLimit($cat,$firstTopicToReturn);
