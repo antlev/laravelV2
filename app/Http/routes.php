@@ -72,6 +72,7 @@ Route::group(['middleware' => 'web'], function () {
 
 
 //Forum
+	Route::get('/forum/test', 'forumController@test');
 
 	// Index
 	Route::get('/forum/', 'forumController@index');
@@ -111,3 +112,5 @@ Route::group(['middleware' => 'web'], function () {
 
 
 });
+
+

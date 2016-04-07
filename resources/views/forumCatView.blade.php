@@ -127,11 +127,13 @@
         data: {'lastTopicPrinted': -1 }, //We want to start by the first topic so we set the variable lastTopicPrinted to 0
         success: function(data){ 
           obj = $.parseJSON(data); // Parse the data which has been encode using JSON
-          for(var i=0;i<obj.nbPost.length;i++) {
+          console.log(obj);
+          for(var i=0;i<obj.topics.length;i++) {
             topicData.topicId.push(obj.topics[i].topic_id); // For each data needed we set the topicData
             topicData.creator.push(obj.topics[i].topic_createur);
             topicData.topicTitle.push(obj.topics[i].topic_titre);
-          }         
+          }
+          console.log(topicData);         
         },
         complete: function(data){ // When request is completed
             // Secondajax post request the will get number of post and the name of the topic creator
@@ -141,7 +143,9 @@
               data: {'topicData': topicData},
               success: function(data){
                 obj = $.parseJSON(data); // Parse the data which has been encode using JSON
-                for(var i=0;i<obj['nbPost'].length;++i){ // for each post 
+                console.log(obj);
+                console.log(obj['nbPost']);
+                for(var i=0;i<obj['creatorName'].length;++i){ // for each post 
                     // we append those line containing correct values at the correct place (using #topics)
                     $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
                 }
@@ -157,7 +161,6 @@
       topicTitle : [],
       creator : [],
     }
-      console.log($('table tr:last').attr('id'));
       // First ajax post request will get the next topics to print
       $.ajax({
         url: './{{$cat}}/next',
@@ -166,7 +169,6 @@
         data: {'lastTopicPrinted': $('table tr:last').attr('id') }, // get and send the last printed 'id' tr to get the next topics to print
         success: function(data){ 
           obj = $.parseJSON(data); // Parse the data which has been encode using JSON
-          console.log(obj);
           for(var i=0;i<obj.nbPost.length;i++) {
             topicData.topicId.push(obj.topics[i].topic_id);
             topicData.creator.push(obj.topics[i].topic_createur);

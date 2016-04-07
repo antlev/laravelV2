@@ -58,17 +58,7 @@ class forumController extends Controller{
 		$topic = $this->__getTopicFromCatLimit($cat,0); // Return a fixed number of topics starting at the id which is the second parameter
 		$topics = $this->__getAllTopics(); // Return all topics (for navigation)
 		$lastTopicFromCat = $this->__getLastTopicIdByCat($cat)->topic_id; // Return last topic from categorie
-		$nbPost = array(); // Store the number of post for each categorie
-		$lastPostId = array();
-		$lastPostCreator = array();
 
-		foreach ($topic as $value) { // For each topics
-			array_push($nbPost, $this->__getNbPostByTopic($value->topic_id)); // get the number of posts
-			array_push($lastPostId, $this->__getLastPostId($value->topic_id)); // get the last post
-			if ( $this->__getLastPostCreator($value->topic_id) != null ) {
-				array_push($lastPostCreator, $this->__getLastPostCreator($value->topic_id)); // and the creator of the last post
-			}
-		}
 		// Puts information into an array to send everything to 'forumIndexView' 
 		$data = array(
 			'topic' => $topic,
@@ -76,10 +66,8 @@ class forumController extends Controller{
 			'lastTopicFromCat' => $lastTopicFromCat,
 			'categories' =>  $categories,
 			'catName' => $catName,
-			'cat' => $cat, // passed as a parameter
-			'lastPostId' => $lastPostId,
-			'lastPostCreator' => $lastPostCreator,
-			'nbPost' => $nbPost);
+			'cat' => $cat, // (passed as a parameter)
+			);
 		return view('forumCatView',  $data);
 	}
 	// Return the forumTopicView with correct data (route : /forum/{cat}/{topic})
@@ -177,29 +165,26 @@ class forumController extends Controller{
 			$nbPost = array();
 			for($i = 0 ; $i < sizeof($topicData['topicId']) ; $i++){
 				$creatorName[] = Auth::getNameById($topicData['creator'][$i]);
-				$nbPost[] = $this->__getNbPostByTopic($i);
+				$nbPost[] = $this->__getNbPostByTopic($topicData['topicId'][$i]);
 			}
-			$topicData = array(
+			$data = array(
 				'topicData' => $topicData,
 				'creatorName' => $creatorName,
 				'nbPost' => $nbPost);
+
 		// json_encode while encode data to be usable in the jQuery request
-     	return json_encode($topicData);
+     	return json_encode($data);
 	}
 	public function nextCat($cat){
 		$inputData = Input::all(); // Getting data from Post_Request
 		$firstTopicToReturn = $inputData['lastTopicPrinted']+1;
-		$nbPost = array();
 		// __getTopicFromCatLimit while return a certain number of topic starting at firstTopicToReturn
 		$topics = $this->__getTopicFromCatLimit($cat,$firstTopicToReturn);
-		foreach ($topics as $topic) {
-			$nbPost[] = $this->__getNbPostByTopic($topic->topic_id);
-		}
+
 		$data = array(
-			'topics' => $topics,
-			'nbPost' => $nbPost);
-/*		dd($data);
-*/		// json_encode while encode data to be usable in the jQuery request	
+			'topics' => $topics);
+		//dd($data);
+		// json_encode while encode data to be usable in the jQuery request	
 		return  json_encode($data);
 	}
 
@@ -550,6 +535,10 @@ class forumController extends Controller{
 		return DB::table('forum_topic')
 			->where('topic_createur', '=', $creatorId)
 			->count();
+	}
+
+	public function test(){
+		dd($this->__getNbPostByTopic(1));
 	}
 }
 ?>
