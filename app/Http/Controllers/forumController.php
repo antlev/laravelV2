@@ -183,7 +183,6 @@ class forumController extends Controller{
 
 		$data = array(
 			'topics' => $topics);
-		//dd($data);
 		// json_encode while encode data to be usable in the jQuery request	
 		return  json_encode($data);
 	}
@@ -193,7 +192,9 @@ class forumController extends Controller{
 */
 	public function getNbPostByCat($cat){
 		return DB::table('forum_post')
-			->where('post_topic_id', '=', $cat)
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_cat')
+			->where('forum_topic.topic_cat', '=', $cat)
+			//  TODO DOUBLON
 			->count();
 	}
 	public function getNbTopicByCat($cat){
@@ -538,7 +539,7 @@ class forumController extends Controller{
 	}
 
 	public function test(){
-		dd($this->__getNbPostByTopic(1));
+		dd($this->getNbPostByCat(1));
 	}
 }
 ?>
