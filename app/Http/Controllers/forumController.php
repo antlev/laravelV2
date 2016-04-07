@@ -35,8 +35,17 @@ class forumController extends Controller{
 			array_push($nbTopic, $this->getNbTopicByCat($cat->cat_id));
 			array_push($nbPost, $this->getNbPostByCat($cat->cat_id));
 			// First we get the last post creator id then his name using Auth
-			array_push($lastPostCreator, Auth::getNameById($this->__getLastPostCreatorIdByCat($cat->cat_id)->post_createur));
-			array_push($lastPost, $this->__getLastPostByCat($cat->cat_id));
+			// If the lastPost or lastPostCreator is null, then we put -1 into the var
+			if( Auth::getNameById($this->__getLastPostCreatorIdByCat($cat->cat_id)->post_createur) != null){
+				array_push($lastPostCreator, Auth::getNameById($this->__getLastPostCreatorIdByCat($cat->cat_id)->post_createur));
+			} else {
+				array_push($lastPostCreator, -1);
+			}
+			if( $this->__getLastPostByCat($cat->cat_id) != null){
+				array_push($lastPost, $this->__getLastPostByCat($cat->cat_id));			
+			} else {
+				array_push($lastPost, -1);
+			}
 		}
 		$topics = $this->__getAllTopics();
 		// Puts information into an array to send everything to 'forumIndexView' 
