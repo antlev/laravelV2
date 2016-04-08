@@ -30,53 +30,47 @@
   </ul>
   </br>
 
-<div class="col-lg-12">
-  <div class="col-lg-6">
-    <div class="col-lg-offset-1 ">
-      <h3 style="margin-left:15px">Vous êtes dans la catégorie <a href="{{url('forum/'.$cat)}}">{{$catName}}</a></h3></br>
+  <div class="col-lg-12">
+    <div class="col-lg-6">
+      <div class="col-lg-offset-1 ">
+        <h3 style="margin-left:15px">Vous êtes dans la catégorie <a href="{{url('forum/'.$cat)}}">{{$catName}}</a></h3></br>
+      </div>
     </div>
-  </div>
 
-  <!-- Menu de navigation -->
-  <div class="col-lg-6">
-    <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle col-lg-offset-5 col-lg-3 col-md-2 col-sm-12 col-xs-12" type="button" data-toggle="dropdown" style="margin-right:20px">Navigation Forum
-      <span class="caret"></span></button>
+    <!-- Menu de navigation -->
+    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+        <span class="caret"></span>
+      </button>
       <ul class="dropdown-menu">
-        <li class="dropdown-header" ><a style="font-weight:bold" href="{{url('forum')}}">Index</a></li>
+        <li class="dropdown-header" >
+          <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
+        </li>
         @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
-          <li class="dropdown-header"><a href="{{url('forum/'.$cats->cat_id.'/')}}">{{$cats->cat_nom}}</a></li>
-          @foreach($topic as $topic_as) <!-- On affiche les catégories -->
-            @if($topic_as->topic_cat==$cats->cat_id)
-              <li><a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">{{$topic_as->topic_titre}}</a></li>
-            @endif
-          @endforeach
+          <li class="dropdown-header">
+            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+              <h4>{{$cats->cat_nom}}</h4>
+            </a>
           </li>
         @endforeach
-      <ul>
+      </ul>
     </div>
-  </div>
-</div>
 
+    <h4 style="margin-left:15px">Titre du Topic : </h4>
 
-
-
-
-
-<h4 style="margin-left:15px">Titre du Topic : </h4>
-
-  <table class="table forum table-striped">
-    <thead>
-      <tr>
-        <th class="cell-stat"></th>
-        <input id="titleTopic" class="form-control" style="width:85%;margin-left:10px;margin-right:10px!important" rows="6" placeholder="Ecrivez ce que vous voulez"> </input> </br>
-        <h4 style="margin-left:15px">Message : </h4>
-        <textarea id="msgTopic" rows="10" class="form-control" style="width:85%;margin-left:10px;margin-right:10px!important" rows="6" placeholder="Ecrivez ce que vous voulez"> </textarea>
-      </tr>
-    </thead>
-    </br>
-          <a href="{{url('forum/'.$cat)}}" class="btn btn-warning" style="margin-left:15px"> Revenir aux catégories </a>
-          <button id="saveMsgTopic" class="btn btn-info" style="margin-left:15px">Créer le Topic et Poster le Message </button>
+    <table class="table forum table-striped">
+      <thead>
+        <tr>
+          <th class="cell-stat"></th>
+          <input id="titleTopic" class="form-control" style="width:85%;margin-left:10px;margin-right:10px!important" rows="6" placeholder="Ecrivez ce que vous voulez"> </input> </br>
+          <h4 style="margin-left:15px">Message : </h4>
+          <textarea id="msgTopic" rows="10" class="form-control" style="width:85%;margin-left:10px;margin-right:10px!important" rows="6" placeholder="Ecrivez ce que vous voulez"> </textarea>
+        </tr>
+      </thead>
+      </br>
+    </table>
+    <a href="{{url('forum/'.$cat)}}" class="btn btn-warning" style="margin-left:15px"> Revenir aux catégories </a>
+    <button id="saveMsgTopic" class="btn btn-info" style="margin-left:15px">Créer le Topic et Poster le Message </button>
   </body>
 </html> 
 

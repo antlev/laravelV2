@@ -62,7 +62,7 @@ class forumController extends Controller{
 	}
 	// Return the forumCatView with correct data (route : /forum/{cat})
 	public function cat($cat){
-		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$categories = $this->__getAllCategories(); // for the navigation menu
 		$catName = $this->__getCatName($cat); // Get the categorie name using the id
 		$topic = $this->__getTopicFromCatLimit($cat,0); // Return a fixed number of topics starting at the id which is the second parameter
 		$topics = $this->__getAllTopics(); // Return all topics (for navigation)
@@ -81,10 +81,10 @@ class forumController extends Controller{
 	}
 	// Return the forumTopicView with correct data (route : /forum/{cat}/{topic})
 	public function topic($cat,$topic_id){
+		$categories = $this->__getAllCategories(); // for the navigation menu
 		$posts = $this->__getPosts($topic_id);
 		$catName = $this->__getCatName($cat); // Return the categori name using it's id
 		$topic = $this->__getTopic($topic_id);
-		$categories = $this->__getAllCategories(); // Get all categories for navigation menu
 		$topics = $this->__getAllTopics();
 		$data = array(
 			'posts' => $posts,
@@ -97,7 +97,7 @@ class forumController extends Controller{
 	}
 	// Return the forumNewTopicView with correct data (route : /forum/{cat}/newTopic)
 	public function newTopic($cat){
-		$categories = $this->__getAllCategories(); // Get all categories for nav
+		$categories = $this->__getAllCategories(); // for the navigation menu
 		$catName = $this->__getCatName($cat); // Get the parent categorie name
 		$topic = $this->__getTopicFromCat($cat); // Get all the topics in the categorie passed as a parameter
 		$topics = $this->__getAllTopics(); // Get all topics
@@ -122,6 +122,7 @@ class forumController extends Controller{
 	}
 	// Return the forumMyPostsView with correct data (route : /forum/{auth}/myPosts)
 	public function myPosts($auth){
+		$categories = $this->__getAllCategories(); // for the navigation menu
 		$posts = $this->__getPostByCreatorId($auth);
 		$nbPost = $this->__getNbPostByCreatorId($auth);
 		$postCat = array();
@@ -130,6 +131,7 @@ class forumController extends Controller{
 			array_push($postCat, $this->__getCatByTopic($post->post_topic_id));
 		}
 		$data = array(
+			'categories' => $categories,
 			'posts' => $posts,
 			'nbPost' => $nbPost,
 			'postCat' => $postCat);
@@ -142,10 +144,12 @@ class forumController extends Controller{
 	}
 	// Return forumMyProfilView (route : /forum/{auth}/myProfil )
 	public function myProfil($auth){
+		$categories = $this->__getAllCategories(); // for the navigation menu	
 		$data = array();
 		$nbPost = $this->__getNbPostByCreatorId($auth);
 		$nbTopic = $this->__getNbTopicByCreatorId($auth);
 		$data = array(
+			'categories' => $categories,
 			'nbPost' => $nbPost,
 			'nbTopic' => $nbTopic);
 		// Checks the authenticity of the user
@@ -157,10 +161,30 @@ class forumController extends Controller{
 	}
 	// Return the adminView (route : /forum/admin)
 	public function adminView(){
+		$categories = $this->__getAllCategories(); // for the navigation menu	
 		if( Auth::isAdmin() ){ // We checks that the user is an admin
-			return view('forumAdminView');
+			return view('forumAdminView', $categories);
 		} else { // If not we return the index
 			return index();				
+		}
+	}
+	// Function called in gt by 'routes' which return the 'forumEditPostView'
+	public function editPostView($cat,$topicId,$postId){
+		$categories = $this->__getAllCategories(); // for the navigation menu	
+		// Checks that user has the correct right pn the post
+		$postToEdit = $this->__getPostMessageById($postId)[0]->post_texte;
+			$data = array(
+				'categories' => $categories,
+				'postId' => $postId,
+				'cat' => $cat,
+				'topic_id' => $topicId,
+				'postToEdit' => $postToEdit);
+		if( Auth::isAdmin() ){
+			return view('forumEditPostView',$data);
+		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			return view('forumEditPostView',$data);
+		} else {
+			dd("Vous n'avez pas le droit d'accèder à cette page");
 		}
 	}
 
@@ -322,23 +346,7 @@ class forumController extends Controller{
 	    	->get();
 	}
 */
-	// Function called in gt by 'routes' which return the 'forumEditPostView'
-	public function editPostView($cat,$topicId,$postId){
-		// Checks that user has the correct right pn the post
-		$postToEdit = $this->__getPostMessageById($postId)[0]->post_texte;
-			$data = array(
-				'postId' => $postId,
-				'cat' => $cat,
-				'topic_id' => $topicId,
-				'postToEdit' => $postToEdit);
-		if( Auth::isAdmin() ){
-			return view('forumEditPostView',$data);
-		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
-			return view('forumEditPostView',$data);
-		} else {
-			dd("Vous n'avez pas le droit d'accèder à cette page");
-		}
-	}
+
 	// Function called in post by 'routes' which modify a message into the database
 	public function editPost($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post

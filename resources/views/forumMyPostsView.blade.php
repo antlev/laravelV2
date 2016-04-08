@@ -30,12 +30,33 @@
     </ul>
 
     <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
-      <div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'>
-        </br>
-          <h2>Vous avez posté {{$nbPost}} messages sur le forum</h2>
-        </br>   
-      </div>
+      <div class='col-lg-12 col-md-12 col-sm-12 col-xs-12'>
+        <div class='col-lg-6 col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'>
+            <h2>Vous avez posté {{$nbPost}} messages sur le forum</h2>
+        </div>
+
+        <!-- Menu de navigation -->
+        <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+          <button class="btn btn-primary dropdown-toggle col-lg-offset-6 col-md-offset-7 col-sm-offset-6 col-lg-6 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header" >
+              <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
+            </li>
+            @foreach($categories as $cats)  <!-- print the categories in the dropdown menu -->
+              <li class="dropdown-header">
+                <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+                  <h4>{{$cats->cat_nom}}</h4>
+                </a>
+              </li>
+            @endforeach
+          </ul>
+        </div>
+      </div>    *
     </div>
+
+
 
 
 

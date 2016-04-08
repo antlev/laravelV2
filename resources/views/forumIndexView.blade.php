@@ -39,28 +39,19 @@
         <li class="dropdown-header" >
           <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
         </li>
-        @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+        @foreach($categories as $cats)  <!-- print the categories in the dropdown menu -->
           <li class="dropdown-header">
             <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
               <h4>{{$cats->cat_nom}}</h4>
             </a>
           </li>
-          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-            @if($topic_as->topic_cat==$cats->cat_id)
-              <li>
-                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
-                  <h5>{{$topic_as->topic_titre}}</h5>
-                </a>
-              </li>
-            @endif
-          @endforeach
         @endforeach
       </ul>
     </div>
 
   <table class="table forum table-striped">
     <thead>
-      @foreach($forum as $forum_as) <!-- On affiche les catégories -->
+      @foreach($forum as $forum_as) <!-- print the categories -->
       <tr>
         <th class="cell-stat"></th>
         <th>

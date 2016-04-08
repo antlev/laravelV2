@@ -29,7 +29,25 @@
       <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
       <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
     </ul>
-
+    
+    <!-- Navigation menu -->
+    <div class="dropdown col-lg-6 col-md-6 col-sm-6">
+      <button class="btn btn-primary dropdown-toggle col-lg-offset-6 col-md-offset-7 col-sm-offset-6 col-lg-6 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header" >
+          <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
+        </li>
+        @foreach($categories as $cats)  <!-- print the categories in the dropdown menu -->
+          <li class="dropdown-header">
+            <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
+              <h4>{{$cats->cat_nom}}</h4>
+            </a>
+          </li>
+        @endforeach
+      </ul>
+    </div>
 
     <div class="col-lg-offset-1 col-lg-11 col-md-offset-1 col-md-11 col-sm-offset-1 col-sm-11">
       <h2  href="{{url('forum/'.Auth::id().'/myProfil')}}">

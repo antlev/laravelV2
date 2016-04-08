@@ -47,7 +47,7 @@
 
         @yield('nav')
 
-    <!-- Menu de navigation -->
+    <!-- Navigation menu -->
     <div class="dropdown col-lg-6 col-md-6 col-sm-6">
       <button class="btn btn-primary dropdown-toggle col-lg-offset-6 col-md-offset-7 col-sm-offset-6 col-lg-6 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
         <span class="caret"></span>
@@ -56,21 +56,12 @@
         <li class="dropdown-header" >
           <a style="font-weight:bold" href="{{url('forum')}}">Index</a>
         </li>
-        @foreach($categories as $cats)  <!-- On affiche les sous_catégories -->
+        @foreach($categories as $cats)  <!-- print the categories in the dropdown menu -->
           <li class="dropdown-header">
             <a style="font-weight:bold" href="{{url('forum/'.$cats->cat_id.'/')}}">
               <h4>{{$cats->cat_nom}}</h4>
             </a>
           </li>
-          @foreach($topics as $topic_as) <!-- On affiche les catégories -->
-            @if($topic_as->topic_cat==$cats->cat_id)
-              <li>
-                <a href="{{url('forum/'.$cats->cat_id.'/'.$topic_as->topic_id)}}">
-                  <h5>{{$topic_as->topic_titre}}</h5>
-                </a>
-              </li>
-            @endif
-          @endforeach
         @endforeach
       </ul>
     </div>
@@ -84,9 +75,9 @@
 
       
 
-    <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
+    <?php $id = 0 ?> <!-- Variable $id allow to count the number of messages printed -->
     
-    @foreach($posts as $post) <!-- On affiche les catégories -->
+    @foreach($posts as $post) <!-- print the categories -->
       <div class="row">
         @if($post->post_topic_id==$topic[0]->topic_id && $post->post_sup == 0)
           <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
