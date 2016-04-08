@@ -138,8 +138,8 @@
                 console.log(obj['nbPost']);
                 for(var i=0;i<obj['creatorName'].length;++i){ // for each post 
                     // we append those line containing correct values at the correct place (using #topics)
-                    $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
-                }
+                    $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par <a href='{{url('forum/'}}'"+obj['topicData']['createur'][i]+"/myProfil>"+obj['creatorName'][i]+"</a></td></tr>");
+                }   // TODO CONCATENATE HREFUSING CREATEUR
 /*                topicData.topicId = topicData.topicTitle = topicData.creator = '';
 */              }             
             });      
