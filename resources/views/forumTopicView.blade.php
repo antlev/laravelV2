@@ -84,24 +84,25 @@
 
       
 
-    <?php $messagExist = 0 ?> <!-- On initialise messagExist à 0 -->
     <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
     
     @foreach($posts as $post) <!-- On affiche les catégories -->
       <div class="row">
-
-        <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
-          @if($post->post_topic_id==$topic[0]->topic_id)
-            <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
+        @if($post->post_topic_id==$topic[0]->topic_id && $post->post_sup == 0)
+          <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
             <div class="panel-body panel-info" style="min-height:70px">
               <h3> {{$post->post_texte}}  </h3>
               <?php $id++ ?>   <!-- On incrémente la variable id à chaque post -->
             </div>
-            
-
             <div class="panel-footer panel-info" style="height:55px" >
               <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12"> 
-                <div>posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}}</div>
+                <div>
+                  @if($post->post_edit == 1)
+                    <div>Posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}} (Edité le {{$post->post_edit_time}})</div>
+                  @else
+                    <div>Posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}}</div>
+                  @endif
+                </div>
               </div>
               @if(Auth::isAdmin())
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">   
@@ -122,11 +123,8 @@
               @endif
             </div>
           </div>
-        </div>
-
-
-
-      @endif
+        @endif
+      </div>
       <script>
         $('#supPost{{$id}}').click(function() {
           $.ajax({
@@ -142,7 +140,7 @@
       </script>
     @endforeach
 
-    @if($messagExist==0) <!-- Si aucun message ne doit être affiché -->
+    @if($id==0) <!-- Si aucun message ne doit être affiché -->
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h3>Aucun message n'est sauvegardé pour ce topic '{{$topic[0]->topic_titre}}' </h3></div>
     @endif
 

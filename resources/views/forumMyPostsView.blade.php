@@ -41,85 +41,82 @@
 
 
     <?php $id = 0 ?> <!-- Variable $id permettant de compter le nombre de messages affiché, permettant d'avoir un id -->
-    @foreach($posts as $post) <!-- On affiche les catégories -->
-    <div class="row">
-      <div class=" col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
-          <h3>Message n°{{$id}}
-            <a href="{{url('forum/'.$post->topic_cat.'/'.$post->topic_id)}}"> (Topic:{{$post->topic_titre}})</a>
-            <a href="{{url('forum/'.$post->topic_cat)}}"> (Catégorie:{{$post->cat_nom}})</a></h3>
-      </div>
-      <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
-        <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
-        <div class="panel-body panel-info" style="min-height:70px">
-          <h4> {{$post->post_texte}}  </h4>
-          <?php $id++ ?>   <!-- On incrémente la variable id à chaque post -->
-        </div>
-        
-
-        <div class="panel-footer panel-info" style="height:55px" >
-          <div class="col-lg-7 col-md-6 col-sm-6 col-xs-7"> 
-            <h5>posté le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </h5>
+    @foreach($posts as $post) <!-- Print the topic -->
+      @if($post->post_sup == 0) <!-- If the post hasn't been deleted -->
+        <div class="row">
+          <div class=" col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+              <h3>Message n°{{$id}}
+                <a href="{{url('forum/'.$post->topic_cat.'/'.$post->topic_id)}}"> (Topic:{{$post->topic_titre}})</a>
+                <a href="{{url('forum/'.$post->topic_cat)}}"> (Catégorie:{{$post->cat_nom}})</a></h3>
           </div>
-          @if(Auth::isAdmin())
-            <div class="col-lg-5 col-md-6 col-sm-6 col-xs-5">  
-              <!-- Button 'Voir la discussion' -->
-              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                <a href="{{url('/forum/'.$postCat[$id-1].'/'.$post->post_topic_id)}}" class="btn btn-success" style="margin-left:15px">Voir la discussion</a> 
-              </div> 
-              <!-- Button 'Editer un message' -->
-              <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-4">
-                <a href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
+          <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info">
+            <?php $messagExist = 1 ?> <!-- Si on affiche un message on met cette variable à 1 -->
+            <div class="panel-body panel-info" style="min-height:70px">
+              <h4> {{$post->post_texte}}  </h4>
+              <?php $id++ ?>   <!-- On incrémente la variable id à chaque post -->
+            </div>
+            <div class="panel-footer panel-info" style="height:55px" >
+              <div class="col-lg-7 col-md-6 col-sm-6 col-xs-7"> 
+                <h5>posté le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </h5>
               </div>
-              <!-- Button 'Supprimer un message' -->
-              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                <button id="supPost{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
+              @if(Auth::isAdmin())
+                <div class="col-lg-5 col-md-6 col-sm-6 col-xs-5">  
+                  <!-- Button 'Voir la discussion' -->
+                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <a href="{{url('/forum/'.$postCat[$id-1].'/'.$post->post_topic_id)}}" class="btn btn-success" style="margin-left:15px">Voir la discussion</a> 
+                  </div> 
+                  <!-- Button 'Editer un message' -->
+                  <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-lg-3 col-md-3 col-sm-3 col-xs-4">
+                    <a href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px">Editer</a> 
+                  </div>
+                  <!-- Button 'Supprimer un message' -->
+                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <button id="supPost{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
+                  </div>
+                </div>
+              @else(Auth::id() == $post->post_createur)
+                <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
+                  <a href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
+                  <button id="supPost{{$id}}"  href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
+                </div>
+              @endif
               </div>
             </div>
-          @else(Auth::id() == $post->post_createur)
-            <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
-              <a href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
-              <button id="supPost{{$id}}"  href="{{url('forum/'.$postCat[$id-1].'/'.$post->post_topic_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
-            </div>
-          @endif
         </div>
-      </div>
-    </div>
+      <script>
+        $('#supPost{{$id}}').click(function() {
+          alert('ok');
+          $.ajax({
+              url: '{{$post->post_topic_id}}/supPost',
+              type: "post",
+              data: {'postId': $(this).attr('data-id') },
+              success: function(data){
+                window.location.href = ""; // On redirige sur la même page
+              }
+          });  
+        });
+        
+        $('#editPost{{$id}}').click(function() {
+          alert('ok');
+          window.location.href = "";
+
+        });
+
+        $('#goToPost{{$id}}').click(function() {
+          alert('ok');
+          $.ajax({
+              url: '{{$post->post_topic_id}}/supPost',
+              type: "post",
+              data: {'postId': $(this).attr('data-id') },
+              success: function(data){
+                window.location.href = ""; // On redirige sur la même page
+              }
+          });  
+        });
 
 
-
-    <script>
-      $('#supPost{{$id}}').click(function() {
-        alert('ok');
-        $.ajax({
-            url: '{{$post->post_topic_id}}/supPost',
-            type: "post",
-            data: {'postId': $(this).attr('data-id') },
-            success: function(data){
-              window.location.href = ""; // On redirige sur la même page
-            }
-        });  
-      });
-      
-      $('#editPost{{$id}}').click(function() {
-        alert('ok');
-        window.location.href = "";
-
-      });
-
-      $('#goToPost{{$id}}').click(function() {
-        alert('ok');
-        $.ajax({
-            url: '{{$post->post_topic_id}}/supPost',
-            type: "post",
-            data: {'postId': $(this).attr('data-id') },
-            success: function(data){
-              window.location.href = ""; // On redirige sur la même page
-            }
-        });  
-      });
-
-
-    </script>
+      </script>
+    @endif
   @endforeach
 
       </tbody>

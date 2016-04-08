@@ -114,7 +114,7 @@ class forumController extends Controller{
 	// Return the forumMyPostsView with correct data (route : /forum/{auth}/myPosts)
 	public function myPosts($auth){
 		$posts = $this->__getPostByCreatorId($auth);
-		$nbPost = sizeof($posts);
+		$nbPost = $this->__getNbPostByCreatorId($auth);
 		$postCat = array();
 		foreach ($posts as $post) {
 			// For each post we get the categorie
@@ -222,7 +222,7 @@ class forumController extends Controller{
 
 	    DB::table('forum_post')
 	    	->where('post_id', '=', $postId)
-	    	->delete();
+	    	->update(['post_sup' => 1]);
 	}
 	public function supPostById(){
  		$inputData = Input::all(); // Get the data send in post
@@ -230,12 +230,7 @@ class forumController extends Controller{
 
 	    return DB::table('forum_post')
 	    	->where('post_createur', '=', $idToSup)
-	    	->delete();
-	}
-	private function __supPostById($idToSup){
-	    return DB::table('forum_post')
-	    	->where('post_createur', '=', $idToSup)
-	    	->delete();
+	    	->update(['post_sup' => 1]);
 	}
 	public function supPostByName(){
  		$inputData = Input::all(); // Get the data send in post
@@ -321,21 +316,18 @@ class forumController extends Controller{
 	// Function called in gt by 'routes' which return the 'forumEditPostView'
 	public function editPostView($cat,$topicId,$postId){
 		// Checks that user has the correct right pn the post
-		$editorId = Auth::id();
-		if( Auth::isAdmin() ){
-			$postToEdit = $this->__getPostMessageById($postId)[0]->post_texte;
+		$postToEdit = $this->__getPostMessageById($postId)[0]->post_texte;
 			$data = array(
 				'postId' => $postId,
 				'cat' => $cat,
 				'topic_id' => $topicId,
 				'postToEdit' => $postToEdit);
-
+		if( Auth::isAdmin() ){
 			return view('forumEditPostView',$data);
-
-		} else if( $editorId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
-			dd('it s ok go on');
+		} else if( Auth::id() == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
+			return view('forumEditPostView',$data);
 		} else {
-			dd("sorry you don't have permission to edit this message");
+			dd("Vous n'avez pas le droit d'accèder à cette page");
 		}
 	}
 	// Function called in post by 'routes' which modify a message into the database
@@ -344,13 +336,12 @@ class forumController extends Controller{
 		$editeurId = Auth::id();
 		$inputData = Input::all();  // Get the data send in post
 		$postToReplace = $inputData['msgToSend'];
-
 		if( Auth::isAdmin() ){
-			DB::table('forum_post')->where('post_id', '=', $postId)->update(['post_texte' => $postToReplace]);
+			return $this->__editPostById($postId,$postToReplace);
 		} else if( $editeurId == $this->__getCreatorPostById($post_id)[0] ){ // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
-			dd('it s ok go on');
+			return $this->__editPostById($postId,$postToReplace);
 		} else {
-			dd("sorry you don't have permission to edit this message");
+			dd("Vous n'avez pas le droit d'accèder à cette page");
 		}
 	}
 	// Function called by 'routes' which insert the new topic into the database
@@ -410,9 +401,6 @@ class forumController extends Controller{
 		return DB::table('forum_categorie')
 			->orderBy('cat_ordre')
 			->get();
-/*		return DB::select("SELECT cat_id, cat_nom, cat_ordre, forum_id, cat_desc
-			FROM forum_categorie
-			ORDER BY cat_ordre ASC");*/
 	}
 	// Return the topics which are in the category passed as a parameter
 	private function __getTopicFromCat($cat){
@@ -424,7 +412,12 @@ class forumController extends Controller{
 	// Return the topics which are in the category passed as a parameter
 	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
 	private function __getTopicFromCatLimit($cat,$firstTopicToReturn){
-		return DB::table('forum_topic')->where('topic_cat', $cat)->orderBy('topic_id')->skip($firstTopicToReturn)->take(2)->get();
+		return DB::table('forum_topic')
+			->where('topic_cat', $cat)
+			->orderBy('topic_id')
+			->skip($firstTopicToReturn)
+			->take(15)
+			->get();
 	}
 	// Return all topics
 	private function __getAllTopics(){
@@ -523,13 +516,16 @@ class forumController extends Controller{
 			->get();
 	}
 	private function __getNbPostByTopic($topic_id){
+		// TODO Doublon
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
+			->where('post_sup', '=', 0) // if the topic hasn't been deleted
 			->count();
 	}
 	private function __getNbPostByCreatorId($creatorId){
 		return DB::table('forum_post')
 			->where('post_createur', '=', $creatorId)
+			->where('post_sup', '=', 0) // if the topic hasn't been deleted
 			->count();
 	}
 	private function __getNbTopicByCreatorId($creatorId){
@@ -537,9 +533,19 @@ class forumController extends Controller{
 			->where('topic_createur', '=', $creatorId)
 			->count();
 	}
+	private function __supPostById($idToSup){
+	    return DB::table('forum_post')
+	    	->where('post_createur', '=', $idToSup)
+	    	->update(['post_sup' => 1]);
+	}
+	private function __editPostById($idToSup,$postToReplace){
+	    return DB::table('forum_post')
+	    	->where('post_id', '=', $idToSup)
+	    	->update(['post_edit' => 1, 'post_texte' => $postToReplace, 'post_edit_time' => date('Y-m-d H:i:s')]);
+	}
 
 	public function test(){
-		dd($this->getNbPostByCat(1));
+		dd($this->__editPostById(5,"super edition"));
 	}
 }
 ?>
