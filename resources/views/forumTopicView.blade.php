@@ -89,9 +89,13 @@
               <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12"> 
                 <div>
                   @if($post->post_edit == 1)
-                    <div>Posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}} (Edité le {{$post->post_edit_time}})</div>
+                    <div>
+                      <div>Posté le {{$post->post_time}} par <a href="{{url('forum/'.$post->post_createur.'/myProfil')}}">{{Auth::getNamebyId($post->post_createur)}}</a> (Edité le {{$post->post_edit_time}})</div>
+                    </div>
                   @else
-                    <div>Posté le {{$post->post_time}} par {{Auth::getNamebyId($post->post_createur)}}</div>
+                    <div>
+                      <div>Posté le {{$post->post_time}} par <a href="{{url('forum/'.$post->post_createur.'/myProfil')}}">{{Auth::getNamebyId($post->post_createur)}}</a></div>
+                    </div>                  
                   @endif
                 </div>
               </div>
