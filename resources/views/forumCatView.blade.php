@@ -118,31 +118,29 @@
         data: {'lastTopicPrinted': -1 }, //We want to start by the first topic so we set the variable lastTopicPrinted to 0
         success: function(data){ 
           obj = $.parseJSON(data); // Parse the data which has been encode using JSON
-          console.log(obj);
           for(var i=0;i<obj.topics.length;i++) {
             topicData.topicId.push(obj.topics[i].topic_id); // For each data needed we set the topicData
             topicData.creator.push(obj.topics[i].topic_createur);
             topicData.topicTitle.push(obj.topics[i].topic_titre);
           }
-          console.log(topicData);         
         },
         complete: function(data){ // When request is completed
             // Secondajax post request the will get number of post and the name of the topic creator
-            $.ajax({
-              url: 'getPostInfoById',
-              type: "post",
-              data: {'topicData': topicData},
-              success: function(data){
-                obj = $.parseJSON(data); // Parse the data which has been encode using JSON
-                console.log(obj);
-                console.log(obj['nbPost']);
-                for(var i=0;i<obj['creatorName'].length;++i){ // for each post 
-                    // we append those line containing correct values at the correct place (using #topics)
-                    $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par <a href='{{url('forum/'}}'"+obj['topicData']['createur'][i]+"/myProfil>"+obj['creatorName'][i]+"</a></td></tr>");
-                }   // TODO CONCATENATE HREFUSING CREATEUR
-/*                topicData.topicId = topicData.topicTitle = topicData.creator = '';
-*/              }             
-            });      
+          $.ajax({
+            url: 'getPostInfoById',
+            type: "post",
+            data: {'topicData': topicData},
+            success: function(data){
+              obj = $.parseJSON(data); // Parse the data which has been encode using JSON
+              console.log(obj);
+              console.log(obj['topicData']['createur']);
+              for(var i=0;i<obj['creatorName'].length;++i){ // for each post 
+                  // we append those line containing correct values at the correct place (using #topics)
+                  $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par <a href='{{url('forum/')}}"+"/"+obj['topicData']['creator'][i]+"/myProfil'>"+obj['creatorName'][i]+"</a></td></tr>");
+              }
+              /*                topicData.topicId = topicData.topicTitle = topicData.creator = '';*/
+            }             
+          });      
         }
     });  
 
@@ -176,7 +174,7 @@
               obj = $.parseJSON(data); // Parse the data which has been encode using JSON
               for(var i=0;i<obj['nbPost'].length;++i){ // for each post
                 // Append those line containing correct values at the correct place (using #topics)
-                $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par "+obj['creatorName'][i]+"</td></tr>");
+                $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par <a href='{{url('forum/')}}'"+'/'+obj['topicData']['creator'][i]+"'/myProfil'></td></tr>");
               }
               topicData.topicId = topicData.topicTitle = topicData.creator = '';       
             }             

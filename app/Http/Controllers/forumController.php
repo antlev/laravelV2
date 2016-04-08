@@ -151,7 +151,8 @@ class forumController extends Controller{
 		$data = array(
 			'categories' => $categories,
 			'nbPost' => $nbPost,
-			'nbTopic' => $nbTopic);
+			'nbTopic' => $nbTopic,
+			'userId' => $auth);
 		// Checks the authenticity of the user
 		if( Auth::isAdmin() || Auth::id() == $this->__getCreatorPostById($post_id)[0] ){  // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			return view('forumMyProfilView', $data);
@@ -225,9 +226,10 @@ class forumController extends Controller{
 */
 	public function getNbPostByCat($cat){
 		return DB::table('forum_post')
-			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_cat')
+			->select()
+			->distinct()
+			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
 			->where('forum_topic.topic_cat', '=', $cat)
-			//  TODO DOUBLON
 			->count();
 	}
 	public function getNbTopicByCat($cat){
@@ -533,10 +535,10 @@ class forumController extends Controller{
 			->get();
 	}
 	private function __getNbPostByTopic($topic_id){
-		// TODO Doublon
 		return DB::table('forum_post')
 			->where('post_topic_id', '=', $topic_id)
 			->where('post_sup', '=', 0) // if the topic hasn't been deleted
+			->distinct()
 			->count();
 	}
 	private function __getNbPostByCreatorId($creatorId){
@@ -562,7 +564,7 @@ class forumController extends Controller{
 	}
 
 	public function test(){
-		dd($this->__editPostById(5,"super edition"));
+		dd($this->getNbPostByCat(1));
 	}
 }
 ?>

@@ -51,7 +51,7 @@
 
     <div class="col-lg-offset-1 col-lg-11 col-md-offset-1 col-md-11 col-sm-offset-1 col-sm-11">
       <h2  href="{{url('forum/'.Auth::id().'/myProfil')}}">
-        <a href="{{url('forum/'.Auth::id().'/myProfil')}}"> Profil de : {{Auth::getPrenomById(Auth::id())}} {{Auth::getNomById(Auth::id())}} ({{Auth::getNameById(Auth::id())}})</a>
+        <a href="{{url('forum/'.Auth::id().'/myProfil')}}"> Profil de : {{Auth::getPrenomById($userId)}} {{Auth::getNomById($userId)}} ({{Auth::getNameById($userId)}})</a>
       </h2>
     </div>
     <div class='col-lg-offset-1 col-lg-10  col-sm-offset-2 col-xs-offset-2'>
