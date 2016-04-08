@@ -123,13 +123,15 @@ class forumController extends Controller{
 	// Return the forumMyPostsView with correct data (route : /forum/{auth}/myPosts)
 	public function myPosts($auth){
 		$categories = $this->__getAllCategories(); // for the navigation menu
-		$posts = $this->__getPostByCreatorId($auth);
-		$nbPost = $this->__getNbPostByCreatorId($auth);
 		$postCat = array();
+		$posts = $this->__getPostByCreatorId($auth);
+
 		foreach ($posts as $post) {
-			// For each post we get the categorie
-			array_push($postCat, $this->__getCatByTopic($post->post_topic_id));
+			if($this->__getCatByPost($post->post_id) != null){
+				array_push($postCat, $this->__getCatByPost($post->post_id));		
+			}
 		}
+		$nbPost = $this->__getNbPostByCreatorId($auth);
 		$data = array(
 			'categories' => $categories,
 			'posts' => $posts,
@@ -393,7 +395,9 @@ class forumController extends Controller{
 */
 	// Return the category's name taking it's id as a parameter
 	private function __getCatName($cat){ 
-		return DB::table('forum_categorie')->where('cat_id',$cat)->value('cat_nom');
+		return DB::table('forum_categorie')
+			->where('cat_id',$cat)
+			->value('cat_nom');
 	}
 	// Return a table containing all posts of the topic in parameter
 	private function __getPosts($topic){ 
@@ -449,8 +453,15 @@ class forumController extends Controller{
 				->where('topic_id', $topicId)
 				->get();
 	}
+	private function __getCatByPost($postId){
+			return DB::table('forum_post')
+				->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
+				->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
+				->where('post_id', $postId)
+				->where('post_sup', 0)
+				->get();
+	}
 	private function __getCatByTopic($topicId){
-
 		return DB::table('forum_topic')
 			->where('topic_id', $topicId)
 			->value('topic_cat');
@@ -529,9 +540,8 @@ class forumController extends Controller{
 	}
 	private function __getPostByCreatorId($id){
 		return DB::table('forum_post')
-			->join('forum_topic', 'forum_post.post_topic_id', '=', 'forum_topic.topic_id')
-			->join('forum_categorie', 'forum_topic.topic_cat', '=', 'forum_categorie.cat_id')
 			->where('post_createur', $id)
+			->where('post_sup', 0)
 			->get();
 	}
 	private function __getNbPostByTopic($topic_id){
@@ -564,7 +574,7 @@ class forumController extends Controller{
 	}
 
 	public function test(){
-		dd($this->getNbPostByCat(1));
+		dd($this->__getNbPostByCreatorId(4));
 	}
 }
 ?>

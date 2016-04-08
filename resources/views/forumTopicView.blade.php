@@ -45,8 +45,6 @@
           <button class="btn btn-success" href="{{url('forum/'.$cat.'/')}}">Revenir à la catégorie</button>
         </div>
 
-        @yield('nav')
-
     <!-- Navigation menu -->
     <div class="dropdown col-lg-6 col-md-6 col-sm-6">
       <button class="btn btn-primary dropdown-toggle col-lg-offset-6 col-md-offset-7 col-sm-offset-6 col-lg-6 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
