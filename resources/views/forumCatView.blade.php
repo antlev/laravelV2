@@ -176,7 +176,7 @@
           }
         },
         complete: function(data){ // When request is completed
-          // Secondajax post request the will get number of post and the name of the topic creator
+          // Second ajax post request the will get number of post and the name of the topic creator
           $.ajax({
             url: 'getPostInfoById',
             type: "post",
