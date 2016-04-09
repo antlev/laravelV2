@@ -21,7 +21,7 @@
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myProfil')}}">Profil</a></li>
       <li role="presentation"><a href="{{url('forum/'.Auth::id().'/myPosts')}}">Mes Messages</a></li>
       <li role="presentation"><a href="{{url('forum/admin')}}">Admin</a></li>
-      <li role="presentation"><a href="{{url('forum/admin')}}">Revenir au site M2L</a></li>
+    <li role="presentation"><a href="{{url('')}}">Revenir au site M2L</a></li>
     </ul>
     </br>  
   </head>

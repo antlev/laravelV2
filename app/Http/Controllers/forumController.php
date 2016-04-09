@@ -129,6 +129,8 @@ class forumController extends Controller{
 		foreach ($posts as $post) {
 			if($this->__getCatByPost($post->post_id) != null){
 				array_push($postCat, $this->__getCatByPost($post->post_id));		
+			} else{
+				array_push($postCat, array(-1));	
 			}
 		}
 		$nbPost = $this->__getNbPostByCreatorId($auth);
@@ -138,6 +140,7 @@ class forumController extends Controller{
 			'nbPost' => $nbPost,
 			'postCat' => $postCat);
 		// Checks the authenticity of the user
+		dd($postCat);
 		if( Auth::isAdmin() || Auth::id() == $this->__getCreatorPostById($post_id)[0] ){  // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			return view('forumMyPostsView', $data);
 		} else {
