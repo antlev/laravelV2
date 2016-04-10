@@ -17,8 +17,8 @@
     <div class="page-header page-heading col-lg-12 text-center">
       <h1 onclick="location.href='{{url('forum')}}'" >Forum De La Maison Des Ligues</h1>
     </div>
-    <div class="col-lg-offset-3">
-      <h4 class="lead">Bonjour {{Auth::getNameById(Auth::id())}}</h4>
+    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-2 col-xs-offset-2">
+      <h3 class="lead">Bonjour {{Auth::getNameById(Auth::id())}}</h3>
     </div>
   </div>
   <!-- Barre de navigation -->

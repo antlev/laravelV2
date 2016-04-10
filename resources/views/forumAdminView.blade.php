@@ -50,10 +50,10 @@
           <input class="col-lg-6" rows="10" id="surnameToSup" class="form-control"></input>
         </div>
         <div class="col-md-6 col-lg-7">
-          <div class="col-lg-3 col-lg-offset-1 ">
+          <div class="col-lg-3 ">
             <h4>Nom  du créateur</h4>
           </div>
-          <input class="col-lg-2" rows="10" id="nameToSup" class="form-control"></input>
+          <input class="col-lg-4" rows="10" id="nameToSup" class="form-control"></input>
           <button id="supByName" class="btn btn-warning col-lg-offset-1 col-lg-2 col-md-offset-1">Supprimer</button>
         </div>
       </div>
