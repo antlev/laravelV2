@@ -65,8 +65,13 @@
       </div>
     </div>
 
-    <div class="col-lg-offset-1  col-md-12 col-sm-12 col-xs-12">
-      <h2>Topic : {{$topic[0]->topic_titre}}</h2>
+    <div class="col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-12 col-xs-12">
+      <div class="col-lg-2 col-md-3">
+        <h2>Topic : {{$topic[0]->topic_titre}}</h2>
+      </div>
+      <div class="col-lg-offset-10 col-md-offset-10">
+        <h4>(Vues : {{$topic[0]->topic_vu}})</h4>
+      </div>
     </div>
 
       
@@ -153,9 +158,15 @@
 </html> 
 
 <script>
-  $(function() { 
-    
+  $(function() {     
     $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
+    // Increment the number of view 
+    $.ajax({
+      url: './{{$topic[0]->topic_id}}/viewTopic',
+      type: "post",
+      success: function(data){ 
+      },
+    }); 
   });
 </script>
 

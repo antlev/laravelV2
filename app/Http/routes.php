@@ -103,14 +103,12 @@ Route::group(['middleware' => 'web'], function () {
 	Route::post('/forum/{cat}/saveMsgTopic','forumController@createTopic');
     Route::post('/forum/{cat}/{topic}/savePost','forumController@postMessage');
 	Route::post('/forum/{cat}/{topic}/supPost','forumController@supPost');
-	Route::post('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPost');
 	Route::get('/forum/{cat}/{topic}/newPost','forumController@newPost');
+	Route::post('/forum/{cat}/{topic}/viewTopic','forumController@viewTopic');
+	Route::post('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPost');
 	Route::get('/forum/{cat}/{topic}/{post_id}/editPost','forumController@editPostView');
 	Route::get('/forum/{cat}/{topic}', 'forumController@topic');
 	Route::get('/forum/{cat}', 'forumController@cat');
-
-
-
 });
 
 

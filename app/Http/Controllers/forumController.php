@@ -391,6 +391,14 @@ class forumController extends Controller{
 			['post_createur' => $creatorId, 'post_texte' => $messageTopic, 'post_topic_id' => $postTopicId->topic_id, 'post_time' => date('Y-m-d H:i:s')]
 		);
 	}
+	public function viewTopic($cat,$topic){
+		DB::table('forum_topic')
+			->where('topic_id', $topic)
+			->update(['topic_vu' => DB::table('forum_topic')
+					->where('topic_id', $topic)
+					->select('topic_vu')
+					->get()[0]->topic_vu+1 ] );
+	}
 
 /**
 	DATABASE REQUESTS
