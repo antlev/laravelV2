@@ -202,14 +202,17 @@ class forumController extends Controller{
 			$topicData = Input::get('topicData');
 			$creatorName = array();
 			$nbPost = array();
+			$lastPostDate = array();
 			for($i = 0 ; $i < sizeof($topicData['topicId']) ; $i++){
 				$creatorName[] = Auth::getNameById($topicData['creator'][$i]);
 				$nbPost[] = $this->__getNbPostByTopic($topicData['topicId'][$i]);
+				array_push($lastPostDate, $this->__getLastPostDateByTopic($topicData['topicId'][$i]));
 			}
 			$data = array(
 				'topicData' => $topicData,
 				'creatorName' => $creatorName,
-				'nbPost' => $nbPost);
+				'nbPost' => $nbPost,
+				'lastPostDate' => $lastPostDate);
 
 		// json_encode while encode data to be usable in the jQuery request
      	return json_encode($data);
@@ -527,10 +530,10 @@ class forumController extends Controller{
 			->first();
 	}
 	// Return the last post date of a certain category
-	private function __getLastPostDateByCat(){
-		return DB::table('forum_post')
-			
+	private function __getLastPostDateByTopic($topicId){
+		return DB::table('forum_post')	
 			->select('post_time')
+			->where('post_topic_id', $topicId)
 			->orderBy('post_id', 'desc')
 			->first();
 	}

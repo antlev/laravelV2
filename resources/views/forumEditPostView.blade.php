@@ -32,8 +32,8 @@
   </ul>
 
   <!-- Navigation menu -->
-  <div class="dropdown col-lg-6 col-md-6 col-sm-6">
-    <button class="btn btn-primary dropdown-toggle col-lg-offset-6 col-md-offset-7 col-sm-offset-6 col-lg-6 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+  <div class="dropdown col-lg-offset-9 col-md-offset-9 col-sm-offset-9 col-lg-6 col-md-6 col-sm-6">
+    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Navigation Forum
       <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
@@ -50,7 +50,7 @@
     </ul>
   </div>
 
-  <h4 style="margin-left:15px">Edition du Message : </h4>
+  <h3 style="margin-left:15px">Edition du Message : </h3>
 
   <table class="table forum table-striped">
     <thead>
@@ -70,7 +70,6 @@ $(function() {
   
   $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
   $('#editPost').click(function() {
-    alert('ok');
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
       // TODO voulez vous supprimer votre message
@@ -80,6 +79,7 @@ $(function() {
           type: "post",
           data: {'msgToSend': $('#msgToSend').val() },
           success: function(data){
+            alert('Votre message a été édité');
             window.location.href = "{{url('forum/'.$cat.'/'.$topic_id)}}";
           }
       });  

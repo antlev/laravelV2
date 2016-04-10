@@ -43,7 +43,7 @@
 
     <!-- Menu de navigation -->
     <div class="dropdown col-lg-6 col-md-6 col-sm-6">
-      <button class="btn btn-primary dropdown-toggle col-lg-offset-8 col-md-offset-7 col-sm-offset-6 col-lg-3 col-md-4 col-sm-5 col-xs-12" type="button" data-toggle="dropdown">Navigation Forum
+      <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Navigation Forum
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
@@ -134,10 +134,10 @@
             success: function(data){
               obj = $.parseJSON(data); // Parse the data which has been encode using JSON
               console.log(obj);
-              console.log(obj['topicData']['createur']);
+              console.log(obj['lastPostDate'][0]['post_time']);
               for(var i=0;i<obj['creatorName'].length;++i){ // for each post 
                   // we append those line containing correct values at the correct place (using #topics)
-                  $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'>posté par <a href='{{url('forum/')}}"+"/"+obj['topicData']['creator'][i]+"/myProfil'>"+obj['creatorName'][i]+"</a></td></tr>");
+                  $('#topics').append("<tr id="+i+"><td><h4 class='col-lg-offset-1' ><a href='{{url('forum/'.$cat.'/')}}"+'/'+obj['topicData']['topicId'][i]+"' style='margin-left:20px'>"+obj['topicData']['topicTitle'][i]+"</a></h4></td><td class='cell-stat text-center hidden-xs'>"+obj['nbPost'][i]+"</td><td class='cell-stat hidden-sm hidden-xs'><div>posté par <a href='{{url('forum/')}}"+"/"+obj['topicData']['creator'][i]+"/myProfil'>"+obj['creatorName'][i]+"</a></div><small>"+obj['lastPostDate'][i]['post_time']+"</small></td></tr>");
               }
               /*                topicData.topicId = topicData.topicTitle = topicData.creator = '';*/
             }             
