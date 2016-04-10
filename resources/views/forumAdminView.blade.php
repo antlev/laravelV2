@@ -67,13 +67,6 @@
         <input class="col-lg-7" rows="10" id="postIdToSup" class="form-control"></input>
         <button  id="supByPostId" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
       </div>
-      <div class="col-lg-offset-1 col-lg-11  col-md-6">
-        <div class="col-lg-2">
-          <h4>Par date  du post</h4>
-        </div>
-        <input class="col-lg-7" rows="10" id="DateToSup" class="form-control"></input>
-        <button  id="supByDate" class="btn btn-warning col-lg-offset-1 col-lg-1 col-md-offset-1">Supprimer</button>
-      </div>
     </div>
 
     <div>
@@ -110,7 +103,7 @@
       </div>
     </div>
 
-        <div>
+    <div>
       <h2 class="col-lg-offset-1 col-lg-11 col-md-12">Afficher un post</h2>
       <div class="col-lg-offset-1 col-lg-11  col-md-6">
         <div class="col-lg-2">
@@ -119,20 +112,16 @@
         <input id="postIdToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
         <button id="printByPostId" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
       </div>
-
-      <div class="col-lg-offset-1 col-lg-11 col-md-6">
-        <div class="col-lg-2">
-          <h4>Par date du post</h4>
-        </div>
-        <input id="dateToPrint" class="col-lg-7" rows="10"  class="form-control"></input>
-        <button id="printByDate" class="btn btn-primary col-lg-offset-1 col-lg-1 col-md-offset-1">Afficher</button>
-      </div>
     </div>
 
-    <div class="col-lg-offset-9">
-      </br>
-      </br>
-      <a href="{{url('forum')}}" class="btn btn-success" style="margin-left:15px"> Revenir à l'index du forum</a>
+    <tbody id="topics"></tbody>
+
+    <div>
+      <div class="col-lg-offset-9">
+        </br>
+        </br>
+        <a href="{{url('forum')}}" class="btn btn-success" style="margin-left:15px"> Revenir à l'index du forum</a>
+      </div> 
     </div> 
   </body>
 </html> 
@@ -160,7 +149,6 @@
         });
         }      
       });
-
       $('#supByName').click(function() {
         if( $('#surnameToSup').val() == '' || $('#nameToSup').val() == '' ){
           alert('Veulliez entrer un nom et un prénom');
@@ -183,7 +171,6 @@
           });
         }      
       });
-
       $('#supByPseudo').click(function() {
         if( $('#pseudoToSup').val() == ''){
           alert('Veulliez entrer un pseudo svp');
@@ -204,28 +191,26 @@
           });
         }      
       });
-
       $('#supByPostId').click(function() {
         if( $('#postIdToSup').val() == ''){
           alert('Please enter an id')
         } else {
-                  $.ajax({
-          url: './admin/supByPostId',
-          type: "post",
-          data: {'postIdToSup': $('#postIdToSup').val() },
-          success: function(data){ 
-            console.log(data); 
-            if(data == 0){
-              alert("Aucun messages correspondant à la requête n'a pu être supprimé")
-            } else {
-              //TODO afficher id
-              alert("Tous les messages de l'utilisateur (id) "+$('#supByPostId').val()+" ont été supprimé" );
-            }
-          } 
-        });
+          $.ajax({
+            url: './admin/supByPostId',
+            type: "post",
+            data: {'postIdToSup': $('#postIdToSup').val() },
+            success: function(data){ 
+              console.log(data); 
+              if(data == 0){
+                alert("Aucun messages correspondant à la requête n'a pu être supprimé")
+              } else {
+                //TODO afficher id
+                alert("Tous les messages de l'utilisateur (id) "+$('#supByPostId').val()+" ont été supprimé" );
+              }
+            } 
+          });
         }      
       });
-
       $('#supByPostDate').click(function() {
         if( $('#postDateToSup').val() == ''){
           alert('Please enter an id')
@@ -235,7 +220,6 @@
             type: "post",
             data: {'postDateToSup': $('#postDateToSup').val() },
             success: function(data){
-            console.log(data); 
               if(data == 0){
                 alert("Aucun messages correspondant à la requête n'a pu être supprimé")
               } else {
@@ -246,50 +230,50 @@
           });
         }      
       });
-
       $('#printById').click(function() {
         if( $('#idToPrint').val() == ''){
           alert('Please enter an id')
         } else {
-                  $.ajax({
-          url: './admin/printById',
-          type: "post",
-          data: {'idToPrint': $('#idToPrint').val() },
-          success: function(data){ 
-            console.log(data);
-            if(data == 0){
-              alert("Aucun messages correspond à la requête")
-            } else {
-              //TODO afficher id
-              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+          $.ajax({
+            url: './admin/printById',
+            type: "post",
+            data: {'idToPrint': $('#idToPrint').val() },
+            success: function(data){
+              obj = $.parseJSON(data); // Parse the data which has been encode using JSON 
+              console.log(obj[0]['post_texte']);
+              if(data == 0){
+                alert("Aucun messages correspond à la requête")
+              } else {
+                for(var i=0;i<obj.length;i++) {
+                  $('#topics').append("<div class='row'><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'><h3>Message n°"+i+"</h3></div><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info'><div class='panel-body panel-info' style='min-height:70px'><h4> "+obj[i]['post_texte']+"  </h4></div></div</div>");
+                }
+              }
             }
-          } 
+            });
+          }      
         });
-        }      
-      });
-
       $('#printByPseudo').click(function() {
         if( $('#pseudoToPrint').val() == ''){
           alert('Please enter an pseudo')
         } else {
-                  $.ajax({
-          url: './admin/printByPseudo',
-          type: "post",
-          data: {'pseudoToPrint': $('#pseudoToPrint').val() },
-          success: function(data){
-            console.log(data);S 
-            if(data == 0){
-              alert("Aucun messages correspond à la requête")
-            } else {
-              //TODO afficher id
-              alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
-            }
-          } 
-        });
+          $.ajax({
+            url: './admin/printByPseudo',
+            type: "post",
+            data: {'pseudoToPrint': $('#pseudoToPrint').val() },
+            success: function(data){
+              console.log(data);S 
+              if(data == 0){
+                alert("Aucun messages correspond à la requête")
+              } else {
+                for(var i=0;i<obj.length;i++) {
+                  $('#topics').append("<div class='row'><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'><h3>Message n°"+i+"</h3></div><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info'><div class='panel-body panel-info' style='min-height:70px'><h4> "+obj[i]['post_texte']+"  </h4></div></div</div>");
+                }
+              }
+            } 
+          });
         }      
       });
 
-//TODO
     $('#printByName').click(function() {
         if( $('#surnameToPrint').val() == '' || $('#nameToPrint').val() == '' ){
           alert('Veulliez entrer un nom et un prénom');
@@ -297,14 +281,15 @@
           $.ajax({
             url: './admin/printByName',
             type: "post",
-            // TODO TOCHECK
             data: {'nameToPrint': $('#nameToPrint').val(), 'surnameToPrint': $('#surnameToPrint').val() },
             success: function(data){
               console.log(data); 
               if(data == -1){
                 alert("Plusieurs utilisateur correspondent veuillez utiliser l'id");
               } else if (data == 1) {
-                alert("Tous les messages de l'utilisateur (id) "+$('#supById').val()+" ont été supprimé" );
+                for(var i=0;i<obj.length;i++) {
+                  $('#topics').append("<div class='row'><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'><h3>Message n°"+i+"</h3></div><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info'><div class='panel-body panel-info' style='min-height:70px'><h4> "+obj[i]['post_texte']+"  </h4></div></div</div>");
+                }
               } else {
                 alert('Aucun post ne correspond à votre requête')
               }
@@ -312,9 +297,6 @@
           });
         }      
       });
-
-
-
       $('#printByPostId').click(function() {
         if( $('#postIdToPrint').val() == ''){
           alert('Please enter an id')
@@ -328,8 +310,9 @@
             if(data == 0){
               alert("Aucun messages correspondant à la requête n'a pu être supprimé")
             } else {
-              //TODO afficher id
-              alert("Tous les messages de l'utilisateur (id) "+$('#printByPostId').val()+" ont été supprimé" );
+              for(var i=0;i<obj.length;i++) {
+                $('#topics').append("<div class='row'><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'><h3>Message n°"+i+"</h3></div><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info'><div class='panel-body panel-info' style='min-height:70px'><h4> "+obj[i]['post_texte']+"  </h4></div></div</div>");
+              }
             }
           } 
         });
@@ -349,9 +332,9 @@
             if(data == 0){
               alert("Aucun messages correspondant à la requête n'a pu être supprimé")
             } else {
-              //TODO afficher id
-              alert("Tous les messages de l'utilisateur (id) "+$('#printByPostDate').val()+" ont été supprimé" );
-            }
+              for(var i=0;i<obj.length;i++) {
+                $('#topics').append("<div class='row'><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1'><h3>Message n°"+i+"</h3></div><div class='col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1 col-lg-10 col-md-10 col-sm-10 col-xs-10 col-offset-1 panel panel-info'><div class='panel-body panel-info' style='min-height:70px'><h4> "+obj[i]['post_texte']+"  </h4></div></div</div>");
+              }            }
           } 
         });
         }      

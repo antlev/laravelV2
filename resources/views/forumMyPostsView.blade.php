@@ -76,7 +76,7 @@
               <div class="col-lg-7 col-md-6 col-sm-6 col-xs-7"> 
                 <h5>posté le {{$post->post_time}} par {{Auth::getPrenombyId($post->post_createur)}} {{Auth::getNombyId($post->post_createur)}} </h5>
               </div>
-              @if(Auth::isAdmin())
+              @if(Auth::isAdmin() || Auth::id() == $post->post_createur)
                 <div class="col-lg-5 col-md-6 col-sm-6 col-xs-5">  
                   <!-- Button 'Voir la discussion' -->
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -90,11 +90,6 @@
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <button id="supPost{{$id}}" class="btn btn-danger" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button> 
                   </div>
-                </div>
-              @else(Auth::id() == $post->post_createur)
-                <div class="col-lg-3 col-md-3 col-xs-3 panel-footer pull-right">   
-                  <a href="{{url('forum/'.$postCat[$id][0]->cat_id.'/'.$post->post_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-danger" style="margin-left:15px">Editer</a> 
-                  <button id="supPost{{$id}}"  href="{{url('forum/'.$postCat[$id][0]->cat_id.'/'.$post->post_id.'/editPost')}}" class="btn btn-warning" style="margin-left:15px" data-id="{{$post->post_id}}">Supprimer</button>
                 </div>
               @endif
               </div>

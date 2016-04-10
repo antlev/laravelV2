@@ -72,7 +72,6 @@ $(function() {
   $('#editPost').click(function() {
     if($('#msgToSend').val() == ''){
       alert('Votre message est vide');
-      // TODO voulez vous supprimer votre message
     } else{
       $.ajax({
           url: 'editPost',

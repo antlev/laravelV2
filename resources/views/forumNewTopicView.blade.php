@@ -82,7 +82,6 @@ $(function() {
   $('#saveMsgTopic').click(function() {
     if($('#msgTopic').val() == " " ) {
       alert('Votre message est vide');
-      // TODO : condition else if pas correcte
     } else if ( $('#titleTopic').val() == " " ) {
       alert('Votre titre est vide');
     } else {

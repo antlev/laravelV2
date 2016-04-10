@@ -140,7 +140,6 @@ class forumController extends Controller{
 			'nbPost' => $nbPost,
 			'postCat' => $postCat);
 		// Checks the authenticity of the user
-		dd($postCat);
 		if( Auth::isAdmin() || Auth::id() == $this->__getCreatorPostById($post_id)[0] ){  // getCreateurPostById retourne un tableau d'une case contenant l'id du createur du post
 			return view('forumMyPostsView', $data);
 		} else {
@@ -312,9 +311,9 @@ class forumController extends Controller{
  		$inputData = Input::all(); // Get the data send in post
 	    $idToPrint = $inputData['idToPrint'];
 
-	    return DB::table('forum_post')
+	    return json_encode(DB::table('forum_post')
 	    	->where('post_createur', '=', $idToPrint)
-	    	->get();
+	    	->get());
 	}
 	public function getPostByName(){
  		$inputData = Input::all(); // Get the data send in post
@@ -447,7 +446,7 @@ class forumController extends Controller{
 			->get();
 	}	
 	// Return the topics which are in the category passed as a parameter
-	// This function start with topic firstTopicToReturn and return x TODO(define x) topics max
+	// This function start with topic firstTopicToReturn and return 15 topics max
 	private function __getTopicFromCatLimit($cat,$firstTopicToReturn){
 		return DB::table('forum_topic')
 			->where('topic_cat', $cat)
