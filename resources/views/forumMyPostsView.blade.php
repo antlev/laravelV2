@@ -109,12 +109,6 @@
               }
           });  
         });
-        
-        $('#editPost{{$id}}').click(function() {
-          alert('ok');
-          window.location.href = "";
-
-        });
 
         $('#goToPost{{$id}}').click(function() {
           alert('ok');
